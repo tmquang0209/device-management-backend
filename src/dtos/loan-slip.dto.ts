@@ -1,5 +1,4 @@
 import { EEquipmentLoanSlipStatus } from '@common/enums';
-import { PaginationRequestDto, PaginationResponseDto } from '@dto';
 import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
@@ -12,6 +11,7 @@ import {
 } from 'class-validator';
 import { i18nValidationMessage } from 'nestjs-i18n';
 import { I18nTranslations } from 'src/generated/i18n.generated';
+import { PaginationRequestDto, PaginationResponseDto } from './pagination.dto';
 
 // ============== Equipment Loan Slip DTOs ==============
 

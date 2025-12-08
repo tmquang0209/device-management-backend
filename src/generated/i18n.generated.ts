@@ -144,6 +144,122 @@ export type I18nTranslations = {
                 "success": string;
             };
         };
+        "loan_slip": {
+            "create": {
+                "success": string;
+                "borrower_not_found": string;
+                "loaner_not_found": string;
+                "device_not_found": string;
+                "device_not_available": string;
+            };
+            "return": {
+                "success": string;
+                "loan_slip_not_found": string;
+                "device_not_in_slip": string;
+            };
+            "cancel": {
+                "success": string;
+                "loan_slip_not_found": string;
+                "cannot_cancel_loan_slip": string;
+            };
+            "get": {
+                "loan_slip_not_found": string;
+            };
+            "list": {
+                "success": string;
+            };
+        };
+        "warranty": {
+            "create": {
+                "success": string;
+                "device_not_found": string;
+                "device_warranty_expired": string;
+                "warranty_already_exists": string;
+            };
+            "update": {
+                "success": string;
+                "warranty_not_found": string;
+            };
+            "complete": {
+                "success": string;
+                "warranty_not_found": string;
+            };
+            "reject": {
+                "success": string;
+                "warranty_not_found": string;
+            };
+            "get": {
+                "warranty_not_found": string;
+            };
+            "list": {
+                "success": string;
+            };
+        };
+    };
+    "master-data": {
+        "param": {
+            "create": {
+                "success": string;
+                "already_exists": string;
+            };
+            "update": {
+                "success": string;
+                "not_found": string;
+                "already_exists": string;
+            };
+            "delete": {
+                "success": string;
+                "not_found": string;
+            };
+            "get": {
+                "not_found": string;
+            };
+            "list": {
+                "success": string;
+            };
+        };
+        "partner": {
+            "create": {
+                "success": string;
+                "already_exists": string;
+            };
+            "update": {
+                "success": string;
+                "not_found": string;
+                "already_exists": string;
+            };
+            "delete": {
+                "success": string;
+                "not_found": string;
+            };
+            "get": {
+                "not_found": string;
+            };
+            "list": {
+                "success": string;
+            };
+        };
+        "supplier": {
+            "create": {
+                "success": string;
+                "already_exists": string;
+            };
+            "update": {
+                "success": string;
+                "not_found": string;
+                "already_exists": string;
+            };
+            "delete": {
+                "success": string;
+                "not_found": string;
+            };
+            "get": {
+                "not_found": string;
+            };
+            "list": {
+                "success": string;
+            };
+        };
     };
     "payment": {
         "details": {

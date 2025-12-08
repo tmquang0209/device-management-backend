@@ -1,4 +1,3 @@
-import { PaginationRequestDto, PaginationResponseDto } from '@dto';
 import { Transform, TransformFnParams } from 'class-transformer';
 import {
   IsDate,
@@ -9,6 +8,7 @@ import {
 } from 'class-validator';
 import { i18nValidationMessage } from 'nestjs-i18n';
 import { I18nTranslations } from 'src/generated/i18n.generated';
+import { PaginationRequestDto, PaginationResponseDto } from './pagination.dto';
 
 export class CreateDeviceTypeDto {
   @IsNotEmpty({

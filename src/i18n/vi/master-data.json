@@ -1,0 +1,65 @@
+{
+  "param": {
+    "create": {
+      "success": "Tham số được tạo thành công",
+      "already_exists": "Tham số với loại và mã này đã tồn tại"
+    },
+    "update": {
+      "success": "Tham số được cập nhật thành công",
+      "not_found": "Tham số không được tìm thấy",
+      "already_exists": "Tham số với loại và mã này đã tồn tại"
+    },
+    "delete": {
+      "success": "Tham số được xóa thành công",
+      "not_found": "Tham số không được tìm thấy"
+    },
+    "get": {
+      "not_found": "Tham số không được tìm thấy"
+    },
+    "list": {
+      "success": "Tham số được lấy thành công"
+    }
+  },
+  "partner": {
+    "create": {
+      "success": "Đối tác được tạo thành công",
+      "already_exists": "Đối tác với tên này đã tồn tại"
+    },
+    "update": {
+      "success": "Đối tác được cập nhật thành công",
+      "not_found": "Đối tác không được tìm thấy",
+      "already_exists": "Đối tác với tên này đã tồn tại"
+    },
+    "delete": {
+      "success": "Đối tác được xóa thành công",
+      "not_found": "Đối tác không được tìm thấy"
+    },
+    "get": {
+      "not_found": "Đối tác không được tìm thấy"
+    },
+    "list": {
+      "success": "Đối tác được lấy thành công"
+    }
+  },
+  "supplier": {
+    "create": {
+      "success": "Nhà cung cấp được tạo thành công",
+      "already_exists": "Nhà cung cấp với tên này đã tồn tại"
+    },
+    "update": {
+      "success": "Nhà cung cấp được cập nhật thành công",
+      "not_found": "Nhà cung cấp không được tìm thấy",
+      "already_exists": "Nhà cung cấp với tên này đã tồn tại"
+    },
+    "delete": {
+      "success": "Nhà cung cấp được xóa thành công",
+      "not_found": "Nhà cung cấp không được tìm thấy"
+    },
+    "get": {
+      "not_found": "Nhà cung cấp không được tìm thấy"
+    },
+    "list": {
+      "success": "Nhà cung cấp được lấy thành công"
+    }
+  }
+}

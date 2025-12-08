@@ -51,3 +51,23 @@ export enum EWarrantyStatus {
   COMPLETED = 3,
   REJECTED = 4,
 }
+
+/**
+ * Partner Type Enum
+ * 1: INDIVIDUAL - Individual partner
+ * 2: ORGANIZATION - Organization partner
+ */
+export enum EPartnerType {
+  INDIVIDUAL = 1,
+  ORGANIZATION = 2,
+}
+
+/**
+ * Common Status Enum for Param, Partner, Supplier
+ * 1: ACTIVE - Entity is active
+ * 2: INACTIVE - Entity is inactive
+ */
+export enum ECommonStatus {
+  ACTIVE = 1,
+  INACTIVE = 2,
+}
