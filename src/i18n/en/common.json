@@ -1,0 +1,23 @@
+{
+  "http": {
+    "success": "Success",
+    "failed": "Failed",
+    "not_found": "Not Found",
+    "invalid": "Invalid",
+    "forbidden": "Forbidden",
+    "unauthorized": "Unauthorized",
+    "internal_error": "Internal Server Error"
+  },
+  "validation": {
+    "must_be_number": "{property} must be a number",
+    "must_be_string": "{property} must be a string",
+    "must_be_boolean": "{property} must be a boolean",
+    "must_be_array": "{property} must be an array",
+    "must_be_date": "{property} must be a date",
+    "must_be_uuid": "{property} must be a valid UUID",
+    "field_required": "{property} is required",
+    "in_array": "{property} must be one of the following values: {values}",
+    "must_be_email": "{property} must be a valid email address"
+  },
+  "welcome": "Welcome to our application!"
+}

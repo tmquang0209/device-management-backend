@@ -1,0 +1,38 @@
+{
+  "details": {
+    "not_found": "Nhà cung cấp thanh toán không được tìm thấy.",
+    "success": "Lấy thông tin nhà cung cấp thanh toán thành công.",
+    "inactive": "Nhà cung cấp thanh toán hiện không hoạt động."
+  },
+  "list": {
+    "success": "Lấy danh sách nhà cung cấp thanh toán thành công."
+  },
+  "create": {
+    "success": "Tạo nhà cung cấp thanh toán thành công.",
+    "duplicate_code": "Mã nhà cung cấp thanh toán đã tồn tại."
+  },
+  "update": {
+    "success": "Cập nhật nhà cung cấp thanh toán thành công.",
+    "duplicate_code": "Mã nhà cung cấp thanh toán đã tồn tại.",
+    "status_changed": "Cập nhật thành công {total} trạng thái nhà cung cấp thanh toán."
+  },
+  "delete": {
+    "success": "Xóa thành công {total} nhà cung cấp thanh toán."
+  },
+  "disabled": "Thanh toán đang bị vô hiệu hóa.",
+  "transaction": {
+    "details": {
+      "success": "Lấy thông tin giao dịch thanh toán thành công."
+    },
+    "list": {
+      "success": "Lấy danh sách giao dịch thanh toán thành công."
+    },
+    "create": {
+      "success": "Tạo giao dịch thanh toán thành công."
+    },
+    "not_found": "Giao dịch thanh toán không được tìm thấy.",
+    "update": {
+      "success": "Cập nhật giao dịch thanh toán thành công."
+    }
+  }
+}

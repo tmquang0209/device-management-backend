@@ -1,0 +1,10 @@
+{
+  "get_role_info_success": "Lấy thông tin vai trò thành công",
+  "get_roles_list_success": "Lấy danh sách vai trò thành công",
+  "create_role_success": "Tạo vai trò thành công",
+  "update_role_success": "Cập nhật vai trò thành công",
+  "delete_role_success": "Xóa vai trò thành công",
+  "get_permissions_list_success": "Lấy danh sách quyền thành công",
+  "role_not_found": "Không tìm thấy vai trò",
+  "cannot_delete_default": "Không thể xóa vai trò mặc định"
+}

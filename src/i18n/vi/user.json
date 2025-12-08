@@ -1,0 +1,35 @@
+{
+  "info": {
+    "get_profile_success": "Lấy thông tin người dùng thành công"
+  },
+  "create": {
+    "success": "Tạo người dùng thành công",
+    "fail": "Tạo người dùng thất bại",
+    "email_exists": "Email đã tồn tại",
+    "role_not_found": "Không tìm thấy vai trò"
+  },
+  "list": {
+    "success": "Lấy danh sách người dùng thành công"
+  },
+  "update": {
+    "success": "Cập nhật người dùng thành công",
+    "fail": "Cập nhật người dùng thất bại",
+    "user_not_found": "Không tìm thấy người dùng",
+    "role_not_found": "Không tìm thấy vai trò"
+  },
+  "change_password": {
+    "success": "Đổi mật khẩu thành công",
+    "fail": "Đổi mật khẩu thất bại",
+    "incorrect_password": "Mật khẩu hiện tại không đúng",
+    "user_not_found": "Không tìm thấy người dùng"
+  },
+  "details": {
+    "success": "Lấy thông tin chi tiết người dùng thành công",
+    "not_found": "Không tìm thấy người dùng"
+  },
+  "change_status": {
+    "success": "Cập nhật trạng thái người dùng thành công",
+    "fail": "Cập nhật trạng thái người dùng thất bại",
+    "not_found": "Không tìm thấy người dùng"
+  }
+}

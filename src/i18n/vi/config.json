@@ -1,0 +1,21 @@
+{
+  "create": {
+    "success": "Tạo hoặc cập nhật cấu hình thành công"
+  },
+  "list": {
+    "success": "Lấy danh sách cấu hình thành công"
+  },
+  "info": {
+    "success": "Lấy thông tin cấu hình thành công"
+  },
+  "update": {
+    "success": "Cập nhật cấu hình thành công"
+  },
+  "delete": {
+    "success": "Xóa cấu hình thành công"
+  },
+  "errors": {
+    "config_not_found": "Không tìm thấy cấu hình với id {id}",
+    "config_key_not_found": "Không tìm thấy cấu hình với key {key}"
+  }
+}

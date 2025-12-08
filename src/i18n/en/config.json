@@ -1,0 +1,21 @@
+{
+  "create": {
+    "success": "Config created or updated successfully"
+  },
+  "list": {
+    "success": "Configs retrieved successfully"
+  },
+  "info": {
+    "success": "Config retrieved successfully"
+  },
+  "delete": {
+    "success": "Config deleted successfully"
+  },
+  "update": {
+    "success": "Config updated successfully"
+  },
+  "errors": {
+    "config_not_found": "Config with id {id} not found",
+    "config_key_not_found": "Config with key {key} not found"
+  }
+}

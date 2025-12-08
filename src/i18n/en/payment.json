@@ -1,0 +1,38 @@
+{
+  "details": {
+    "not_found": "Payment provider not found.",
+    "success": "Successfully retrieved payment provider details.",
+    "inactive": "Payment provider is currently inactive."
+  },
+  "list": {
+    "success": "Successfully retrieved the list of payment providers."
+  },
+  "create": {
+    "success": "Payment provider created successfully.",
+    "duplicate_code": "Payment provider code already exists."
+  },
+  "update": {
+    "success": "Payment provider updated successfully.",
+    "duplicate_code": "Payment provider code already exists.",
+    "status_changed": "Successfully updated {total} payment provider statuses."
+  },
+  "delete": {
+    "success": "Successfully deleted {total} payment providers."
+  },
+  "disabled": "Payment is currently disabled.",
+  "transaction": {
+    "details": {
+      "success": "Payment transaction details retrieved successfully."
+    },
+    "list": {
+      "success": "Payment transactions retrieved successfully."
+    },
+    "create": {
+      "success": "Payment transaction created successfully."
+    },
+    "not_found": "Payment transaction not found.",
+    "update": {
+      "success": "Payment transaction updated successfully."
+    }
+  }
+}

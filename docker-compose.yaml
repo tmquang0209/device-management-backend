@@ -1,0 +1,26 @@
+version: '3.7'
+
+services:
+  minio:
+    image: minio/minio:latest
+    container_name: my-minio
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: 12345678
+    volumes:
+      - minio-data:/data
+    command: server /data --console-address ":9001"
+
+  redis:
+    image: redis:latest
+    container_name: my-redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis-data:/data
+volumes:
+  minio-data:
+  redis-data:

@@ -1,0 +1,35 @@
+{
+  "info": {
+    "get_profile_success": "User profile retrieved successfully"
+  },
+  "create": {
+    "success": "User created successfully",
+    "fail": "Failed to create user",
+    "email_exists": "Email already exists",
+    "role_not_found": "Role not found"
+  },
+  "list": {
+    "success": "User list retrieved successfully"
+  },
+  "update": {
+    "success": "User updated successfully",
+    "fail": "Failed to update user",
+    "user_not_found": "User not found",
+    "role_not_found": "Role not found"
+  },
+  "change_password": {
+    "success": "Password changed successfully",
+    "fail": "Failed to change password",
+    "incorrect_password": "Current password is incorrect",
+    "user_not_found": "User not found"
+  },
+  "details": {
+    "success": "User details retrieved successfully",
+    "not_found": "User not found"
+  },
+  "change_status": {
+    "success": "Update user status successfully",
+    "fail": "Failed to update user status",
+    "not_found": "User not found"
+  }
+}

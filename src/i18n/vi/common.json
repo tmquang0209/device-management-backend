@@ -1,0 +1,23 @@
+{
+  "http": {
+    "success": "Thành công",
+    "failed": "Thất bại",
+    "not_found": "Không tìm thấy",
+    "invalid": "Không hợp lệ",
+    "forbidden": "Bị cấm",
+    "unauthorized": "Chưa được ủy quyền",
+    "internal_error": "Lỗi máy chủ nội bộ"
+  },
+  "validation": {
+    "must_be_number": "{property} phải là một số",
+    "must_be_string": "{property} phải là một chuỗi",
+    "must_be_boolean": "{property} phải là một boolean",
+    "must_be_array": "{property} phải là một mảng",
+    "must_be_date": "{property} phải là một ngày",
+    "must_be_uuid": "{property} phải là một UUID hợp lệ",
+    "field_required": "{property} là bắt buộc",
+    "in_array": "{property} chỉ chứa các giá trị {values}",
+    "must_be_email": "{property} phải là một địa chỉ email hợp lệ"
+  },
+  "welcome": "Chào mừng bạn đến với ứng dụng của chúng tôi!"
+}

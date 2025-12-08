@@ -1,0 +1,10 @@
+{
+  "get_role_info_success": "Get role info successful",
+  "get_roles_list_success": "Get list of roles successful",
+  "create_role_success": "Create role successful",
+  "update_role_success": "Update role successful",
+  "delete_role_success": "Delete role successful",
+  "get_permissions_list_success": "Get list of permissions successful",
+  "role_not_found": "Role not found",
+  "cannot_delete_default": "Cannot delete default role"
+}
