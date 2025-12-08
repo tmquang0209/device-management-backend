@@ -76,6 +76,75 @@ export type I18nTranslations = {
             "config_key_not_found": string;
         };
     };
+    "device": {
+        "device": {
+            "type": {
+                "already_exists": string;
+                "not_found": string;
+                "create": {
+                    "success": string;
+                };
+                "update": {
+                    "success": string;
+                };
+                "delete": {
+                    "success": string;
+                };
+                "list": {
+                    "success": string;
+                };
+            };
+            "location": {
+                "already_exists": string;
+                "not_found": string;
+                "create": {
+                    "success": string;
+                };
+                "update": {
+                    "success": string;
+                };
+                "delete": {
+                    "success": string;
+                };
+                "list": {
+                    "success": string;
+                };
+            };
+            "create": {
+                "success": string;
+                "invalid_device_type": string;
+                "invalid_device_location": string;
+                "serial_exists": string;
+            };
+            "update": {
+                "success": string;
+                "not_found": string;
+                "invalid_device_type": string;
+                "invalid_device_location": string;
+                "serial_exists": string;
+            };
+            "status": {
+                "not_found": string;
+                "success": string;
+            };
+            "delete": {
+                "not_found": string;
+                "success": string;
+            };
+            "details": {
+                "not_found": string;
+            };
+            "list": {
+                "success": string;
+            };
+            "by_type": {
+                "success": string;
+            };
+            "by_location": {
+                "success": string;
+            };
+        };
+    };
     "payment": {
         "details": {
             "not_found": string;

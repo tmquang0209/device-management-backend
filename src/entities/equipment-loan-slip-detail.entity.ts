@@ -1,4 +1,5 @@
 import { BaseEntity } from '@common/database';
+import { EEquipmentLoanSlipDetailStatus } from '@common/enums';
 import {
   BelongsTo,
   Column,
@@ -38,6 +39,27 @@ export class EquipmentLoanSlipDetailEntity extends BaseEntity<EquipmentLoanSlipD
 
   @BelongsTo(() => DeviceEntity)
   declare device?: DeviceEntity;
+
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+    field: 'status',
+  })
+  declare status: EEquipmentLoanSlipDetailStatus;
+
+  @Column({
+    type: DataType.DATE,
+    allowNull: true,
+    field: 'return_date',
+  })
+  declare returnDate?: Date;
+
+  @Column({
+    type: DataType.TEXT,
+    allowNull: true,
+    field: 'note',
+  })
+  declare note?: string;
 
   @ForeignKey(() => UserEntity)
   @Column({

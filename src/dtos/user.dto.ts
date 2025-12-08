@@ -6,16 +6,13 @@ import {
 import { Transform, TransformFnParams } from 'class-transformer';
 import {
   IsBoolean,
-  IsDate,
   IsEmail,
   IsNotEmpty,
   IsOptional,
   IsString,
-  IsUUID,
   Matches,
   MinLength,
 } from 'class-validator';
-import * as dayjs from 'dayjs';
 import { i18nValidationMessage } from 'nestjs-i18n';
 import { I18nTranslations } from 'src/generated/i18n.generated';
 
@@ -28,10 +25,10 @@ export class CreateUserDto {
   @IsString({
     message: i18nValidationMessage<I18nTranslations>(
       'common.validation.must_be_string',
-      { field: 'fullName' },
+      { field: 'name' },
     ),
   })
-  readonly fullName: string;
+  readonly name: string;
 
   @IsNotEmpty({
     message: i18nValidationMessage<I18nTranslations>(
@@ -63,32 +60,7 @@ export class CreateUserDto {
       'common.validation.must_be_string',
     ),
   })
-  readonly phoneNumber: string;
-
-  @IsOptional()
-  @Transform(({ value }: TransformFnParams) => dayjs(value as Date).toDate())
-  @IsDate({
-    message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_date',
-    ),
-  })
-  readonly birthday: Date;
-
-  @IsOptional()
-  @IsString({
-    message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_string',
-    ),
-  })
-  readonly address: string;
-
-  @IsOptional()
-  @IsUUID('4', {
-    message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_uuid',
-    ),
-  })
-  readonly roleId: string;
+  readonly userName: string;
 }
 
 export class UpdateUserDto {
@@ -98,7 +70,7 @@ export class UpdateUserDto {
       'common.validation.must_be_string',
     ),
   })
-  readonly fullName: string;
+  readonly name: string;
 
   @IsOptional()
   @IsEmail(
@@ -117,12 +89,7 @@ export class UpdateUserDto {
       'common.validation.must_be_string',
     ),
   })
-  readonly phoneNumber: string;
-
-  @IsOptional()
-  @Transform(({ value }: TransformFnParams) => dayjs(value as Date).toDate())
-  @IsDate()
-  readonly birthday: Date;
+  readonly userName: string;
 
   @IsOptional()
   @IsString({
@@ -130,15 +97,7 @@ export class UpdateUserDto {
       'common.validation.must_be_string',
     ),
   })
-  readonly address: string;
-
-  @IsOptional()
-  @IsUUID('4', {
-    message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_uuid',
-    ),
-  })
-  readonly roleId: string;
+  readonly roleType: string;
 
   @IsOptional()
   @IsString({
@@ -209,7 +168,7 @@ export class UserListRequestDto extends PaginationRequestDto {
       'common.validation.must_be_string',
     ),
   })
-  readonly fullName: string;
+  readonly name: string;
 
   @IsOptional()
   @IsEmail(
@@ -228,16 +187,7 @@ export class UserListRequestDto extends PaginationRequestDto {
       'common.validation.must_be_string',
     ),
   })
-  readonly phoneNumber: string;
-
-  @IsOptional()
-  @Transform(({ value }: TransformFnParams) => dayjs(value as Date).toDate())
-  @IsDate({
-    message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_date',
-    ),
-  })
-  readonly birthday: Date;
+  readonly userName: string;
 
   @IsOptional()
   @IsString({
@@ -245,7 +195,7 @@ export class UserListRequestDto extends PaginationRequestDto {
       'common.validation.must_be_string',
     ),
   })
-  readonly address: string;
+  readonly roleType: string;
 
   @IsOptional()
   @Transform(
@@ -258,32 +208,6 @@ export class UserListRequestDto extends PaginationRequestDto {
     ),
   })
   readonly status: boolean;
-
-  @IsOptional()
-  @IsString({
-    message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_string',
-    ),
-  })
-  readonly roleId: string;
-
-  @IsOptional()
-  @Transform(({ value }: TransformFnParams) => dayjs(value as Date).toDate())
-  @IsDate({
-    message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_date',
-    ),
-  })
-  readonly createdAt: Date;
-
-  @IsOptional()
-  @Transform(({ value }: TransformFnParams) => dayjs(value as Date).toDate())
-  @IsDate({
-    message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_date',
-    ),
-  })
-  readonly updatedAt: Date;
 }
 
 export class UserListResponseDto extends PaginationResponseDto<

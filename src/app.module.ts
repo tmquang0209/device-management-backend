@@ -28,20 +28,24 @@ import {
   AuditLogService,
   AuthService,
   CacheService,
+  DeviceLocationService,
+  DeviceService,
+  DeviceTypeService,
   FileManagementService,
+  LoanSlipService,
   MailService,
   RoleService,
   RoutesExplorer,
   TokenService,
   UserService,
   VersionService,
+  WarrantyService,
 } from '@services';
 import { ClsService } from 'nestjs-cls';
 import { I18nService } from 'nestjs-i18n';
-import { PaymentModule } from './payment/payment.module';
 
 @Module({
-  imports: [CommonModule, DatabaseModule, PaymentModule],
+  imports: [CommonModule, DatabaseModule],
   controllers: [
     AppController,
     UserController,
@@ -68,6 +72,11 @@ import { PaymentModule } from './payment/payment.module';
     EventGateway,
     MailConsumer,
     MailProducer,
+    DeviceService,
+    DeviceTypeService,
+    DeviceLocationService,
+    LoanSlipService,
+    WarrantyService,
     {
       provide: APP_INTERCEPTOR,
       useClass: CustomCacheInterceptor,

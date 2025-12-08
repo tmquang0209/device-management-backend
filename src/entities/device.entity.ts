@@ -1,4 +1,5 @@
 import { BaseEntity } from '@common/database';
+import { EDeviceStatus } from '@common/enums';
 import {
   BelongsTo,
   Column,
@@ -7,8 +8,8 @@ import {
   HasMany,
   Table,
 } from 'sequelize-typescript';
-import { DeviceLocationEntity } from './devide-location.entity';
-import { DeviceTypeEntity } from './devide.entity';
+import { DeviceLocationEntity } from './device-location.entity';
+import { DeviceTypeEntity } from './device-type.entity';
 import { EquipmentLoanSlipDetailEntity } from './equipment-loan-slip-detail.entity';
 import { SupplierEntity } from './supplier.entity';
 import { UserEntity } from './user.entity';
@@ -81,7 +82,7 @@ export class DeviceEntity extends BaseEntity<DeviceEntity> {
     defaultValue: 1,
     field: 'status',
   })
-  declare status: number;
+  declare status: EDeviceStatus;
 
   @Column({
     type: DataType.DATE,

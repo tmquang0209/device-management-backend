@@ -4,3 +4,11 @@ export enum EAuthLoginType {
   SYSTEM = 'system',
   APP = 'app',
 }
+
+export enum EUserRole {
+  ADMIN = 'ADMIN',
+  DEVICE_MANAGER = 'DEVICE_MANAGER',
+  STAFF = 'STAFF',
+  LECTURER = 'LECTURER',
+  STUDENT = 'STUDENT',
+}

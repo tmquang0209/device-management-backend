@@ -1,3 +1,4 @@
+export * from './device.enum';
 export * from './payment.enum';
 export * from './user.enum';
 

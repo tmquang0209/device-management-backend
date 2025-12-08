@@ -1,4 +1,3 @@
-import { Seeder } from '@common/database/seeds';
 import { HttpExceptionFilter } from '@common/filters';
 import { JwtGuard, PermissionGuard } from '@common/guards';
 import { TransformationInterceptor } from '@common/interceptor';
@@ -6,7 +5,6 @@ import { getQueueToken } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { RoutesExplorer } from '@services';
 import { I18nValidationExceptionFilter, I18nValidationPipe } from 'nestjs-i18n';
 import { AppModule } from './app.module';
 import { setupBullBoard } from './bull-board';
@@ -16,9 +14,6 @@ async function bootstrap() {
   const mailQueueInstance = app.get(getQueueToken('mail'));
   // Setup Bull Board
   setupBullBoard(app, [mailQueueInstance]);
-  if (process.env.SEEDING === 'true') {
-    await new Seeder(app.get(RoutesExplorer)).run();
-  }
 
   const reflector = app.get(Reflector);
 

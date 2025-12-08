@@ -1,6 +1,4 @@
-import { Transform } from 'class-transformer';
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import dayjs from 'dayjs';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { i18nValidationMessage } from 'nestjs-i18n';
 import { I18nTranslations } from 'src/generated/i18n.generated';
 
@@ -64,22 +62,6 @@ export class RegisterDto {
     ),
   })
   readonly password: string;
-
-  @IsOptional()
-  @IsString()
-  readonly phoneNumber?: string;
-
-  @IsOptional()
-  @Transform(({ value }) => (value ? dayjs(value as Date) : value))
-  readonly birthday?: Date;
-
-  @IsOptional()
-  @IsString()
-  readonly address?: string;
-
-  @IsOptional()
-  @IsString()
-  readonly roleId?: string;
 }
 
 export class ForgotPasswordDto {
@@ -102,16 +84,12 @@ export class ForgotPasswordDto {
 export class BasicInfoDto {
   readonly accessToken: string;
   readonly refreshToken: string;
-  readonly fullName: string;
-  readonly email: string;
-  readonly phoneNumber: string;
-  readonly birthday?: Date;
-  readonly status: boolean;
-  readonly address?: string;
-  readonly createdAt?: Date;
-  readonly updatedAt?: Date;
-  readonly roleId?: string;
   readonly id: string;
+  readonly name: string;
+  readonly userName: string;
+  readonly email?: string;
+  readonly roleType: string;
+  readonly status: boolean;
   readonly role?: {
     id: string;
     name: string;

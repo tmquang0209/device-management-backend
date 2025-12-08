@@ -1,0 +1,120 @@
+{
+  "device": {
+    "type": {
+      "already_exists": "Loại thiết bị với tên này đã tồn tại",
+      "not_found": "Loại thiết bị không được tìm thấy",
+      "create": {
+        "success": "Loại thiết bị được tạo thành công"
+      },
+      "update": {
+        "success": "Loại thiết bị được cập nhật thành công"
+      },
+      "delete": {
+        "success": "Loại thiết bị được xóa thành công"
+      },
+      "list": {
+        "success": "Loại thiết bị được lấy thành công"
+      }
+    },
+    "location": {
+      "already_exists": "Vị trí thiết bị với tên này đã tồn tại",
+      "not_found": "Vị trí thiết bị không được tìm thấy",
+      "create": {
+        "success": "Vị trí thiết bị được tạo thành công"
+      },
+      "update": {
+        "success": "Vị trí thiết bị được cập nhật thành công"
+      },
+      "delete": {
+        "success": "Vị trí thiết bị được xóa thành công"
+      },
+      "list": {
+        "success": "Vị trí thiết bị được lấy thành công"
+      }
+    },
+    "create": {
+      "success": "Thiết bị được tạo thành công",
+      "invalid_device_type": "ID loại thiết bị không hợp lệ",
+      "invalid_device_location": "ID vị trí thiết bị không hợp lệ",
+      "serial_exists": "Thiết bị có số seri này đã tồn tại"
+    },
+    "update": {
+      "success": "Thiết bị được cập nhật thành công",
+      "not_found": "Thiết bị không được tìm thấy",
+      "invalid_device_type": "ID loại thiết bị không hợp lệ",
+      "invalid_device_location": "ID vị trí thiết bị không hợp lệ",
+      "serial_exists": "Thiết bị có số seri này đã tồn tại"
+    },
+    "status": {
+      "not_found": "Thiết bị không được tìm thấy",
+      "success": "Trạng thái thiết bị được cập nhật thành công"
+    },
+    "delete": {
+      "not_found": "Thiết bị không được tìm thấy",
+      "success": "Thiết bị được xóa thành công"
+    },
+    "details": {
+      "not_found": "Thiết bị không được tìm thấy"
+    },
+    "list": {
+      "success": "Thiết bị được lấy thành công"
+    },
+    "by_type": {
+      "success": "Thiết bị theo loại được lấy thành công"
+    },
+    "by_location": {
+      "success": "Thiết bị theo vị trí được lấy thành công"
+    }
+  },
+  "loan_slip": {
+    "create": {
+      "success": "Phiếu mượn thiết bị được tạo thành công",
+      "borrower_not_found": "Người mượn không được tìm thấy",
+      "loaner_not_found": "Người cho mượn không được tìm thấy",
+      "device_not_found": "Một hoặc nhiều thiết bị không được tìm thấy",
+      "device_not_available": "Một hoặc nhiều thiết bị không khả dụng để mượn"
+    },
+    "return": {
+      "success": "Thiết bị được trả lại thành công",
+      "loan_slip_not_found": "Phiếu mượn không được tìm thấy",
+      "device_not_in_slip": "Thiết bị không nằm trong phiếu mượn này"
+    },
+    "cancel": {
+      "success": "Phiếu mượn được hủy thành công",
+      "loan_slip_not_found": "Phiếu mượn không được tìm thấy",
+      "cannot_cancel_loan_slip": "Không thể hủy phiếu mượn không ở trạng thái BORROWING"
+    },
+    "get": {
+      "loan_slip_not_found": "Phiếu mượn không được tìm thấy"
+    },
+    "list": {
+      "success": "Phiếu mượn được lấy thành công"
+    }
+  },
+  "warranty": {
+    "create": {
+      "success": "Yêu cầu bảo hành được tạo thành công",
+      "device_not_found": "Thiết bị không được tìm thấy",
+      "device_warranty_expired": "Bảo hành thiết bị đã hết hạn",
+      "warranty_already_exists": "Thiết bị đã có bảo hành đang chờ xử lý hoặc đang xử lý"
+    },
+    "update": {
+      "success": "Bảo hành được cập nhật thành công",
+      "warranty_not_found": "Bảo hành không được tìm thấy"
+    },
+    "complete": {
+      "success": "Bảo hành được hoàn thành thành công",
+      "warranty_not_found": "Bảo hành không được tìm thấy"
+    },
+    "reject": {
+      "success": "Bảo hành được từ chối thành công",
+      "warranty_not_found": "Bảo hành không được tìm thấy"
+    },
+    "get": {
+      "warranty_not_found": "Bảo hành không được tìm thấy"
+    },
+    "list": {
+      "success": "Bảo hành được lấy thành công"
+    }
+  }
+}

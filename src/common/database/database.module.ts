@@ -1,15 +1,22 @@
 import {
   AuditLogsEntity,
   ConfigEntity,
-  PaymentProviderEntity,
-  PaymentTransactionEntity,
+  DeviceEntity,
+  DeviceLocationEntity,
+  DeviceTypeEntity,
+  EquipmentLoanSlipDetailEntity,
+  EquipmentLoanSlipEntity,
+  ParamEntity,
   PermissionEntity,
   RoleEntity,
   RolePermissionsEntity,
+  SupplierEntity,
   UserEntity,
+  WarrantyEntity,
 } from '@entities';
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { PartnerEntity } from 'src/entities/partner.entity';
 import { databaseConfig } from './database.config';
 
 @Module({
@@ -21,8 +28,16 @@ import { databaseConfig } from './database.config';
       PermissionEntity,
       AuditLogsEntity,
       ConfigEntity,
-      PaymentProviderEntity,
-      PaymentTransactionEntity,
+      PartnerEntity,
+      DeviceEntity,
+      DeviceTypeEntity,
+      DeviceLocationEntity,
+      EquipmentLoanSlipEntity,
+      EquipmentLoanSlipDetailEntity,
+      ParamEntity,
+      PartnerEntity,
+      SupplierEntity,
+      WarrantyEntity,
     ]),
     SequelizeModule.forRootAsync({
       useFactory: databaseConfig,

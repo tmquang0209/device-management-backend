@@ -1,10 +1,5 @@
-import {
-  AuthLoginType,
-  EndpointKey,
-  ResponseMessage,
-} from '@common/decorators';
+import { EndpointKey, ResponseMessage } from '@common/decorators';
 import { AllowUnauthorized } from '@common/decorators/allow-unauthorized.decorator';
-import { EAuthLoginType } from '@common/enums';
 import { RefreshTokenGuard } from '@common/guards';
 import { ForgotPasswordDto, LoginDto, RegisterDto } from '@dto';
 import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
@@ -22,8 +17,8 @@ export class AuthController {
   @ResponseMessage(
     i18nValidationMessage<I18nTranslations>('auth.login.success'),
   )
-  login(@Body() params: LoginDto, @AuthLoginType() loginType: EAuthLoginType) {
-    return this.authService.login(params, loginType);
+  login(@Body() params: LoginDto) {
+    return this.authService.login(params);
   }
 
   @EndpointKey('auth.register')

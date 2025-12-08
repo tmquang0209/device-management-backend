@@ -1,7 +1,6 @@
-import { EAuthLoginType } from '@common/enums';
 import { generatePassword } from '@common/utils';
 import { BasicInfoDto, ForgotPasswordDto, LoginDto, RegisterDto } from '@dto';
-import { PermissionEntity, RoleEntity, UserEntity } from '@entities';
+import { RoleEntity, UserEntity } from '@entities';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { MailProducer } from '@producers';
@@ -35,14 +34,12 @@ export class AuthService {
         this.i18n.t('auth.register.role_not_found'),
       );
 
+    const hashedPassword = await bcrypt.hash(params.password, 10);
     await this.userRepo.create({
-      fullName: params.fullName,
+      name: params.fullName,
       email: params.email,
-      password: params.password,
-      roleId: defaultRole.id,
-      phoneNumber: params.phoneNumber,
-      birthday: params.birthday,
-      address: params.address,
+      password: hashedPassword,
+      userName: params.email.split('@')[0],
     } as UserEntity);
 
     await this.mailProducer.sendMailJob({
@@ -53,33 +50,12 @@ export class AuthService {
     });
   }
 
-  async login(
-    params: LoginDto,
-    loginType: EAuthLoginType = EAuthLoginType.CLIENT,
-  ): Promise<BasicInfoDto> {
+  async login(params: LoginDto): Promise<BasicInfoDto> {
     const userExist = await this.userRepo.findOne({
       where: { email: params.email, status: true },
       attributes: {
-        exclude: ['refreshToken', 'updatedAt', 'createdAt', 'roleId'],
+        exclude: ['password', 'updatedAt', 'createdAt'],
       },
-      include: [
-        {
-          model: RoleEntity,
-          attributes: ['id', 'name', 'code'],
-          where: {
-            ...(loginType === EAuthLoginType.SYSTEM
-              ? { code: 'system_admin' }
-              : {}),
-          },
-          include: [
-            {
-              model: PermissionEntity,
-              attributes: ['id', 'key', 'endpoint'],
-              through: { attributes: [] },
-            },
-          ],
-        },
-      ],
     });
     if (!userExist)
       throw new BadRequestException(this.i18n.t('auth.login.user_not_found'));
@@ -91,28 +67,16 @@ export class AuthService {
     const { accessToken, refreshToken: refreshTokenNew } =
       await this.generateJwt(userExist);
 
-    // save refresh token
-    await this.userRepo.update(
-      {
-        refreshToken: refreshTokenNew,
-      },
-      {
-        where: {
-          id: userExist.id,
-        },
-      },
-    );
-
     return {
       accessToken,
       refreshToken: refreshTokenNew,
       id: userExist.id,
-      email: userExist.email,
-      fullName: userExist.fullName,
-      phoneNumber: userExist.phoneNumber,
+      email: userExist.email || '',
+      name: userExist.name,
+      userName: userExist.userName,
+      roleType: userExist.roleType,
       status: userExist.status,
-      role: userExist.role,
-    };
+    } as unknown as BasicInfoDto;
   }
 
   async generateJwt(user: UserEntity) {
@@ -134,24 +98,10 @@ export class AuthService {
     const user = await this.userRepo.findOne({
       where: {
         id: userId,
-        refreshToken,
       },
       attributes: {
-        exclude: ['updatedAt', 'createdAt', 'password'],
+        exclude: ['password'],
       },
-      include: [
-        {
-          model: RoleEntity,
-          attributes: ['id', 'name', 'code'],
-          include: [
-            {
-              model: PermissionEntity,
-              attributes: ['id', 'key', 'endpoint'],
-              through: { attributes: [] },
-            },
-          ],
-        },
-      ],
     });
 
     if (!user)
@@ -161,14 +111,14 @@ export class AuthService {
 
     return {
       id: user.id,
-      email: user.email,
-      fullName: user.fullName,
-      phoneNumber: user.phoneNumber,
+      email: user.email || '',
+      name: user.name,
+      userName: user.userName,
+      roleType: user.roleType,
       status: user.status,
-      role: user.role,
       accessToken,
       refreshToken,
-    };
+    } as unknown as BasicInfoDto;
   }
 
   async sendNewPassword(params: ForgotPasswordDto): Promise<void> {
@@ -186,9 +136,9 @@ export class AuthService {
     });
 
     await this.mailProducer.sendMailJob({
-      to: user.email,
+      to: user.email || '',
       subject: 'Reset password successfully',
-      data: { name: user.fullName, newPassword },
+      data: { name: user.name, newPassword },
       template: 'reset-password',
     });
   }

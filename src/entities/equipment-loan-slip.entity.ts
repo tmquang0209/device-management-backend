@@ -1,4 +1,5 @@
 import { BaseEntity } from '@common/database';
+import { EEquipmentLoanSlipStatus } from '@common/enums';
 import {
   BelongsTo,
   Column,
@@ -44,7 +45,14 @@ export class EquipmentLoanSlipEntity extends BaseEntity<EquipmentLoanSlipEntity>
     allowNull: false,
     field: 'status',
   })
-  declare status: number;
+  declare status: EEquipmentLoanSlipStatus;
+
+  @Column({
+    type: DataType.DATE,
+    allowNull: true,
+    field: 'expected_return_date',
+  })
+  declare expectedReturnDate?: Date;
 
   @ForeignKey(() => UserEntity)
   @Column({

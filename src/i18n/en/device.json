@@ -1,0 +1,120 @@
+{
+  "device": {
+    "type": {
+      "already_exists": "Device type with this name already exists",
+      "not_found": "Device type not found",
+      "create": {
+        "success": "Device type created successfully"
+      },
+      "update": {
+        "success": "Device type updated successfully"
+      },
+      "delete": {
+        "success": "Device type deleted successfully"
+      },
+      "list": {
+        "success": "Device types retrieved successfully"
+      }
+    },
+    "location": {
+      "already_exists": "Device location with this name already exists",
+      "not_found": "Device location not found",
+      "create": {
+        "success": "Device location created successfully"
+      },
+      "update": {
+        "success": "Device location updated successfully"
+      },
+      "delete": {
+        "success": "Device location deleted successfully"
+      },
+      "list": {
+        "success": "Device locations retrieved successfully"
+      }
+    },
+    "create": {
+      "success": "Device created successfully",
+      "invalid_device_type": "Invalid device type ID",
+      "invalid_device_location": "Invalid device location ID",
+      "serial_exists": "Device with this serial number already exists"
+    },
+    "update": {
+      "success": "Device updated successfully",
+      "not_found": "Device not found",
+      "invalid_device_type": "Invalid device type ID",
+      "invalid_device_location": "Invalid device location ID",
+      "serial_exists": "Device with this serial number already exists"
+    },
+    "status": {
+      "not_found": "Device not found",
+      "success": "Device status updated successfully"
+    },
+    "delete": {
+      "not_found": "Device not found",
+      "success": "Device deleted successfully"
+    },
+    "details": {
+      "not_found": "Device not found"
+    },
+    "list": {
+      "success": "Devices retrieved successfully"
+    },
+    "by_type": {
+      "success": "Devices by type retrieved successfully"
+    },
+    "by_location": {
+      "success": "Devices by location retrieved successfully"
+    }
+  },
+  "loan_slip": {
+    "create": {
+      "success": "Loan slip created successfully",
+      "borrower_not_found": "Borrower not found",
+      "loaner_not_found": "Loaner not found",
+      "device_not_found": "One or more devices not found",
+      "device_not_available": "One or more devices are not available for loan"
+    },
+    "return": {
+      "success": "Devices returned successfully",
+      "loan_slip_not_found": "Loan slip not found",
+      "device_not_in_slip": "Device is not in this loan slip"
+    },
+    "cancel": {
+      "success": "Loan slip cancelled successfully",
+      "loan_slip_not_found": "Loan slip not found",
+      "cannot_cancel_loan_slip": "Cannot cancel a loan slip that is not in BORROWING status"
+    },
+    "get": {
+      "loan_slip_not_found": "Loan slip not found"
+    },
+    "list": {
+      "success": "Loan slips retrieved successfully"
+    }
+  },
+  "warranty": {
+    "create": {
+      "success": "Warranty request created successfully",
+      "device_not_found": "Device not found",
+      "device_warranty_expired": "Device warranty has expired",
+      "warranty_already_exists": "Device already has a pending or processing warranty"
+    },
+    "update": {
+      "success": "Warranty updated successfully",
+      "warranty_not_found": "Warranty not found"
+    },
+    "complete": {
+      "success": "Warranty completed successfully",
+      "warranty_not_found": "Warranty not found"
+    },
+    "reject": {
+      "success": "Warranty rejected successfully",
+      "warranty_not_found": "Warranty not found"
+    },
+    "get": {
+      "warranty_not_found": "Warranty not found"
+    },
+    "list": {
+      "success": "Warranties retrieved successfully"
+    }
+  }
+}

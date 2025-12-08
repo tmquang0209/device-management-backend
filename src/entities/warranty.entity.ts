@@ -1,4 +1,5 @@
 import { BaseEntity } from '@common/database';
+import { EWarrantyStatus } from '@common/enums';
 import {
   BelongsTo,
   Column,
@@ -46,7 +47,7 @@ export class WarrantyEntity extends BaseEntity<WarrantyEntity> {
     allowNull: false,
     field: 'status',
   })
-  declare status: number;
+  declare status: EWarrantyStatus;
 
   @ForeignKey(() => UserEntity)
   @Column({
