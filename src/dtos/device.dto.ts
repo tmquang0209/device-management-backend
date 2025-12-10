@@ -95,22 +95,31 @@ export class CreateDeviceLocationDto {
       'common.validation.field_required',
     ),
   })
-  @IsString({
+  @IsUUID('4', {
     message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_string',
-      { field: 'deviceLocationName' },
+      'common.validation.must_be_uuid',
+      { field: 'rackId' },
     ),
   })
-  readonly deviceLocationName: string;
+  readonly rackId: string;
 
   @IsOptional()
   @IsString({
     message: i18nValidationMessage<I18nTranslations>(
       'common.validation.must_be_string',
-      { field: 'location' },
+      { field: 'xPosition' },
     ),
   })
-  readonly location?: string;
+  readonly xPosition?: string;
+
+  @IsOptional()
+  @IsString({
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.must_be_string',
+      { field: 'yPosition' },
+    ),
+  })
+  readonly yPosition?: string;
 
   @IsOptional()
   readonly status?: number;
@@ -118,22 +127,31 @@ export class CreateDeviceLocationDto {
 
 export class UpdateDeviceLocationDto {
   @IsOptional()
-  @IsString({
+  @IsUUID('4', {
     message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_string',
-      { field: 'deviceLocationName' },
+      'common.validation.must_be_uuid',
+      { field: 'rackId' },
     ),
   })
-  readonly deviceLocationName?: string;
+  readonly rackId?: string;
 
   @IsOptional()
   @IsString({
     message: i18nValidationMessage<I18nTranslations>(
       'common.validation.must_be_string',
-      { field: 'location' },
+      { field: 'xPosition' },
     ),
   })
-  readonly location?: string;
+  readonly xPosition?: string;
+
+  @IsOptional()
+  @IsString({
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.must_be_string',
+      { field: 'yPosition' },
+    ),
+  })
+  readonly yPosition?: string;
 
   @IsOptional()
   readonly status?: number;
@@ -141,13 +159,13 @@ export class UpdateDeviceLocationDto {
 
 export class DeviceLocationListRequestDto extends PaginationRequestDto {
   @IsOptional()
-  @IsString({
+  @IsUUID('4', {
     message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_string',
-      { field: 'deviceLocationName' },
+      'common.validation.must_be_uuid',
+      { field: 'rackId' },
     ),
   })
-  readonly deviceLocationName?: string;
+  readonly rackId?: string;
 
   @IsOptional()
   readonly status?: number;
@@ -155,11 +173,16 @@ export class DeviceLocationListRequestDto extends PaginationRequestDto {
 
 export class DeviceLocationResponseDto {
   readonly id: string;
-  readonly deviceLocationName: string;
-  readonly location?: string;
+  readonly rackId: string;
+  readonly xPosition?: string;
+  readonly yPosition?: string;
   readonly status: number;
   readonly createdAt: Date;
   readonly updatedAt: Date;
+  readonly rack?: {
+    id: string;
+    code: string;
+  };
 }
 
 export class DeviceLocationListResponseDto extends PaginationResponseDto<DeviceLocationResponseDto> {
@@ -212,25 +235,23 @@ export class CreateDeviceDto {
   })
   readonly deviceTypeId: string;
 
-  @IsNotEmpty({
-    message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.field_required',
-    ),
-  })
-  @IsUUID('4', {
-    message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_uuid',
-    ),
-  })
-  readonly deviceLocationId: string;
-
   @IsOptional()
   @IsUUID('4', {
     message: i18nValidationMessage<I18nTranslations>(
       'common.validation.must_be_uuid',
+      { field: 'rackId' },
     ),
   })
-  readonly supplierId?: string;
+  readonly rackId?: string;
+
+  @IsOptional()
+  @IsString({
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.must_be_string',
+      { field: 'supplier' },
+    ),
+  })
+  readonly supplier?: string;
 
   @IsOptional()
   readonly status?: number;
@@ -311,15 +332,16 @@ export class UpdateDeviceDto {
       'common.validation.must_be_uuid',
     ),
   })
-  readonly deviceLocationId?: string;
+  readonly rackId?: string;
 
   @IsOptional()
-  @IsUUID('4', {
+  @IsString({
     message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_uuid',
+      'common.validation.must_be_string',
+      { field: 'supplier' },
     ),
   })
-  readonly supplierId?: string;
+  readonly supplier?: string;
 
   @IsOptional()
   readonly status?: number;
@@ -422,14 +444,26 @@ export class WarrantyInfoDto {
   readonly endDate?: Date;
 }
 
+export class RackInfoDto {
+  readonly id: string;
+  readonly code: string;
+  readonly status: number;
+  readonly deviceLocations?: {
+    id: string;
+    xPosition?: string;
+    yPosition?: string;
+    status: number;
+  }[];
+}
+
 export class DeviceResponseDto {
   readonly id: string;
   readonly deviceName: string;
   readonly serial?: string;
   readonly model?: string;
   readonly deviceType?: DeviceTypeInfoDto;
-  readonly deviceLocation?: DeviceLocationInfoDto;
-  readonly supplier?: SupplierInfoDto;
+  readonly rack?: RackInfoDto;
+  readonly supplier?: string;
   readonly status: number;
   readonly purchaseDate?: Date;
   readonly warrantyExpirationDate?: Date;
@@ -448,8 +482,8 @@ export class DeviceDetailResponseDto {
   readonly serial?: string;
   readonly model?: string;
   readonly deviceType?: DeviceTypeInfoDto;
-  readonly deviceLocation?: DeviceLocationInfoDto;
-  readonly supplier?: SupplierInfoDto;
+  readonly rack?: RackInfoDto;
+  readonly supplier?: string;
   readonly warranty?: WarrantyInfoDto[];
   readonly status: number;
   readonly purchaseDate?: Date;

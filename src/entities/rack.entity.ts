@@ -7,34 +7,23 @@ import {
   HasMany,
   Table,
 } from 'sequelize-typescript';
-import { EquipmentLoanSlipEntity } from './equipment-loan-slip.entity';
-import { MaintenanceSlipEntity } from './maintenance-slip.entity';
+import { DeviceLocationEntity } from './device-location.entity';
+import { DeviceEntity } from './device.entity';
 import { UserEntity } from './user.entity';
 
 @Table({
-  tableName: 'partner',
+  tableName: 'rack',
   underscored: true,
   timestamps: true,
   paranoid: true,
 })
-export class PartnerEntity extends BaseEntity<PartnerEntity> {
+export class RackEntity extends BaseEntity<RackEntity> {
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.STRING,
     allowNull: false,
-    field: 'partner_type',
+    field: 'code',
   })
-  declare partnerType: number;
-
-  @ForeignKey(() => UserEntity)
-  @Column({
-    type: DataType.UUID,
-    allowNull: true,
-    field: 'user_id',
-  })
-  declare userId?: string;
-
-  @BelongsTo(() => UserEntity, 'userId')
-  declare user?: UserEntity;
+  declare code: string;
 
   @Column({
     type: DataType.INTEGER,
@@ -66,12 +55,9 @@ export class PartnerEntity extends BaseEntity<PartnerEntity> {
   @BelongsTo(() => UserEntity, 'modifiedById')
   declare modifiedByUser?: UserEntity;
 
-  @HasMany(() => EquipmentLoanSlipEntity, 'equipmentBorrowerId')
-  declare borrowedSlips?: EquipmentLoanSlipEntity[];
+  @HasMany(() => DeviceEntity)
+  declare devices?: DeviceEntity[];
 
-  @HasMany(() => EquipmentLoanSlipEntity, 'equipmentLoanerId')
-  declare loanedSlips?: EquipmentLoanSlipEntity[];
-
-  @HasMany(() => MaintenanceSlipEntity)
-  declare maintenanceSlips?: MaintenanceSlipEntity[];
+  @HasMany(() => DeviceLocationEntity)
+  declare deviceLocations?: DeviceLocationEntity[];
 }

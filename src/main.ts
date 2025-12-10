@@ -19,7 +19,7 @@ async function bootstrap() {
 
   // Enable CORS
   app.enableCors({
-    origin: ['http://localhost:4000', 'https://fe-codebase.tmquang.com'],
+    origin: ['http://localhost:3004', 'https://device-client.hqlab.dev'],
     credentials: true,
     exposedHeaders: ['Content-Disposition'],
   });

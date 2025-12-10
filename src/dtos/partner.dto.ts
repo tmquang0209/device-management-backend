@@ -13,11 +13,11 @@ export class CreatePartnerDto {
   })
   @IsString({
     message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_string',
-      { property: 'partnerName' },
+      'common.validation.must_be_uuid',
+      { property: 'userId' },
     ),
   })
-  readonly partnerName: string;
+  readonly userId: string;
 
   @IsNotEmpty({
     message: i18nValidationMessage<I18nTranslations>(
@@ -28,15 +28,6 @@ export class CreatePartnerDto {
   readonly partnerType: number;
 
   @IsOptional()
-  @IsString({
-    message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_string',
-      { property: 'description' },
-    ),
-  })
-  readonly description?: string;
-
-  @IsOptional()
   @IsNumber()
   readonly status?: number;
 }
@@ -45,24 +36,15 @@ export class UpdatePartnerDto {
   @IsOptional()
   @IsString({
     message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_string',
-      { property: 'partnerName' },
+      'common.validation.must_be_uuid',
+      { property: 'userId' },
     ),
   })
-  readonly partnerName?: string;
+  readonly userId?: string;
 
   @IsOptional()
   @IsNumber()
   readonly partnerType?: number;
-
-  @IsOptional()
-  @IsString({
-    message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_string',
-      { property: 'description' },
-    ),
-  })
-  readonly description?: string;
 
   @IsOptional()
   @IsNumber()
@@ -72,7 +54,7 @@ export class UpdatePartnerDto {
 export class PartnerListRequestDto extends PaginationRequestDto {
   @IsOptional()
   @IsString()
-  readonly partnerName?: string;
+  readonly userId?: string;
 
   @IsOptional()
   @IsNumber()
@@ -85,12 +67,16 @@ export class PartnerListRequestDto extends PaginationRequestDto {
 
 export class PartnerResponseDto {
   id: string;
-  partnerName: string;
+  userId: string;
   partnerType: number;
-  description?: string;
   status: number;
   createdAt: Date;
   updatedAt: Date;
+  user?: {
+    id: string;
+    username: string;
+    email: string;
+  };
 }
 
 export class PartnerListResponseDto extends PaginationResponseDto<PartnerResponseDto> {}

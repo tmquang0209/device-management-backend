@@ -4,10 +4,9 @@ import {
   Column,
   DataType,
   ForeignKey,
-  HasMany,
   Table,
 } from 'sequelize-typescript';
-import { DeviceEntity } from './device.entity';
+import { RackEntity } from './rack.entity';
 import { UserEntity } from './user.entity';
 
 @Table({
@@ -17,19 +16,30 @@ import { UserEntity } from './user.entity';
   paranoid: true,
 })
 export class DeviceLocationEntity extends BaseEntity<DeviceLocationEntity> {
+  @ForeignKey(() => RackEntity)
   @Column({
-    type: DataType.STRING,
+    type: DataType.UUID,
     allowNull: false,
-    field: 'device_location_name',
+    field: 'rack_id',
   })
-  declare deviceLocationName: string;
+  declare rackId: string;
+
+  @BelongsTo(() => RackEntity)
+  declare rack?: RackEntity;
 
   @Column({
     type: DataType.STRING,
     allowNull: true,
-    field: 'location',
+    field: 'x_position',
   })
-  declare location?: string;
+  declare xPosition?: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+    field: 'y_position',
+  })
+  declare yPosition?: string;
 
   @Column({
     type: DataType.INTEGER,
@@ -60,7 +70,4 @@ export class DeviceLocationEntity extends BaseEntity<DeviceLocationEntity> {
 
   @BelongsTo(() => UserEntity, 'modifiedById')
   declare modifiedByUser?: UserEntity;
-
-  @HasMany(() => DeviceEntity)
-  declare devices?: DeviceEntity[];
 }

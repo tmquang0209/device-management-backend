@@ -1,14 +1,17 @@
+/**
+ * @deprecated The supplier field in DeviceEntity has been changed from a foreign key to a simple VARCHAR field.
+ * This entity is no longer used in the new schema. Supplier information is now stored as text in the device table.
+ * This file will be removed in a future version.
+ */
+import { BaseEntity } from '@common/database';
 import {
   BelongsTo,
   Column,
   DataType,
   ForeignKey,
-  HasMany,
   Table,
 } from 'sequelize-typescript';
 import { UserEntity } from './user.entity';
-import { BaseEntity } from '@common/database';
-import { DeviceEntity } from './device.entity';
 
 @Table({
   tableName: 'supplier',
@@ -67,7 +70,4 @@ export class SupplierEntity extends BaseEntity<SupplierEntity> {
 
   @BelongsTo(() => UserEntity, 'modifiedById')
   declare modifiedByUser?: UserEntity;
-
-  @HasMany(() => DeviceEntity)
-  declare devices?: DeviceEntity[];
 }

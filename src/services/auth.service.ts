@@ -54,7 +54,7 @@ export class AuthService {
     const userExist = await this.userRepo.findOne({
       where: { email: params.email, status: true },
       attributes: {
-        exclude: ['password', 'updatedAt', 'createdAt'],
+        exclude: ['updatedAt', 'createdAt'],
       },
     });
     if (!userExist)

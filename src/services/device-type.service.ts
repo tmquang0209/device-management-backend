@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { I18nService } from 'nestjs-i18n';
+import { CacheService } from './cache.service';
 
 @Injectable()
 export class DeviceTypeService {
@@ -20,6 +21,7 @@ export class DeviceTypeService {
     @InjectModel(DeviceTypeEntity)
     private readonly deviceTypeRepo: typeof DeviceTypeEntity,
     private readonly i18n: I18nService,
+    private readonly cacheService: CacheService,
   ) {}
 
   async createDeviceType(
@@ -36,6 +38,8 @@ export class DeviceTypeService {
     const newDeviceType = await this.deviceTypeRepo.create(
       params as unknown as DeviceTypeEntity,
     );
+
+    await this.cacheService.delByPattern('*device-types*');
     return newDeviceType.toJSON();
   }
 
@@ -65,6 +69,7 @@ export class DeviceTypeService {
     }
 
     await deviceType.update(params);
+    await this.cacheService.delByPattern('*device-types*');
     return deviceType.toJSON();
   }
 
@@ -122,6 +127,7 @@ export class DeviceTypeService {
       throw new NotFoundException(this.i18n.t('device.type.not_found'));
     }
 
+    await this.cacheService.delByPattern('*device-types*');
     await deviceType.destroy();
   }
 }

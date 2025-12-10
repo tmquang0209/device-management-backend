@@ -9,6 +9,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { EquipmentLoanSlipDetailEntity } from './equipment-loan-slip-detail.entity';
+import { PartnerEntity } from './partner.entity';
 import { UserEntity } from './user.entity';
 
 @Table({
@@ -18,7 +19,7 @@ import { UserEntity } from './user.entity';
   paranoid: true,
 })
 export class EquipmentLoanSlipEntity extends BaseEntity<EquipmentLoanSlipEntity> {
-  @ForeignKey(() => UserEntity)
+  @ForeignKey(() => PartnerEntity)
   @Column({
     type: DataType.UUID,
     allowNull: false,
@@ -26,10 +27,10 @@ export class EquipmentLoanSlipEntity extends BaseEntity<EquipmentLoanSlipEntity>
   })
   declare equipmentBorrowerId: string;
 
-  @BelongsTo(() => UserEntity, 'equipmentBorrowerId')
-  declare borrower?: UserEntity;
+  @BelongsTo(() => PartnerEntity, 'equipmentBorrowerId')
+  declare borrower?: PartnerEntity;
 
-  @ForeignKey(() => UserEntity)
+  @ForeignKey(() => PartnerEntity)
   @Column({
     type: DataType.UUID,
     allowNull: false,
@@ -37,8 +38,8 @@ export class EquipmentLoanSlipEntity extends BaseEntity<EquipmentLoanSlipEntity>
   })
   declare equipmentLoanerId: string;
 
-  @BelongsTo(() => UserEntity, 'equipmentLoanerId')
-  declare loaner?: UserEntity;
+  @BelongsTo(() => PartnerEntity, 'equipmentLoanerId')
+  declare loaner?: PartnerEntity;
 
   @Column({
     type: DataType.INTEGER,
@@ -46,13 +47,6 @@ export class EquipmentLoanSlipEntity extends BaseEntity<EquipmentLoanSlipEntity>
     field: 'status',
   })
   declare status: EEquipmentLoanSlipStatus;
-
-  @Column({
-    type: DataType.DATE,
-    allowNull: true,
-    field: 'expected_return_date',
-  })
-  declare expectedReturnDate?: Date;
 
   @ForeignKey(() => UserEntity)
   @Column({

@@ -5,7 +5,7 @@ import {
   DeviceLocationResponseDto,
   UpdateDeviceLocationDto,
 } from '@dto';
-import { DeviceLocationEntity } from '@entities';
+import { DeviceLocationEntity, RackEntity } from '@entities';
 import {
   BadRequestException,
   Injectable,
@@ -19,20 +19,37 @@ export class DeviceLocationService {
   constructor(
     @InjectModel(DeviceLocationEntity)
     private readonly deviceLocationRepo: typeof DeviceLocationEntity,
+    @InjectModel(RackEntity)
+    private readonly rackRepo: typeof RackEntity,
     private readonly i18n: I18nService,
   ) {}
 
   async createDeviceLocation(
     params: CreateDeviceLocationDto,
   ): Promise<DeviceLocationResponseDto> {
-    const existingLocation = await this.deviceLocationRepo.findOne({
-      where: { deviceLocationName: params.deviceLocationName },
-    });
-
-    if (existingLocation) {
+    // Validate rack exists
+    const rack = await this.rackRepo.findByPk(params.rackId);
+    if (!rack) {
       throw new BadRequestException(
-        this.i18n.t('device.location.already_exists'),
+        this.i18n.t('device.location.invalid_rack'),
       );
+    }
+
+    // Check if position already exists on this rack
+    if (params.xPosition && params.yPosition) {
+      const existingLocation = await this.deviceLocationRepo.findOne({
+        where: {
+          rackId: params.rackId,
+          xPosition: params.xPosition,
+          yPosition: params.yPosition,
+        },
+      });
+
+      if (existingLocation) {
+        throw new BadRequestException(
+          this.i18n.t('device.location.position_already_exists'),
+        );
+      }
     }
 
     const newLocation = await this.deviceLocationRepo.create(
@@ -51,17 +68,33 @@ export class DeviceLocationService {
       throw new NotFoundException(this.i18n.t('device.location.not_found'));
     }
 
-    // Check for duplicate name if updating deviceLocationName
-    if (
-      params.deviceLocationName &&
-      params.deviceLocationName !== location.deviceLocationName
-    ) {
-      const existingLocation = await this.deviceLocationRepo.findOne({
-        where: { deviceLocationName: params.deviceLocationName },
-      });
-      if (existingLocation) {
+    // Validate rack if changing
+    if (params.rackId && params.rackId !== location.rackId) {
+      const rack = await this.rackRepo.findByPk(params.rackId);
+      if (!rack) {
         throw new BadRequestException(
-          this.i18n.t('device.location.already_exists'),
+          this.i18n.t('device.location.invalid_rack'),
+        );
+      }
+    }
+
+    // Check for duplicate position if updating
+    const targetRackId = params.rackId || location.rackId;
+    const targetXPosition = params.xPosition || location.xPosition;
+    const targetYPosition = params.yPosition || location.yPosition;
+
+    if (targetXPosition && targetYPosition) {
+      const existingLocation = await this.deviceLocationRepo.findOne({
+        where: {
+          rackId: targetRackId,
+          xPosition: targetXPosition,
+          yPosition: targetYPosition,
+        },
+      });
+
+      if (existingLocation && existingLocation.id !== id) {
+        throw new BadRequestException(
+          this.i18n.t('device.location.position_already_exists'),
         );
       }
     }
@@ -106,6 +139,13 @@ export class DeviceLocationService {
   async getDeviceLocationById(id: string): Promise<DeviceLocationResponseDto> {
     const location = await this.deviceLocationRepo.findOne({
       where: { id },
+      include: [
+        {
+          model: RackEntity,
+          as: 'rack',
+          attributes: ['id', 'code'],
+        },
+      ],
       attributes: {
         exclude: ['deletedAt'],
       },

@@ -25,6 +25,7 @@ import {
   DeviceEntity,
   EquipmentLoanSlipDetailEntity,
   EquipmentLoanSlipEntity,
+  PartnerEntity,
   UserEntity,
   WarrantyEntity,
 } from '@entities';
@@ -39,6 +40,8 @@ export class LoanSlipService {
     private readonly loanSlipDetailRepo: typeof EquipmentLoanSlipDetailEntity,
     @InjectModel(DeviceEntity)
     private readonly deviceRepo: typeof DeviceEntity,
+    @InjectModel(PartnerEntity)
+    private readonly partnerRepo: typeof PartnerEntity,
     @InjectModel(UserEntity)
     private readonly userRepo: typeof UserEntity,
     @InjectModel(WarrantyEntity)
@@ -62,7 +65,7 @@ export class LoanSlipService {
 
     try {
       // Validate borrower exists
-      const borrower = await this.userRepo.findByPk(dto.borrowerId, {
+      const borrower = await this.partnerRepo.findByPk(dto.borrowerId, {
         transaction,
       });
       if (!borrower) {
@@ -72,7 +75,7 @@ export class LoanSlipService {
       }
 
       // Validate loaner exists
-      const loaner = await this.userRepo.findByPk(dto.loanerId, {
+      const loaner = await this.partnerRepo.findByPk(dto.loanerId, {
         transaction,
       });
       if (!loaner) {
@@ -144,14 +147,26 @@ export class LoanSlipService {
       const createdLoanSlip = await this.loanSlipRepo.findByPk(loanSlip.id, {
         include: [
           {
-            model: UserEntity,
+            model: PartnerEntity,
             as: 'borrower',
-            attributes: ['id', 'name', 'userName'],
+            include: [
+              {
+                model: UserEntity,
+                as: 'user',
+                attributes: ['id', 'name', 'email'],
+              },
+            ],
           },
           {
-            model: UserEntity,
+            model: PartnerEntity,
             as: 'loaner',
-            attributes: ['id', 'name', 'userName'],
+            include: [
+              {
+                model: UserEntity,
+                as: 'user',
+                attributes: ['id', 'name', 'email'],
+              },
+            ],
           },
           {
             model: EquipmentLoanSlipDetailEntity,
@@ -173,7 +188,7 @@ export class LoanSlipService {
         );
       }
 
-      return createdLoanSlip.toJSON();
+      return createdLoanSlip.toJSON() as LoanSlipResponseDto;
     } catch (error) {
       await transaction.rollback();
       throw error;
@@ -309,14 +324,26 @@ export class LoanSlipService {
       const updatedLoanSlip = await this.loanSlipRepo.findByPk(loanSlipId, {
         include: [
           {
-            model: UserEntity,
+            model: PartnerEntity,
             as: 'borrower',
-            attributes: ['id', 'name', 'userName'],
+            include: [
+              {
+                model: UserEntity,
+                as: 'user',
+                attributes: ['id', 'name', 'email'],
+              },
+            ],
           },
           {
-            model: UserEntity,
+            model: PartnerEntity,
             as: 'loaner',
-            attributes: ['id', 'name', 'userName'],
+            include: [
+              {
+                model: UserEntity,
+                as: 'user',
+                attributes: ['id', 'name', 'email'],
+              },
+            ],
           },
           {
             model: EquipmentLoanSlipDetailEntity,
@@ -338,7 +365,7 @@ export class LoanSlipService {
         );
       }
 
-      return updatedLoanSlip.toJSON();
+      return updatedLoanSlip.toJSON() as LoanSlipResponseDto;
     } catch (error) {
       await transaction.rollback();
       throw error;
@@ -367,14 +394,26 @@ export class LoanSlipService {
     // Add include for borrower, loaner, details
     options.include = [
       {
-        model: UserEntity,
+        model: PartnerEntity,
         as: 'borrower',
-        attributes: ['id', 'name', 'userName'],
+        include: [
+          {
+            model: UserEntity,
+            as: 'user',
+            attributes: ['id', 'name', 'email'],
+          },
+        ],
       },
       {
-        model: UserEntity,
+        model: PartnerEntity,
         as: 'loaner',
-        attributes: ['id', 'name', 'userName'],
+        include: [
+          {
+            model: UserEntity,
+            as: 'user',
+            attributes: ['id', 'name', 'email'],
+          },
+        ],
       },
       {
         model: EquipmentLoanSlipDetailEntity,
@@ -392,7 +431,7 @@ export class LoanSlipService {
     const { rows, count } = await this.loanSlipRepo.findAndCountAll(options);
 
     return {
-      data: rows.map((row) => row.toJSON()),
+      data: rows.map((row) => row.toJSON() as LoanSlipResponseDto),
       total: count,
       page,
       pageSize,
@@ -406,14 +445,26 @@ export class LoanSlipService {
     const loanSlip = await this.loanSlipRepo.findByPk(id, {
       include: [
         {
-          model: UserEntity,
+          model: PartnerEntity,
           as: 'borrower',
-          attributes: ['id', 'name', 'userName'],
+          include: [
+            {
+              model: UserEntity,
+              as: 'user',
+              attributes: ['id', 'name', 'email'],
+            },
+          ],
         },
         {
-          model: UserEntity,
+          model: PartnerEntity,
           as: 'loaner',
-          attributes: ['id', 'name', 'userName'],
+          include: [
+            {
+              model: UserEntity,
+              as: 'user',
+              attributes: ['id', 'name', 'email'],
+            },
+          ],
         },
         {
           model: EquipmentLoanSlipDetailEntity,
@@ -435,7 +486,7 @@ export class LoanSlipService {
       );
     }
 
-    return loanSlip.toJSON();
+    return loanSlip.toJSON() as LoanSlipResponseDto;
   }
 
   /**

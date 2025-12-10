@@ -14,7 +14,7 @@ import {
   PartnerResponseDto,
   UpdatePartnerDto,
 } from '@dto';
-import { PartnerEntity } from '@entities';
+import { PartnerEntity, UserEntity } from '@entities';
 import { CacheService } from '@services';
 
 @Injectable()
@@ -22,14 +22,22 @@ export class PartnerService {
   constructor(
     @InjectModel(PartnerEntity)
     private readonly partnerRepo: typeof PartnerEntity,
+    @InjectModel(UserEntity)
+    private readonly userRepo: typeof UserEntity,
     private readonly i18n: I18nService,
     private readonly cacheService: CacheService,
   ) {}
 
   async create(dto: CreatePartnerDto): Promise<PartnerResponseDto> {
-    // Check if partner with same name already exists
+    // Validate user exists
+    const user = await this.userRepo.findByPk(dto.userId);
+    if (!user) {
+      throw new BadRequestException(this.i18n.t('partner.create.invalid_user'));
+    }
+
+    // Check if partner already exists for this user
     const existingPartner = await this.partnerRepo.findOne({
-      where: { partnerName: dto.partnerName },
+      where: { userId: dto.userId },
     });
 
     if (existingPartner) {
@@ -42,7 +50,7 @@ export class PartnerService {
 
     await this.cacheService.delByPattern('*partners*');
 
-    return newPartner.toJSON();
+    return newPartner.toJSON() as PartnerResponseDto;
   }
 
   async update(id: string, dto: UpdatePartnerDto): Promise<PartnerResponseDto> {
@@ -52,10 +60,18 @@ export class PartnerService {
       throw new NotFoundException(this.i18n.t('partner.update.not_found'));
     }
 
-    // Check if updating to existing partner name
-    if (dto.partnerName) {
+    // Validate user if changing
+    if (dto.userId && dto.userId !== partner.userId) {
+      const user = await this.userRepo.findByPk(dto.userId);
+      if (!user) {
+        throw new BadRequestException(
+          this.i18n.t('partner.update.invalid_user'),
+        );
+      }
+
+      // Check if another partner already exists for this user
       const existingPartner = await this.partnerRepo.findOne({
-        where: { partnerName: dto.partnerName },
+        where: { userId: dto.userId },
       });
 
       if (existingPartner && existingPartner.id !== id) {
@@ -69,7 +85,7 @@ export class PartnerService {
 
     await this.cacheService.delByPattern('*partners*');
 
-    return partner.toJSON();
+    return partner.toJSON() as PartnerResponseDto;
   }
 
   async getList(
@@ -91,7 +107,7 @@ export class PartnerService {
     const { rows, count } = await this.partnerRepo.findAndCountAll(options);
 
     return {
-      data: rows.map((row) => row.toJSON()),
+      data: rows.map((row) => row.toJSON() as PartnerResponseDto),
       total: count,
       page,
       pageSize,
@@ -99,13 +115,21 @@ export class PartnerService {
   }
 
   async getById(id: string): Promise<PartnerResponseDto> {
-    const partner = await this.partnerRepo.findByPk(id);
+    const partner = await this.partnerRepo.findByPk(id, {
+      include: [
+        {
+          model: UserEntity,
+          as: 'user',
+          attributes: ['id', 'username', 'email'],
+        },
+      ],
+    });
 
     if (!partner) {
       throw new NotFoundException(this.i18n.t('partner.get.not_found'));
     }
 
-    return partner.toJSON();
+    return partner.toJSON() as PartnerResponseDto;
   }
 
   async delete(id: string): Promise<void> {

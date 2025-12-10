@@ -8,6 +8,7 @@ export * from './device.controller';
 export * from './loan-slip.controller';
 export * from './param.controller';
 export * from './partner.controller';
+export * from './rack.controller';
 export * from './role.controller';
 export * from './supplier.controller';
 export * from './upload.controller';

@@ -4,37 +4,61 @@ import {
   Column,
   DataType,
   ForeignKey,
-  HasMany,
   Table,
 } from 'sequelize-typescript';
-import { EquipmentLoanSlipEntity } from './equipment-loan-slip.entity';
-import { MaintenanceSlipEntity } from './maintenance-slip.entity';
+import { DeviceEntity } from './device.entity';
+import { PartnerEntity } from './partner.entity';
 import { UserEntity } from './user.entity';
 
 @Table({
-  tableName: 'partner',
+  tableName: 'maintenance_slip',
   underscored: true,
   timestamps: true,
   paranoid: true,
 })
-export class PartnerEntity extends BaseEntity<PartnerEntity> {
+export class MaintenanceSlipEntity extends BaseEntity<MaintenanceSlipEntity> {
+  @ForeignKey(() => DeviceEntity)
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.UUID,
     allowNull: false,
-    field: 'partner_type',
+    field: 'device_id',
   })
-  declare partnerType: number;
+  declare deviceId: string;
 
-  @ForeignKey(() => UserEntity)
+  @BelongsTo(() => DeviceEntity)
+  declare device?: DeviceEntity;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+    field: 'transfer_status',
+  })
+  declare transferStatus?: string;
+
+  @ForeignKey(() => PartnerEntity)
   @Column({
     type: DataType.UUID,
     allowNull: true,
-    field: 'user_id',
+    field: 'partner_id',
   })
-  declare userId?: string;
+  declare partnerId?: string;
 
-  @BelongsTo(() => UserEntity, 'userId')
-  declare user?: UserEntity;
+  @BelongsTo(() => PartnerEntity)
+  declare partner?: PartnerEntity;
+
+  @Column({
+    type: DataType.TEXT,
+    allowNull: true,
+    field: 'reason',
+  })
+  declare reason?: string;
+
+  @Column({
+    type: DataType.DATE,
+    allowNull: true,
+    field: 'request_date',
+  })
+  declare requestDate?: Date;
 
   @Column({
     type: DataType.INTEGER,
@@ -65,13 +89,4 @@ export class PartnerEntity extends BaseEntity<PartnerEntity> {
 
   @BelongsTo(() => UserEntity, 'modifiedById')
   declare modifiedByUser?: UserEntity;
-
-  @HasMany(() => EquipmentLoanSlipEntity, 'equipmentBorrowerId')
-  declare borrowedSlips?: EquipmentLoanSlipEntity[];
-
-  @HasMany(() => EquipmentLoanSlipEntity, 'equipmentLoanerId')
-  declare loanedSlips?: EquipmentLoanSlipEntity[];
-
-  @HasMany(() => MaintenanceSlipEntity)
-  declare maintenanceSlips?: MaintenanceSlipEntity[];
 }

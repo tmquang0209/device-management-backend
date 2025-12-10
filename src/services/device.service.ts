@@ -14,8 +14,8 @@ import {
   DeviceEntity,
   DeviceLocationEntity,
   DeviceTypeEntity,
-  SupplierEntity,
-  WarrantyEntity,
+  MaintenanceSlipEntity,
+  RackEntity,
 } from '@entities';
 import {
   BadRequestException,
@@ -33,8 +33,8 @@ export class DeviceService {
     private readonly deviceRepo: typeof DeviceEntity,
     @InjectModel(DeviceTypeEntity)
     private readonly deviceTypeRepo: typeof DeviceTypeEntity,
-    @InjectModel(DeviceLocationEntity)
-    private readonly deviceLocationRepo: typeof DeviceLocationEntity,
+    @InjectModel(RackEntity)
+    private readonly rackRepo: typeof RackEntity,
     private readonly i18n: I18nService,
     private readonly cacheService: CacheService,
     private readonly auditContext: AuditContextService,
@@ -49,14 +49,14 @@ export class DeviceService {
       );
     }
 
-    // Validate deviceLocation exists
-    const deviceLocation = await this.deviceLocationRepo.findByPk(
-      params.deviceLocationId,
-    );
-    if (!deviceLocation) {
-      throw new BadRequestException(
-        this.i18n.t('device.create.invalid_device_location'),
-      );
+    // Validate rack exists if provided
+    if (params.rackId) {
+      const rack = await this.rackRepo.findByPk(params.rackId);
+      if (!rack) {
+        throw new BadRequestException(
+          this.i18n.t('device.create.invalid_rack'),
+        );
+      }
     }
 
     // Check for duplicate serial if provided
@@ -90,11 +90,12 @@ export class DeviceService {
       include: [
         {
           model: DeviceTypeEntity,
-          attributes: ['id', 'typeName'],
+          attributes: ['id', 'deviceTypeName'],
         },
         {
-          model: DeviceLocationEntity,
-          attributes: ['id', 'locationName'],
+          model: RackEntity,
+          as: 'rack',
+          attributes: ['id', 'code'],
         },
       ],
     });
@@ -117,17 +118,12 @@ export class DeviceService {
       }
     }
 
-    // Validate deviceLocation if provided
-    if (
-      params.deviceLocationId &&
-      params.deviceLocationId !== device.deviceLocationId
-    ) {
-      const deviceLocation = await this.deviceLocationRepo.findByPk(
-        params.deviceLocationId,
-      );
-      if (!deviceLocation) {
+    // Validate rack if provided
+    if (params.rackId && params.rackId !== device.rackId) {
+      const rack = await this.rackRepo.findByPk(params.rackId);
+      if (!rack) {
         throw new BadRequestException(
-          this.i18n.t('device.update.invalid_device_location'),
+          this.i18n.t('device.update.invalid_rack'),
         );
       }
     }
@@ -175,17 +171,21 @@ export class DeviceService {
         include: [
           {
             model: DeviceTypeEntity,
-            attributes: ['id', 'typeName'],
+            attributes: ['id', 'deviceTypeName'],
             required: false,
           },
           {
-            model: DeviceLocationEntity,
-            attributes: ['id', 'locationName'],
-            required: false,
-          },
-          {
-            model: SupplierEntity,
-            attributes: ['id', 'supplierName'],
+            model: RackEntity,
+            as: 'rack',
+            attributes: ['id', 'code', 'status'],
+            include: [
+              {
+                model: DeviceLocationEntity,
+                as: 'deviceLocations',
+                attributes: ['id', 'xPosition', 'yPosition', 'status'],
+                required: false,
+              },
+            ],
             required: false,
           },
         ],
@@ -197,8 +197,10 @@ export class DeviceService {
 
     const { rows, count } = await this.deviceRepo.findAndCountAll(options);
 
+    const data = rows.map((row) => row.toJSON());
+
     return {
-      data: rows.map((row) => row.toJSON()),
+      data,
       total: count,
       page: Math.floor(options.offset! / options.limit!) + 1,
       pageSize: options.limit!,
@@ -214,19 +216,32 @@ export class DeviceService {
       include: [
         {
           model: DeviceTypeEntity,
-          attributes: ['id', 'typeName', 'description'],
+          attributes: ['id', 'deviceTypeName', 'description'],
         },
         {
-          model: DeviceLocationEntity,
-          attributes: ['id', 'locationName', 'address'],
+          model: RackEntity,
+          as: 'rack',
+          attributes: ['id', 'code', 'status'],
+          include: [
+            {
+              model: DeviceLocationEntity,
+              as: 'deviceLocations',
+              attributes: ['id', 'xPosition', 'yPosition', 'status'],
+              required: false,
+            },
+          ],
+          required: false,
         },
         {
-          model: SupplierEntity,
-          attributes: ['id', 'supplierName', 'contactInfo'],
-        },
-        {
-          model: WarrantyEntity,
-          attributes: ['id', 'warrantyName', 'startDate', 'endDate'],
+          model: MaintenanceSlipEntity,
+          as: 'maintenanceSlips',
+          attributes: [
+            'id',
+            'transferStatus',
+            'reason',
+            'requestDate',
+            'status',
+          ],
           required: false,
         },
       ],
@@ -306,8 +321,10 @@ export class DeviceService {
 
     const { rows, count } = await this.deviceRepo.findAndCountAll(options);
 
+    const data = rows.map((row) => row.toJSON());
+
     return {
-      data: rows.map((row) => row.toJSON()),
+      data,
       total: count,
       page: Math.floor(options.offset! / options.limit!) + 1,
       pageSize: options.limit!,
@@ -335,7 +352,7 @@ export class DeviceService {
         include: [
           {
             model: DeviceTypeEntity,
-            attributes: ['id', 'typeName'],
+            attributes: ['id', 'deviceTypeName'],
           },
         ],
         exclude: ['deletedAt'],
@@ -346,8 +363,10 @@ export class DeviceService {
 
     const { rows, count } = await this.deviceRepo.findAndCountAll(options);
 
+    const data = rows.map((row) => row.toJSON());
+
     return {
-      data: rows.map((row) => row.toJSON()),
+      data,
       total: count,
       page: Math.floor(options.offset! / options.limit!) + 1,
       pageSize: options.limit!,

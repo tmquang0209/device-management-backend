@@ -1,4 +1,7 @@
-import { EEquipmentLoanSlipStatus } from '@common/enums';
+import {
+  EEquipmentLoanSlipDetailStatus,
+  EEquipmentLoanSlipStatus,
+} from '@common/enums';
 import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
@@ -101,7 +104,7 @@ export class ReturnDeviceItemDto {
       'common.validation.field_required',
     ),
   })
-  readonly status: number; // 2: RETURNED, 3: BROKEN
+  readonly status: EEquipmentLoanSlipDetailStatus; // 2: RETURNED, 3: BROKEN
 
   @IsOptional()
   @IsString({
@@ -179,13 +182,19 @@ export class LoanSlipResponseDto {
   details?: LoanSlipDetailResponseDto[];
   borrower?: {
     id: string;
-    name: string;
-    userName: string;
+    user?: {
+      id: string;
+      fullName: string;
+      email: string;
+    };
   };
   loaner?: {
     id: string;
-    name: string;
-    userName: string;
+    user?: {
+      id: string;
+      fullName: string;
+      email: string;
+    };
   };
   createdAt: Date;
   updatedAt: Date;

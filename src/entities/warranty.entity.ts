@@ -1,3 +1,8 @@
+/**
+ * @deprecated This entity is replaced by MaintenanceSlipEntity.
+ * Please use MaintenanceSlipEntity for all maintenance and warranty tracking.
+ * This file will be removed in a future version.
+ */
 import { BaseEntity } from '@common/database';
 import { EWarrantyStatus } from '@common/enums';
 import {
