@@ -4,7 +4,6 @@ import { i18nValidationMessage } from 'nestjs-i18n';
 import { I18nTranslations } from 'src/generated/i18n.generated';
 
 // ============== Param DTOs ==============
-
 export class CreateParamDto {
   @IsNotEmpty({
     message: i18nValidationMessage<I18nTranslations>(
@@ -46,7 +45,15 @@ export class CreateParamDto {
   readonly value: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsNumber(
+    {},
+    {
+      message: i18nValidationMessage<I18nTranslations>(
+        'common.validation.must_be_number',
+        { property: 'status' },
+      ),
+    },
+  )
   readonly status?: number;
 }
 

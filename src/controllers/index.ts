@@ -6,6 +6,7 @@ export * from './device-location.controller';
 export * from './device-type.controller';
 export * from './device.controller';
 export * from './loan-slip.controller';
+export * from './maintenance-slip.controller';
 export * from './param.controller';
 export * from './partner.controller';
 export * from './rack.controller';

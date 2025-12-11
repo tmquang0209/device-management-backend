@@ -4,7 +4,16 @@ import {
   UpdateWarrantyDto,
   WarrantyListRequestDto,
 } from '@dto';
-import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { WarrantyService } from '@services';
 import { i18nValidationMessage } from 'nestjs-i18n';
 
@@ -51,5 +60,19 @@ export class WarrantyController {
   @ResponseMessage(i18nValidationMessage('warranty.reject.success'))
   rejectWarranty(@Param('id') id: string) {
     return this.warrantyService.rejectWarranty(id);
+  }
+
+  @EndpointKey('warranties.get_by_device')
+  @Get('device/:deviceId')
+  @ResponseMessage(i18nValidationMessage('warranty.list.success'))
+  getWarrantiesByDevice(@Param('deviceId') deviceId: string) {
+    return this.warrantyService.findByDevice(deviceId);
+  }
+
+  @EndpointKey('warranties.cancel')
+  @Delete(':id/cancel')
+  @ResponseMessage(i18nValidationMessage('warranty.cancel.success'))
+  cancelWarranty(@Param('id') id: string) {
+    return this.warrantyService.cancelWarranty(id);
   }
 }

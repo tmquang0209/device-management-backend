@@ -338,4 +338,84 @@ export class WarrantyService {
 
     return updatedWarranty.toJSON();
   }
+
+  /**
+   * Find warranties by device ID
+   */
+  async findByDevice(deviceId: string): Promise<WarrantyResponseDto[]> {
+    const warranties = await this.warrantyRepo.findAll({
+      where: { deviceId },
+      include: [
+        {
+          model: DeviceEntity,
+          as: 'device',
+          attributes: ['id', 'deviceName', 'serial'],
+        },
+      ],
+      order: [['createdAt', 'DESC']],
+    });
+
+    return warranties.map((warranty) => warranty.toJSON());
+  }
+
+  /**
+   * Cancel warranty request (soft delete)
+   * - Can only cancel PENDING or PROCESSING warranties
+   * - Revert device status if needed
+   */
+  async cancelWarranty(id: string): Promise<void> {
+    const transaction = await this.sequelize.transaction();
+
+    try {
+      const warranty = await this.warrantyRepo.findByPk(id, {
+        include: [
+          {
+            model: DeviceEntity,
+            as: 'device',
+            attributes: ['id', 'status'],
+          },
+        ],
+        transaction,
+      });
+
+      if (!warranty) {
+        throw new NotFoundException(
+          this.i18n.t('warranty.cancel.warranty_not_found'),
+        );
+      }
+
+      // Only allow cancelling PENDING or PROCESSING warranties
+      if (
+        warranty.status !== EWarrantyStatus.PENDING &&
+        warranty.status !== EWarrantyStatus.PROCESSING
+      ) {
+        throw new BadRequestException(
+          this.i18n.t('warranty.cancel.invalid_status'),
+        );
+      }
+
+      // Soft delete warranty
+      await warranty.destroy({ transaction });
+
+      // Update device status back to AVAILABLE if it was UNDER_WARRANTY
+      if (warranty.device?.status === EDeviceStatus.UNDER_WARRANTY) {
+        await this.deviceRepo.update(
+          { status: EDeviceStatus.AVAILABLE },
+          {
+            where: { id: warranty.deviceId },
+            transaction,
+          },
+        );
+      }
+
+      await transaction.commit();
+
+      // Clear cache
+      await this.cacheService.delByPattern('*warranty*');
+      await this.cacheService.delByPattern('*devices*');
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
+  }
 }
