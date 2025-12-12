@@ -120,7 +120,7 @@ export class PartnerService {
         {
           model: UserEntity,
           as: 'user',
-          attributes: ['id', 'username', 'email'],
+          attributes: ['id', 'userName', 'name', 'email'],
         },
       ],
     });
