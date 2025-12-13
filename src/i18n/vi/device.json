@@ -97,6 +97,27 @@
       "success": "Phiếu mượn được lấy thành công"
     }
   },
+  "return_slip": {
+    "create": {
+      "success": "Phiếu trả thiết bị được tạo thành công"
+    },
+    "update": {
+      "success": "Phiếu trả thiết bị được cập nhật thành công"
+    },
+    "cancel": {
+      "success": "Phiếu trả thiết bị được hủy thành công"
+    },
+    "list": {
+      "success": "Danh sách phiếu trả được lấy thành công"
+    },
+    "loan_slip_not_found": "Phiếu mượn không được tìm thấy",
+    "loan_slip_not_available": "Phiếu mượn không khả dụng để trả",
+    "returner_not_found": "Người trả thiết bị không được tìm thấy",
+    "device_not_available_for_return": "Thiết bị không khả dụng để trả",
+    "return_slip_not_found": "Phiếu trả không được tìm thấy",
+    "cannot_update_cancelled": "Không thể cập nhật phiếu trả đã hủy",
+    "already_cancelled": "Phiếu trả đã được hủy"
+  },
   "warranty": {
     "create": {
       "success": "Yêu cầu bảo hành được tạo thành công",

@@ -19,11 +19,13 @@ export enum EDeviceStatus {
  * 1: BORROWING - Loan slip is active, device is borrowed
  * 2: CLOSED - Loan slip is closed, all devices returned
  * 3: CANCELLED - Loan slip is cancelled
+ * 4: PARTIAL_RETURNED - Some devices have been returned, but not all
  */
 export enum EEquipmentLoanSlipStatus {
   BORROWING = 1,
   CLOSED = 2,
   CANCELLED = 3,
+  PARTIAL_RETURNED = 4,
 }
 
 /**
@@ -36,6 +38,16 @@ export enum EEquipmentLoanSlipDetailStatus {
   BORROWED = 1,
   RETURNED = 2,
   BROKEN = 3,
+}
+
+/**
+ * Equipment Return Slip Status Enum
+ * 1: RETURNED - Return slip is completed, devices returned to warehouse
+ * 2: CANCELLED - Return slip is cancelled
+ */
+export enum EEquipmentReturnSlipStatus {
+  RETURNED = 1,
+  CANCELLED = 2,
 }
 
 /**

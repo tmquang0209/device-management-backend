@@ -11,6 +11,7 @@ export * from './param.dto';
 export * from './partner.dto';
 export * from './payment.dto';
 export * from './rack.dto';
+export * from './return-slip.dto';
 export * from './role.dto';
 export * from './supplier.dto';
 export * from './user.dto';

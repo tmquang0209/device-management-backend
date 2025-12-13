@@ -1,5 +1,4 @@
 import { BaseEntity } from '@common/database';
-import { EEquipmentLoanSlipDetailStatus } from '@common/enums';
 import {
   BelongsTo,
   Column,
@@ -8,26 +7,26 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { DeviceEntity } from './device.entity';
-import { EquipmentLoanSlipEntity } from './equipment-loan-slip.entity';
+import { EquipmentReturnSlipEntity } from './equipment-return-slip.entity';
 import { UserEntity } from './user.entity';
 
 @Table({
-  tableName: 'equipment_loan_slip_detail',
+  tableName: 'equipment_return_slip_detail',
   underscored: true,
   timestamps: true,
   paranoid: true,
 })
-export class EquipmentLoanSlipDetailEntity extends BaseEntity<EquipmentLoanSlipDetailEntity> {
-  @ForeignKey(() => EquipmentLoanSlipEntity)
+export class EquipmentReturnSlipDetailEntity extends BaseEntity<EquipmentReturnSlipDetailEntity> {
+  @ForeignKey(() => EquipmentReturnSlipEntity)
   @Column({
     type: DataType.UUID,
     allowNull: false,
-    field: 'equipment_loan_slip_id',
+    field: 'equipment_return_slip_id',
   })
-  declare equipmentLoanSlipId: string;
+  declare equipmentReturnSlipId: string;
 
-  @BelongsTo(() => EquipmentLoanSlipEntity)
-  declare loanSlip?: EquipmentLoanSlipEntity;
+  @BelongsTo(() => EquipmentReturnSlipEntity)
+  declare returnSlip?: EquipmentReturnSlipEntity;
 
   @ForeignKey(() => DeviceEntity)
   @Column({
@@ -39,20 +38,6 @@ export class EquipmentLoanSlipDetailEntity extends BaseEntity<EquipmentLoanSlipD
 
   @BelongsTo(() => DeviceEntity)
   declare device?: DeviceEntity;
-
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: false,
-    field: 'status',
-  })
-  declare status: EEquipmentLoanSlipDetailStatus;
-
-  @Column({
-    type: DataType.DATE,
-    allowNull: true,
-    field: 'return_date',
-  })
-  declare returnDate: Date | null;
 
   @Column({
     type: DataType.TEXT,

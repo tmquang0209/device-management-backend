@@ -5,6 +5,8 @@ export * from './device-type.entity';
 export * from './device.entity';
 export * from './equipment-loan-slip-detail.entity';
 export * from './equipment-loan-slip.entity';
+export * from './equipment-return-slip-detail.entity';
+export * from './equipment-return-slip.entity';
 export * from './maintenance-slip.entity';
 export * from './param.entity';
 export * from './partner.entity';

@@ -15,6 +15,7 @@ export * from './minio.service';
 export * from './param.service';
 export * from './partner.service';
 export * from './rack.service';
+export * from './return-slip.service';
 export * from './role.service';
 export * from './routes-explorer.service';
 export * from './s3.service';

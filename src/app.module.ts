@@ -20,6 +20,7 @@ import {
   ParamController,
   PartnerController,
   RackController,
+  ReturnSlipController,
   RoleController,
   UploadController,
   UserController,
@@ -47,6 +48,7 @@ import {
   ParamService,
   PartnerService,
   RackService,
+  ReturnSlipService,
   RoleService,
   RoutesExplorer,
   SeedService,
@@ -78,6 +80,7 @@ import { I18nService } from 'nestjs-i18n';
     // SupplierController,
     WarrantyController,
     RackController,
+    ReturnSlipController,
   ], // need to add controllers here
   providers: [
     AuthService,
@@ -106,6 +109,7 @@ import { I18nService } from 'nestjs-i18n';
     ParamService,
     PartnerService,
     RackService,
+    ReturnSlipService,
     // SupplierService,
     {
       provide: APP_INTERCEPTOR,
