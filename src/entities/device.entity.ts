@@ -11,7 +11,7 @@ import {
 import { DeviceLocationEntity } from './device-location.entity';
 import { DeviceTypeEntity } from './device-type.entity';
 import { EquipmentLoanSlipDetailEntity } from './equipment-loan-slip-detail.entity';
-import { MaintenanceSlipEntity } from './maintenance-slip.entity';
+import { MaintenanceSlipDetailEntity } from './maintenance-slip-detail.entity';
 import { UserEntity } from './user.entity';
 
 @Table({
@@ -122,8 +122,8 @@ export class DeviceEntity extends BaseEntity<DeviceEntity> {
   @BelongsTo(() => UserEntity, 'updatedById')
   declare updatedByUser?: UserEntity;
 
-  @HasMany(() => MaintenanceSlipEntity)
-  declare maintenanceSlips?: MaintenanceSlipEntity[];
+  @HasMany(() => MaintenanceSlipDetailEntity)
+  declare maintenanceSlips?: MaintenanceSlipDetailEntity[];
 
   @HasMany(() => EquipmentLoanSlipDetailEntity)
   declare loanSlipDetails?: EquipmentLoanSlipDetailEntity[];

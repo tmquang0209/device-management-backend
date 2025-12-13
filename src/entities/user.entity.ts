@@ -9,7 +9,6 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { DeviceEntity } from './device.entity';
-import { EquipmentLoanSlipEntity } from './equipment-loan-slip.entity';
 
 @Table({
   tableName: 'user',
@@ -89,10 +88,4 @@ export class UserEntity extends BaseEntity<UserEntity> {
   // Relations
   @HasMany(() => DeviceEntity, 'createdById')
   declare devicesCreated?: DeviceEntity[];
-
-  @HasMany(() => EquipmentLoanSlipEntity, 'equipmentBorrowerId')
-  declare borrowedSlips?: EquipmentLoanSlipEntity[];
-
-  @HasMany(() => EquipmentLoanSlipEntity, 'equipmentLoanerId')
-  declare loanedSlips?: EquipmentLoanSlipEntity[];
 }

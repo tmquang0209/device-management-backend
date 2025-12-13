@@ -83,3 +83,29 @@ export enum ECommonStatus {
   ACTIVE = 1,
   INACTIVE = 2,
 }
+
+/**
+ * Maintenance Slip Status Enum
+ * 1: SENDING - Maintenance slip is active, device is sent for maintenance
+ * 2: CLOSED - Maintenance slip is closed, all devices returned from maintenance
+ * 3: CANCELLED - Maintenance slip is cancelled
+ * 4: PARTIAL_RETURNED - Some devices have been returned from maintenance, but not all
+ */
+export enum EMaintenanceSlipStatus {
+  SENDING = 1,
+  CLOSED = 2,
+  CANCELLED = 3,
+  PARTIAL_RETURNED = 4,
+}
+
+/**
+ * Maintenance Slip Detail Status Enum
+ * 1: SENT - Device is sent for maintenance, not returned yet
+ * 2: RETURNED - Device is returned from maintenance in normal condition
+ * 3: BROKEN - Device cannot be repaired, marked as broken
+ */
+export enum EMaintenanceSlipDetailStatus {
+  SENT = 1,
+  RETURNED = 2,
+  BROKEN = 3,
+}

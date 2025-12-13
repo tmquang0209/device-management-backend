@@ -1,11 +1,17 @@
-import { Transform, TransformFnParams } from 'class-transformer';
 import {
+  EMaintenanceSlipDetailStatus,
+  EMaintenanceSlipStatus,
+} from '@common/enums';
+import { Transform, TransformFnParams, Type } from 'class-transformer';
+import {
+  IsArray,
   IsDate,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
   IsUUID,
+  ValidateNested,
 } from 'class-validator';
 import { i18nValidationMessage } from 'nestjs-i18n';
 import { I18nTranslations } from 'src/generated/i18n.generated';
@@ -14,6 +20,58 @@ import { PaginationRequestDto, PaginationResponseDto } from './pagination.dto';
 // ============== Maintenance Slip DTOs ==============
 
 export class CreateMaintenanceSlipDto {
+  @IsOptional()
+  @IsUUID('4', {
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.must_be_uuid',
+      { field: 'partnerId' },
+    ),
+  })
+  readonly partnerId?: string;
+
+  @IsOptional()
+  @IsString({
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.must_be_string',
+      { field: 'reason' },
+    ),
+  })
+  readonly reason?: string;
+
+  @IsOptional()
+  @Transform(({ value }: TransformFnParams) =>
+    value ? new Date(value) : undefined,
+  )
+  @IsDate({
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.must_be_date',
+      { field: 'requestDate' },
+    ),
+  })
+  readonly requestDate?: Date;
+
+  @IsNotEmpty({
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.field_required',
+    ),
+  })
+  @IsArray({
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.must_be_array',
+      { property: 'deviceIds' },
+    ),
+  })
+  @IsUUID('4', {
+    each: true,
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.must_be_uuid',
+      { property: 'deviceIds' },
+    ),
+  })
+  readonly deviceIds: string[];
+}
+
+export class ReturnDeviceItemMaintenanceDto {
   @IsNotEmpty({
     message: i18nValidationMessage<I18nTranslations>(
       'common.validation.field_required',
@@ -22,53 +80,43 @@ export class CreateMaintenanceSlipDto {
   @IsUUID('4', {
     message: i18nValidationMessage<I18nTranslations>(
       'common.validation.must_be_uuid',
-      { field: 'deviceId' },
+      { property: 'deviceId' },
     ),
   })
   readonly deviceId: string;
 
-  @IsOptional()
-  @IsString({
+  @IsNotEmpty({
     message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_string',
-      { field: 'transferStatus' },
+      'common.validation.field_required',
     ),
   })
-  readonly transferStatus?: string;
-
-  @IsOptional()
-  @IsUUID('4', {
-    message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_uuid',
-      { field: 'partnerId' },
-    ),
-  })
-  readonly partnerId?: string;
+  readonly status: EMaintenanceSlipDetailStatus; // 2: RETURNED, 3: BROKEN
 
   @IsOptional()
   @IsString({
     message: i18nValidationMessage<I18nTranslations>(
       'common.validation.must_be_string',
-      { field: 'reason' },
+      { property: 'note' },
     ),
   })
-  readonly reason?: string;
+  readonly note?: string;
+}
 
-  @IsOptional()
-  @Transform(({ value }: TransformFnParams) =>
-    value ? new Date(value) : undefined,
-  )
-  @IsDate({
+export class ReturnMaintenanceSlipDto {
+  @IsNotEmpty({
     message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_date',
-      { field: 'requestDate' },
+      'common.validation.field_required',
     ),
   })
-  readonly requestDate?: Date;
-
-  @IsOptional()
-  @IsNumber()
-  readonly status?: number;
+  @IsArray({
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.must_be_array',
+      { property: 'items' },
+    ),
+  })
+  @ValidateNested({ each: true })
+  @Type(() => ReturnDeviceItemMaintenanceDto)
+  readonly items: ReturnDeviceItemMaintenanceDto[];
 }
 
 export class UpdateMaintenanceSlipDto {
@@ -76,24 +124,6 @@ export class UpdateMaintenanceSlipDto {
   @IsUUID('4', {
     message: i18nValidationMessage<I18nTranslations>(
       'common.validation.must_be_uuid',
-      { field: 'deviceId' },
-    ),
-  })
-  readonly deviceId?: string;
-
-  @IsOptional()
-  @IsString({
-    message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_string',
-      { field: 'transferStatus' },
-    ),
-  })
-  readonly transferStatus?: string;
-
-  @IsOptional()
-  @IsUUID('4', {
-    message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_uuid',
       { field: 'partnerId' },
     ),
   })
@@ -122,19 +152,10 @@ export class UpdateMaintenanceSlipDto {
 
   @IsOptional()
   @IsNumber()
-  readonly status?: number;
+  readonly status?: EMaintenanceSlipStatus;
 }
 
 export class MaintenanceSlipListRequestDto extends PaginationRequestDto {
-  @IsOptional()
-  @IsUUID('4', {
-    message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_uuid',
-      { field: 'deviceId' },
-    ),
-  })
-  readonly deviceId?: string;
-
   @IsOptional()
   @IsUUID('4', {
     message: i18nValidationMessage<I18nTranslations>(
@@ -145,31 +166,53 @@ export class MaintenanceSlipListRequestDto extends PaginationRequestDto {
   readonly partnerId?: string;
 
   @IsOptional()
-  @IsString({
-    message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_string',
-      { field: 'transferStatus' },
-    ),
-  })
-  readonly transferStatus?: string;
-
-  @IsOptional()
   @IsNumber()
-  readonly status?: number;
+  readonly status?: EMaintenanceSlipStatus;
+}
+
+export class MaintenanceSlipDetailResponseDto {
+  id: string;
+  maintenanceSlipId: string;
+  deviceId: string;
+  status: number; // 1: SENT, 2: RETURNED, 3: BROKEN
+  returnDate?: Date;
+  note?: string;
+  device?: {
+    id: string;
+    deviceName: string;
+    serial?: string;
+    model?: string;
+    deviceType?: {
+      id: string;
+      deviceTypeName: string;
+    };
+  };
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export class MaintenanceSlipResponseDto {
   readonly id: string;
-  readonly deviceId: string;
-  readonly transferStatus?: string;
+  readonly code: string;
   readonly partnerId?: string;
   readonly reason?: string;
   readonly requestDate?: Date;
-  readonly status: number;
+  readonly status: EMaintenanceSlipStatus;
   readonly createdAt: Date;
   readonly updatedAt: Date;
   readonly createdById?: string;
   readonly modifiedById?: string;
+  readonly partner?: {
+    id: string;
+    userId?: string;
+    partnerType?: string;
+    user?: {
+      id: string;
+      name: string;
+      email: string;
+    };
+  };
+  readonly details?: MaintenanceSlipDetailResponseDto[];
 }
 
 export class MaintenanceSlipListResponseDto extends PaginationResponseDto<MaintenanceSlipResponseDto> {

@@ -1,12 +1,16 @@
 import { BaseEntity } from '@common/database';
+import { EMaintenanceSlipStatus } from '@common/enums';
+import { Op } from 'sequelize';
 import {
+  BeforeCreate,
   BelongsTo,
   Column,
   DataType,
   ForeignKey,
+  HasMany,
   Table,
 } from 'sequelize-typescript';
-import { DeviceEntity } from './device.entity';
+import { MaintenanceSlipDetailEntity } from './maintenance-slip-detail.entity';
 import { PartnerEntity } from './partner.entity';
 import { UserEntity } from './user.entity';
 
@@ -17,23 +21,12 @@ import { UserEntity } from './user.entity';
   paranoid: true,
 })
 export class MaintenanceSlipEntity extends BaseEntity<MaintenanceSlipEntity> {
-  @ForeignKey(() => DeviceEntity)
-  @Column({
-    type: DataType.UUID,
-    allowNull: false,
-    field: 'device_id',
-  })
-  declare deviceId: string;
-
-  @BelongsTo(() => DeviceEntity)
-  declare device?: DeviceEntity;
-
   @Column({
     type: DataType.STRING,
     allowNull: true,
-    field: 'transfer_status',
+    field: 'code',
   })
-  declare transferStatus?: string;
+  declare code: string;
 
   @ForeignKey(() => PartnerEntity)
   @Column({
@@ -63,10 +56,10 @@ export class MaintenanceSlipEntity extends BaseEntity<MaintenanceSlipEntity> {
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
-    defaultValue: 1,
+    defaultValue: EMaintenanceSlipStatus.SENDING,
     field: 'status',
   })
-  declare status: number;
+  declare status: EMaintenanceSlipStatus;
 
   @ForeignKey(() => UserEntity)
   @Column({
@@ -89,4 +82,33 @@ export class MaintenanceSlipEntity extends BaseEntity<MaintenanceSlipEntity> {
 
   @BelongsTo(() => UserEntity, 'updatedById')
   declare updatedByUser?: UserEntity;
+
+  @HasMany(() => MaintenanceSlipDetailEntity)
+  declare details?: MaintenanceSlipDetailEntity[];
+
+  @BeforeCreate
+  static async generateCode(instance: MaintenanceSlipEntity) {
+    if (!instance.code) {
+      const now = new Date();
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const year = String(now.getFullYear()).slice(-2);
+      const datePrefix = `${day}${month}${year}`;
+
+      // Find the count of maintenance slips created today
+      const startOfDay = new Date(now.setHours(0, 0, 0, 0));
+      const endOfDay = new Date(now.setHours(23, 59, 59, 999));
+
+      const count = await MaintenanceSlipEntity.count({
+        where: {
+          createdAt: {
+            [Op.between]: [startOfDay, endOfDay],
+          },
+        },
+      });
+
+      const sequence = String(count + 1).padStart(3, '0');
+      instance.code = `GDBT_${datePrefix}_${sequence}`;
+    }
+  }
 }

@@ -4,6 +4,7 @@ import {
   BasicInfoDto,
   CreateMaintenanceSlipDto,
   MaintenanceSlipListRequestDto,
+  ReturnMaintenanceSlipDto,
   UpdateMaintenanceSlipDto,
 } from '@dto';
 import {
@@ -49,18 +50,22 @@ export class MaintenanceSlipController {
     return this.maintenanceSlipService.getById(id);
   }
 
-  @EndpointKey('maintenance_slips.get_by_device')
-  @Get('device/:deviceId')
-  @ResponseMessage(i18nValidationMessage('maintenance_slip.list.success'))
-  getMaintenanceSlipsByDevice(@Param('deviceId') deviceId: string) {
-    return this.maintenanceSlipService.findByDevice(deviceId);
-  }
-
   @EndpointKey('maintenance_slips.get_by_partner')
   @Get('partner/:partnerId')
   @ResponseMessage(i18nValidationMessage('maintenance_slip.list.success'))
   getMaintenanceSlipsByPartner(@Param('partnerId') partnerId: string) {
     return this.maintenanceSlipService.findByPartner(partnerId);
+  }
+
+  @EndpointKey('maintenance_slips.return_devices')
+  @Put(':id/return')
+  @ResponseMessage(i18nValidationMessage('maintenance_slip.return.success'))
+  returnDevices(
+    @Param('id') id: string,
+    @Body() dto: ReturnMaintenanceSlipDto,
+    @CurrentUser() user: BasicInfoDto,
+  ) {
+    return this.maintenanceSlipService.returnDevices(id, dto, user?.id);
   }
 
   @EndpointKey('maintenance_slips.update')
@@ -72,6 +77,16 @@ export class MaintenanceSlipController {
     @CurrentUser() user: BasicInfoDto,
   ) {
     return this.maintenanceSlipService.update(id, dto, user?.id);
+  }
+
+  @EndpointKey('maintenance_slips.cancel')
+  @Delete(':id/cancel')
+  @ResponseMessage(i18nValidationMessage('maintenance_slip.cancel.success'))
+  cancelMaintenanceSlip(
+    @Param('id') id: string,
+    @CurrentUser() user: BasicInfoDto,
+  ) {
+    return this.maintenanceSlipService.cancel(id, user?.id);
   }
 
   @EndpointKey('maintenance_slips.delete')

@@ -8,6 +8,7 @@ import {
   EquipmentLoanSlipEntity,
   EquipmentReturnSlipDetailEntity,
   EquipmentReturnSlipEntity,
+  MaintenanceSlipDetailEntity,
   MaintenanceSlipEntity,
   ParamEntity,
   PermissionEntity,
@@ -45,6 +46,7 @@ import { databaseConfig } from './database.config';
       WarrantyEntity,
       RackEntity,
       MaintenanceSlipEntity,
+      MaintenanceSlipDetailEntity,
     ]),
     SequelizeModule.forRootAsync({
       useFactory: databaseConfig,
