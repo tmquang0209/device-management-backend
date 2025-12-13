@@ -1,6 +1,8 @@
 import { BaseEntity } from '@common/database';
 import { EEquipmentLoanSlipStatus } from '@common/enums';
+import { Op } from 'sequelize';
 import {
+  BeforeCreate,
   BelongsTo,
   Column,
   DataType,
@@ -19,6 +21,13 @@ import { UserEntity } from './user.entity';
   paranoid: true,
 })
 export class EquipmentLoanSlipEntity extends BaseEntity<EquipmentLoanSlipEntity> {
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+    field: 'code',
+  })
+  declare code: string;
+
   @ForeignKey(() => PartnerEntity)
   @Column({
     type: DataType.UUID,
@@ -72,4 +81,30 @@ export class EquipmentLoanSlipEntity extends BaseEntity<EquipmentLoanSlipEntity>
 
   @HasMany(() => EquipmentLoanSlipDetailEntity)
   declare details?: EquipmentLoanSlipDetailEntity[];
+
+  @BeforeCreate
+  static async generateCode(instance: EquipmentLoanSlipEntity) {
+    if (!instance.code) {
+      const now = new Date();
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const year = String(now.getFullYear()).slice(-2);
+      const datePrefix = `${day}${month}${year}`;
+
+      // Find the count of racks created today
+      const startOfDay = new Date(now.setHours(0, 0, 0, 0));
+      const endOfDay = new Date(now.setHours(23, 59, 59, 999));
+
+      const count = await EquipmentLoanSlipEntity.count({
+        where: {
+          createdAt: {
+            [Op.between]: [startOfDay, endOfDay],
+          },
+        },
+      });
+
+      const sequence = String(count + 1).padStart(2, '0');
+      instance.code = `GDXM_${datePrefix}_${sequence}`;
+    }
+  }
 }

@@ -100,6 +100,13 @@ export class PartnerService {
         sortOrder: orderBy,
         filters,
         subQuery: false,
+        include: [
+          {
+            model: UserEntity,
+            as: 'user',
+            attributes: ['id', 'userName', 'name', 'email'],
+          },
+        ],
       },
       PartnerEntity,
     );
