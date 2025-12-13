@@ -63,6 +63,10 @@ export class PartnerListRequestDto extends PaginationRequestDto {
   @IsOptional()
   @IsNumber()
   readonly status?: number;
+
+  @IsOptional()
+  @IsString()
+  readonly 'user.name'?: string;
 }
 
 export class PartnerResponseDto {

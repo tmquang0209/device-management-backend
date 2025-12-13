@@ -92,19 +92,35 @@ export class PartnerService {
     params: PartnerListRequestDto,
   ): Promise<PartnerListResponseDto> {
     const { page, pageSize, sortBy, orderBy, ...filters } = params;
+
+    // Extract nested user filters
+    const userFilters: Record<string, any> = {};
+    const partnerFilters: Record<string, any> = {};
+
+    for (const key of Object.keys(filters)) {
+      if (key.startsWith('user.')) {
+        const userKey = key.replace('user.', '');
+        userFilters[userKey] = filters[key];
+      } else {
+        partnerFilters[key] = filters[key];
+      }
+    }
+
     const options = buildSequelizeQuery<PartnerEntity>(
       {
         page,
         pageSize,
         sortBy,
         sortOrder: orderBy,
-        filters,
+        filters: partnerFilters,
         subQuery: false,
         include: [
           {
             model: UserEntity,
             as: 'user',
             attributes: ['id', 'userName', 'name', 'email'],
+            filters: userFilters,
+            required: Object.keys(userFilters).length > 0,
           },
         ],
       },

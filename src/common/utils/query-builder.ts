@@ -86,7 +86,19 @@ export function buildSequelizeQuery<T extends Model>(
       if (inc.filters) {
         for (const f of Object.keys(inc.filters)) {
           if (incAttrs.includes(f) && inc.filters[f] !== undefined) {
-            incWhere[f] = inc.filters[f];
+            const keyType = typeof inc.filters[f];
+            const isUuidField =
+              f.toLowerCase().includes('id') ||
+              f.toLowerCase().endsWith('uuid');
+
+            if (keyType === 'string' && !isUuidField) {
+              // Use LIKE for text search fields
+              incWhere[f] = {
+                [Op.like]: `%${inc.filters[f]}%`,
+              };
+            } else {
+              incWhere[f] = inc.filters[f];
+            }
           }
         }
       }
