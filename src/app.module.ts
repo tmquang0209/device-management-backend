@@ -59,9 +59,10 @@ import {
 } from '@services';
 import { ClsService } from 'nestjs-cls';
 import { I18nService } from 'nestjs-i18n';
+import { SeederModule } from './seeders/seeder.module';
 
 @Module({
-  imports: [CommonModule, DatabaseModule],
+  imports: [CommonModule, DatabaseModule, SeederModule],
   controllers: [
     AppController,
     UserController,
