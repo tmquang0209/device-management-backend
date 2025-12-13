@@ -143,6 +143,12 @@ export type I18nTranslations = {
             "by_location": {
                 "success": string;
             };
+            "unassigned": {
+                "success": string;
+            };
+            "available_for_loan": {
+                "success": string;
+            };
         };
         "loan_slip": {
             "create": {

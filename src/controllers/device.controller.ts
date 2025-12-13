@@ -1,5 +1,6 @@
 import { EndpointKey, ResponseMessage } from '@common/decorators';
 import {
+  AvailableDevicesForLoanRequestDto,
   ChangeDeviceStatusDto,
   CreateDeviceDto,
   DeviceListRequestDto,
@@ -37,6 +38,18 @@ export class DeviceController {
   @ResponseMessage(i18nValidationMessage('device.list.success'))
   getListDevices(@Query() params: DeviceListRequestDto) {
     return this.deviceService.getListDevices(params);
+  }
+
+  @EndpointKey('devices.get_available_for_loan')
+  @Get('available-for-loan')
+  @ResponseMessage(i18nValidationMessage('device.available_for_loan.success'))
+  getAvailableDevicesForLoan(
+    @Query() params: AvailableDevicesForLoanRequestDto,
+  ) {
+    return this.deviceService.getAvailableDevicesForLoan(
+      params.deviceTypeId,
+      params.quantity ?? 1,
+    );
   }
 
   @EndpointKey('devices.get_by_id')

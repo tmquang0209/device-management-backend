@@ -6,7 +6,10 @@ export class PermissionGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
-    console.log('🚀 ~ PermissionGuard ~ canActivate ~ context:', context);
+    console.log(
+      '🚀 ~ PermissionGuard ~ canActivate ~ context:',
+      context.getType(),
+    );
     return true;
   }
 }

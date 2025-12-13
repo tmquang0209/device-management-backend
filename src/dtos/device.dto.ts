@@ -1,5 +1,6 @@
 import { Transform, TransformFnParams } from 'class-transformer';
 import {
+  IsArray,
   IsDate,
   IsNotEmpty,
   IsOptional,
@@ -524,4 +525,33 @@ export class UnassignedDevicesRequestDto extends PaginationRequestDto {
 
   @IsOptional()
   readonly status?: number;
+}
+
+// DTO for getting available devices for loan
+export class AvailableDevicesForLoanRequestDto {
+  @IsNotEmpty({
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.field_required',
+    ),
+  })
+  @IsUUID('4', {
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.must_be_uuid',
+      { field: 'deviceTypeId' },
+    ),
+  })
+  readonly deviceTypeId: string;
+
+  @IsNotEmpty({
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.field_required',
+    ),
+  })
+  @Transform(({ value }) => parseInt(value as string, 10))
+  readonly quantity: number;
+
+  @IsOptional()
+  @IsArray()
+  @IsUUID('4', { each: true })
+  readonly excludeDeviceIds?: string[];
 }

@@ -26,6 +26,7 @@ import {
 import { InjectModel } from '@nestjs/sequelize';
 import { AuditContextService, CacheService } from '@services';
 import { I18nService } from 'nestjs-i18n';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class DeviceService {
@@ -225,6 +226,7 @@ export class DeviceService {
   }
 
   async getDeviceById(id: string): Promise<DeviceDetailResponseDto> {
+    console.log('🚀 ~ DeviceService ~ getDeviceById ~ id:', id);
     const device = await this.deviceRepo.findOne({
       where: { id },
       attributes: {
@@ -434,5 +436,47 @@ export class DeviceService {
       page: Math.floor(options.offset! / options.limit!) + 1,
       pageSize: options.limit!,
     };
+  }
+
+  /**
+   * Get available devices for loan by device type
+   * Prioritizes devices with oldest createdAt (longest time in stock)
+   * Only returns devices with status = 1 (available)
+   */
+  async getAvailableDevicesForLoan(
+    deviceTypeId: string,
+    quantity: number,
+    excludeDeviceIds: string[] = [],
+  ): Promise<DeviceResponseDto[]> {
+    const whereClause: Record<string, unknown> = {
+      deviceTypeId,
+      status: 1, // Only available devices
+    };
+    console.log(
+      '🚀 ~ DeviceService ~ getAvailableDevicesForLoan ~ whereClause:',
+      whereClause,
+    );
+
+    // Exclude already selected devices
+    if (excludeDeviceIds.length > 0) {
+      whereClause.id = { [Op.notIn]: excludeDeviceIds };
+    }
+
+    const devices = await this.deviceRepo.findAll({
+      where: whereClause,
+      attributes: {
+        exclude: ['deletedAt'],
+      },
+      include: [
+        {
+          model: DeviceTypeEntity,
+          attributes: ['id', 'deviceTypeName'],
+        },
+      ],
+      order: [['createdAt', 'ASC']], // Oldest first (longest in stock)
+      limit: quantity,
+    });
+
+    return devices.map((device) => device.toJSON());
   }
 }

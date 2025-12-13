@@ -64,6 +64,12 @@
     },
     "by_location": {
       "success": "Devices by location retrieved successfully"
+    },
+    "unassigned": {
+      "success": "Unassigned devices retrieved successfully"
+    },
+    "available_for_loan": {
+      "success": "Available devices for loan retrieved successfully"
     }
   },
   "loan_slip": {

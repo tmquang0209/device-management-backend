@@ -64,6 +64,12 @@
     },
     "by_location": {
       "success": "Thiết bị theo vị trí được lấy thành công"
+    },
+    "unassigned": {
+      "success": "Thiết bị chưa gán được lấy thành công"
+    },
+    "available_for_loan": {
+      "success": "Thiết bị khả dụng cho mượn được lấy thành công"
     }
   },
   "loan_slip": {
