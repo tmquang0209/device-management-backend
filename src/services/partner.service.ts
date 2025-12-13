@@ -125,9 +125,8 @@ export class PartnerService {
       ],
     });
 
-    if (!partner) {
+    if (!partner)
       throw new NotFoundException(this.i18n.t('partner.get.not_found'));
-    }
 
     return partner.toJSON() as PartnerResponseDto;
   }

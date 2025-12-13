@@ -8,10 +8,10 @@ import {
   HasMany,
   Table,
 } from 'sequelize-typescript';
+import { DeviceLocationEntity } from './device-location.entity';
 import { DeviceTypeEntity } from './device-type.entity';
 import { EquipmentLoanSlipDetailEntity } from './equipment-loan-slip-detail.entity';
 import { MaintenanceSlipEntity } from './maintenance-slip.entity';
-import { RackEntity } from './rack.entity';
 import { UserEntity } from './user.entity';
 
 @Table({
@@ -60,16 +60,16 @@ export class DeviceEntity extends BaseEntity<DeviceEntity> {
   })
   declare supplier?: string;
 
-  @ForeignKey(() => RackEntity)
+  @ForeignKey(() => DeviceLocationEntity)
   @Column({
     type: DataType.UUID,
     allowNull: true,
-    field: 'rack_id',
+    field: 'device_location_id',
   })
-  declare rackId?: string;
+  declare deviceLocationId: string | null;
 
-  @BelongsTo(() => RackEntity)
-  declare rack?: RackEntity;
+  @BelongsTo(() => DeviceLocationEntity)
+  declare deviceLocation?: DeviceLocationEntity;
 
   @Column({
     type: DataType.INTEGER,

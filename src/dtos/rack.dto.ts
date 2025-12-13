@@ -6,18 +6,30 @@ import { PaginationRequestDto, PaginationResponseDto } from './pagination.dto';
 // ============== Rack DTOs ==============
 
 export class CreateRackDto {
-  @IsNotEmpty({
-    message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.field_required',
-    ),
-  })
+  @IsOptional()
   @IsString({
     message: i18nValidationMessage<I18nTranslations>(
       'common.validation.must_be_string',
       { field: 'code' },
     ),
   })
-  readonly code: string;
+  readonly code?: string;
+
+  @IsNotEmpty({
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.field_required',
+    ),
+  })
+  @IsNumber()
+  readonly rows: number;
+
+  @IsNotEmpty({
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.field_required',
+    ),
+  })
+  @IsNumber()
+  readonly cols: number;
 
   @IsOptional()
   @IsNumber()
@@ -33,6 +45,14 @@ export class UpdateRackDto {
     ),
   })
   readonly code?: string;
+
+  @IsOptional()
+  @IsNumber()
+  readonly rows?: number;
+
+  @IsOptional()
+  @IsNumber()
+  readonly cols?: number;
 
   @IsOptional()
   @IsNumber()
@@ -57,6 +77,8 @@ export class RackListRequestDto extends PaginationRequestDto {
 export class RackResponseDto {
   readonly id: string;
   readonly code: string;
+  readonly rows: number;
+  readonly cols: number;
   readonly status: number;
   readonly createdAt: Date;
   readonly updatedAt: Date;

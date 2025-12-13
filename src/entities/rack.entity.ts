@@ -1,5 +1,7 @@
 import { BaseEntity } from '@common/database';
+import { Op } from 'sequelize';
 import {
+  BeforeCreate,
   BelongsTo,
   Column,
   DataType,
@@ -8,7 +10,6 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { DeviceLocationEntity } from './device-location.entity';
-import { DeviceEntity } from './device.entity';
 import { UserEntity } from './user.entity';
 
 @Table({
@@ -20,10 +21,26 @@ import { UserEntity } from './user.entity';
 export class RackEntity extends BaseEntity<RackEntity> {
   @Column({
     type: DataType.STRING,
-    allowNull: false,
+    allowNull: true,
     field: 'code',
   })
   declare code: string;
+
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+    defaultValue: 1,
+    field: 'rows',
+  })
+  declare rows: number;
+
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+    defaultValue: 1,
+    field: 'cols',
+  })
+  declare cols: number;
 
   @Column({
     type: DataType.INTEGER,
@@ -55,9 +72,33 @@ export class RackEntity extends BaseEntity<RackEntity> {
   @BelongsTo(() => UserEntity, 'modifiedById')
   declare modifiedByUser?: UserEntity;
 
-  @HasMany(() => DeviceEntity)
-  declare devices?: DeviceEntity[];
-
   @HasMany(() => DeviceLocationEntity)
   declare deviceLocations?: DeviceLocationEntity[];
+
+  @BeforeCreate
+  static async generateCode(instance: RackEntity) {
+    console.log('🚀 ~ RackEntity ~ generateCode ~ instance:', instance);
+    if (!instance.code) {
+      const now = new Date();
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const year = String(now.getFullYear()).slice(-2);
+      const datePrefix = `${day}${month}${year}`;
+
+      // Find the count of racks created today
+      const startOfDay = new Date(now.setHours(0, 0, 0, 0));
+      const endOfDay = new Date(now.setHours(23, 59, 59, 999));
+
+      const count = await RackEntity.count({
+        where: {
+          createdAt: {
+            [Op.between]: [startOfDay, endOfDay],
+          },
+        },
+      });
+
+      const sequence = String(count + 1).padStart(2, '0');
+      instance.code = `${datePrefix}_${sequence}`;
+    }
+  }
 }

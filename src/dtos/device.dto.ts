@@ -168,6 +168,12 @@ export class DeviceLocationListRequestDto extends PaginationRequestDto {
   readonly rackId?: string;
 
   @IsOptional()
+  readonly xPosition?: string;
+
+  @IsOptional()
+  readonly yPosition?: string;
+
+  @IsOptional()
   readonly status?: number;
 }
 
@@ -239,10 +245,10 @@ export class CreateDeviceDto {
   @IsUUID('4', {
     message: i18nValidationMessage<I18nTranslations>(
       'common.validation.must_be_uuid',
-      { field: 'rackId' },
+      { field: 'deviceLocationId' },
     ),
   })
-  readonly rackId?: string;
+  readonly deviceLocationId?: string;
 
   @IsOptional()
   @IsString({
@@ -330,9 +336,10 @@ export class UpdateDeviceDto {
   @IsUUID('4', {
     message: i18nValidationMessage<I18nTranslations>(
       'common.validation.must_be_uuid',
+      { field: 'deviceLocationId' },
     ),
   })
-  readonly rackId?: string;
+  readonly deviceLocationId?: string;
 
   @IsOptional()
   @IsString({
@@ -496,3 +503,25 @@ export class DeviceDetailResponseDto {
 export class DevicesByTypeRequestDto extends PaginationRequestDto {}
 
 export class DevicesByLocationRequestDto extends PaginationRequestDto {}
+
+export class UnassignedDevicesRequestDto extends PaginationRequestDto {
+  @IsOptional()
+  @IsString({
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.must_be_string',
+      { field: 'deviceName' },
+    ),
+  })
+  readonly deviceName?: string;
+
+  @IsOptional()
+  @IsUUID('4', {
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.must_be_uuid',
+    ),
+  })
+  readonly deviceTypeId?: string;
+
+  @IsOptional()
+  readonly status?: number;
+}

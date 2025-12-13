@@ -10,7 +10,6 @@ import {
 } from 'sequelize-typescript';
 import { DeviceEntity } from './device.entity';
 import { EquipmentLoanSlipEntity } from './equipment-loan-slip.entity';
-import { PartnerEntity } from './partner.entity';
 
 @Table({
   tableName: 'user',
@@ -64,17 +63,6 @@ export class UserEntity extends BaseEntity<UserEntity> {
     field: 'status',
   })
   declare status: boolean;
-
-  @ForeignKey(() => PartnerEntity)
-  @Column({
-    type: DataType.UUID,
-    allowNull: true,
-    field: 'partner_id',
-  })
-  declare partnerId?: string;
-
-  @BelongsTo(() => PartnerEntity)
-  declare partner?: PartnerEntity;
 
   @ForeignKey(() => UserEntity)
   @Column({

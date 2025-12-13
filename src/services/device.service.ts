@@ -8,6 +8,7 @@ import {
   DeviceResponseDto,
   DevicesByLocationRequestDto,
   DevicesByTypeRequestDto,
+  UnassignedDevicesRequestDto,
   UpdateDeviceDto,
 } from '@dto';
 import {
@@ -35,6 +36,8 @@ export class DeviceService {
     private readonly deviceTypeRepo: typeof DeviceTypeEntity,
     @InjectModel(RackEntity)
     private readonly rackRepo: typeof RackEntity,
+    @InjectModel(DeviceLocationEntity)
+    private readonly deviceLocationRepo: typeof DeviceLocationEntity,
     private readonly i18n: I18nService,
     private readonly cacheService: CacheService,
     private readonly auditContext: AuditContextService,
@@ -49,12 +52,14 @@ export class DeviceService {
       );
     }
 
-    // Validate rack exists if provided
-    if (params.rackId) {
-      const rack = await this.rackRepo.findByPk(params.rackId);
-      if (!rack) {
+    // Validate deviceLocation exists if provided
+    if (params.deviceLocationId) {
+      const deviceLocation = await this.deviceLocationRepo.findByPk(
+        params.deviceLocationId,
+      );
+      if (!deviceLocation) {
         throw new BadRequestException(
-          this.i18n.t('device.create.invalid_rack'),
+          this.i18n.t('device.create.invalid_device_location'),
         );
       }
     }
@@ -93,9 +98,16 @@ export class DeviceService {
           attributes: ['id', 'deviceTypeName'],
         },
         {
-          model: RackEntity,
-          as: 'rack',
-          attributes: ['id', 'code'],
+          model: DeviceLocationEntity,
+          as: 'deviceLocation',
+          attributes: ['id', 'xPosition', 'yPosition', 'status'],
+          include: [
+            {
+              model: RackEntity,
+              as: 'rack',
+              attributes: ['id', 'code'],
+            },
+          ],
         },
       ],
     });
@@ -118,12 +130,17 @@ export class DeviceService {
       }
     }
 
-    // Validate rack if provided
-    if (params.rackId && params.rackId !== device.rackId) {
-      const rack = await this.rackRepo.findByPk(params.rackId);
-      if (!rack) {
+    // Validate deviceLocation if provided
+    if (
+      params.deviceLocationId &&
+      params.deviceLocationId !== device.deviceLocationId
+    ) {
+      const deviceLocation = await this.deviceLocationRepo.findByPk(
+        params.deviceLocationId,
+      );
+      if (!deviceLocation) {
         throw new BadRequestException(
-          this.i18n.t('device.update.invalid_rack'),
+          this.i18n.t('device.update.invalid_device_location'),
         );
       }
     }
@@ -175,14 +192,14 @@ export class DeviceService {
             required: false,
           },
           {
-            model: RackEntity,
-            as: 'rack',
-            attributes: ['id', 'code', 'status'],
+            model: DeviceLocationEntity,
+            as: 'deviceLocation',
+            attributes: ['id', 'xPosition', 'yPosition', 'status'],
             include: [
               {
-                model: DeviceLocationEntity,
-                as: 'deviceLocations',
-                attributes: ['id', 'xPosition', 'yPosition', 'status'],
+                model: RackEntity,
+                as: 'rack',
+                attributes: ['id', 'code', 'rows', 'cols', 'status'],
                 required: false,
               },
             ],
@@ -219,14 +236,14 @@ export class DeviceService {
           attributes: ['id', 'deviceTypeName', 'description'],
         },
         {
-          model: RackEntity,
-          as: 'rack',
-          attributes: ['id', 'code', 'status'],
+          model: DeviceLocationEntity,
+          as: 'deviceLocation',
+          attributes: ['id', 'xPosition', 'yPosition', 'status'],
           include: [
             {
-              model: DeviceLocationEntity,
-              as: 'deviceLocations',
-              attributes: ['id', 'xPosition', 'yPosition', 'status'],
+              model: RackEntity,
+              as: 'rack',
+              attributes: ['id', 'code', 'rows', 'cols', 'status'],
               required: false,
             },
           ],
@@ -353,6 +370,52 @@ export class DeviceService {
           {
             model: DeviceTypeEntity,
             attributes: ['id', 'deviceTypeName'],
+          },
+        ],
+        exclude: ['deletedAt'],
+        distinct: true,
+      },
+      DeviceEntity,
+    );
+
+    const { rows, count } = await this.deviceRepo.findAndCountAll(options);
+
+    const data = rows.map((row) => row.toJSON());
+
+    return {
+      data,
+      total: count,
+      page: Math.floor(options.offset! / options.limit!) + 1,
+      pageSize: options.limit!,
+    };
+  }
+
+  async getUnassignedDevices(
+    params: UnassignedDevicesRequestDto,
+  ): Promise<DeviceListResponseDto> {
+    const {
+      page = 1,
+      pageSize = 10,
+      sortBy = 'createdAt',
+      orderBy = 'DESC',
+      ...filters
+    } = params;
+
+    const options = buildSequelizeQuery<DeviceEntity>(
+      {
+        page,
+        pageSize,
+        sortBy,
+        sortOrder: orderBy,
+        filters: {
+          ...filters,
+          deviceLocationId: null,
+        },
+        include: [
+          {
+            model: DeviceTypeEntity,
+            attributes: ['id', 'deviceTypeName'],
+            required: false,
           },
         ],
         exclude: ['deletedAt'],

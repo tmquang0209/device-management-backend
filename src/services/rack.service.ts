@@ -36,16 +36,18 @@ export class RackService {
     const transaction = await this.sequelize.transaction();
 
     try {
-      // Check if rack with same code already exists
-      const existingRack = await this.rackRepo.findOne({
-        where: { code: dto.code },
-        transaction,
-      });
+      // Check if rack with same code already exists (only if code is provided)
+      if (dto.code) {
+        const existingRack = await this.rackRepo.findOne({
+          where: { code: dto.code },
+          transaction,
+        });
 
-      if (existingRack) {
-        throw new BadRequestException(
-          this.i18n.t('rack.create.already_exists'),
-        );
+        if (existingRack) {
+          throw new BadRequestException(
+            this.i18n.t('rack.create.already_exists'),
+          );
+        }
       }
 
       const newRack = await this.rackRepo.create(dto as RackEntity, {

@@ -5,6 +5,7 @@ import {
   DeviceListRequestDto,
   DevicesByLocationRequestDto,
   DevicesByTypeRequestDto,
+  UnassignedDevicesRequestDto,
   UpdateDeviceDto,
 } from '@dto';
 import {
@@ -86,5 +87,12 @@ export class DeviceController {
     @Query() params: DevicesByLocationRequestDto,
   ) {
     return this.deviceService.getDevicesByLocation(deviceLocationId, params);
+  }
+
+  @EndpointKey('devices.get_unassigned')
+  @Get('unassigned/list')
+  @ResponseMessage(i18nValidationMessage('device.unassigned.success'))
+  getUnassignedDevices(@Query() params: UnassignedDevicesRequestDto) {
+    return this.deviceService.getUnassignedDevices(params);
   }
 }
