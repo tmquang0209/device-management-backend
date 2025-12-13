@@ -47,7 +47,12 @@ export function buildSequelizeQuery<T extends Model>(
   for (const key of Object.keys(filters)) {
     if (modelAttributes.includes(key) && filters[key] !== undefined) {
       const keyType = typeof filters[key];
-      if (keyType === 'string') {
+      // Check if it's a UUID field (common UUID field names)
+      const isUuidField =
+        key.toLowerCase().includes('id') || key.toLowerCase().endsWith('uuid');
+
+      if (keyType === 'string' && !isUuidField) {
+        // Use LIKE for text search fields only
         (where as any)[key] = {
           [Op.like]: `%${filters[key]}%`,
         };
@@ -59,6 +64,7 @@ export function buildSequelizeQuery<T extends Model>(
           ],
         };
       } else {
+        // Use exact match for UUIDs, numbers, booleans, etc.
         (where as any)[key] = filters[key];
       }
     }
