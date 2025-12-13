@@ -1,5 +1,7 @@
 import { EndpointKey, ResponseMessage } from '@common/decorators';
+import { CurrentUser } from '@common/decorators/current-user.decorator';
 import {
+  BasicInfoDto,
   CreateMaintenanceSlipDto,
   MaintenanceSlipListRequestDto,
   UpdateMaintenanceSlipDto,
@@ -26,8 +28,11 @@ export class MaintenanceSlipController {
   @EndpointKey('maintenance_slips.create')
   @Post()
   @ResponseMessage(i18nValidationMessage('maintenance_slip.create.success'))
-  createMaintenanceSlip(@Body() dto: CreateMaintenanceSlipDto) {
-    return this.maintenanceSlipService.create(dto);
+  createMaintenanceSlip(
+    @Body() dto: CreateMaintenanceSlipDto,
+    @CurrentUser() user: BasicInfoDto,
+  ) {
+    return this.maintenanceSlipService.create(dto, user?.id);
   }
 
   @EndpointKey('maintenance_slips.get_list')
@@ -64,8 +69,9 @@ export class MaintenanceSlipController {
   updateMaintenanceSlip(
     @Param('id') id: string,
     @Body() dto: UpdateMaintenanceSlipDto,
+    @CurrentUser() user: BasicInfoDto,
   ) {
-    return this.maintenanceSlipService.update(id, dto);
+    return this.maintenanceSlipService.update(id, dto, user?.id);
   }
 
   @EndpointKey('maintenance_slips.delete')

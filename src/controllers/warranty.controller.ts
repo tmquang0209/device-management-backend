@@ -1,5 +1,7 @@
 import { EndpointKey, ResponseMessage } from '@common/decorators';
+import { CurrentUser } from '@common/decorators/current-user.decorator';
 import {
+  BasicInfoDto,
   CreateWarrantyDto,
   UpdateWarrantyDto,
   WarrantyListRequestDto,
@@ -24,8 +26,11 @@ export class WarrantyController {
   @EndpointKey('warranties.create')
   @Post()
   @ResponseMessage(i18nValidationMessage('warranty.create.success'))
-  createWarranty(@Body() dto: CreateWarrantyDto) {
-    return this.warrantyService.createRequest(dto);
+  createWarranty(
+    @Body() dto: CreateWarrantyDto,
+    @CurrentUser() user: BasicInfoDto,
+  ) {
+    return this.warrantyService.createRequest(dto, user?.id);
   }
 
   @EndpointKey('warranties.get_list')
@@ -44,22 +49,26 @@ export class WarrantyController {
   @EndpointKey('warranties.update')
   @Put(':id')
   @ResponseMessage(i18nValidationMessage('warranty.update.success'))
-  updateWarranty(@Param('id') id: string, @Body() dto: UpdateWarrantyDto) {
-    return this.warrantyService.update(id, dto);
+  updateWarranty(
+    @Param('id') id: string,
+    @Body() dto: UpdateWarrantyDto,
+    @CurrentUser() user: BasicInfoDto,
+  ) {
+    return this.warrantyService.update(id, dto, user?.id);
   }
 
   @EndpointKey('warranties.complete')
   @Put(':id/complete')
   @ResponseMessage(i18nValidationMessage('warranty.complete.success'))
-  completeWarranty(@Param('id') id: string) {
-    return this.warrantyService.completeWarranty(id);
+  completeWarranty(@Param('id') id: string, @CurrentUser() user: BasicInfoDto) {
+    return this.warrantyService.completeWarranty(id, user?.id);
   }
 
   @EndpointKey('warranties.reject')
   @Put(':id/reject')
   @ResponseMessage(i18nValidationMessage('warranty.reject.success'))
-  rejectWarranty(@Param('id') id: string) {
-    return this.warrantyService.rejectWarranty(id);
+  rejectWarranty(@Param('id') id: string, @CurrentUser() user: BasicInfoDto) {
+    return this.warrantyService.rejectWarranty(id, user?.id);
   }
 
   @EndpointKey('warranties.get_by_device')
@@ -72,7 +81,7 @@ export class WarrantyController {
   @EndpointKey('warranties.cancel')
   @Delete(':id/cancel')
   @ResponseMessage(i18nValidationMessage('warranty.cancel.success'))
-  cancelWarranty(@Param('id') id: string) {
-    return this.warrantyService.cancelWarranty(id);
+  cancelWarranty(@Param('id') id: string, @CurrentUser() user: BasicInfoDto) {
+    return this.warrantyService.cancelWarranty(id, user?.id);
   }
 }

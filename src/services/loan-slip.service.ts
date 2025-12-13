@@ -60,7 +60,10 @@ export class LoanSlipService {
    * - Create loan slip details for each device
    * - Update device status to ON_LOAN
    */
-  async create(dto: CreateLoanSlipDto): Promise<LoanSlipResponseDto> {
+  async create(
+    dto: CreateLoanSlipDto,
+    userId?: string,
+  ): Promise<LoanSlipResponseDto> {
     const transaction = await this.sequelize.transaction();
 
     try {
@@ -112,6 +115,7 @@ export class LoanSlipService {
           equipmentBorrowerId: dto.borrowerId,
           equipmentLoanerId: dto.loanerId,
           status: EEquipmentLoanSlipStatus.BORROWING,
+          createdById: userId,
         } as unknown as EquipmentLoanSlipEntity,
         { transaction },
       );
@@ -122,6 +126,7 @@ export class LoanSlipService {
           equipmentLoanSlipId: loanSlip.id,
           deviceId: device.id,
           status: EEquipmentLoanSlipDetailStatus.BORROWED,
+          createdById: userId,
         })) as unknown as EquipmentLoanSlipDetailEntity[],
         { transaction },
       );
@@ -205,6 +210,7 @@ export class LoanSlipService {
   async returnDevices(
     loanSlipId: string,
     dto: ReturnLoanSlipDto,
+    userId?: string,
   ): Promise<LoanSlipResponseDto> {
     const transaction = await this.sequelize.transaction();
 
@@ -244,6 +250,7 @@ export class LoanSlipService {
             status: item.status,
             returnDate: new Date(),
             note: item.note,
+            updatedById: userId,
           },
           {
             where: { id: detail.id },
@@ -491,7 +498,7 @@ export class LoanSlipService {
   /**
    * Cancel a loan slip
    */
-  async cancel(loanSlipId: string): Promise<void> {
+  async cancel(loanSlipId: string, userId?: string): Promise<void> {
     const transaction = await this.sequelize.transaction();
 
     try {
@@ -522,7 +529,7 @@ export class LoanSlipService {
 
       // Update loan slip status to CANCELLED
       await this.loanSlipRepo.update(
-        { status: EEquipmentLoanSlipStatus.CANCELLED },
+        { status: EEquipmentLoanSlipStatus.CANCELLED, updatedById: userId },
         {
           where: { id: loanSlipId },
           transaction,

@@ -149,7 +149,10 @@ export class ReturnSlipService {
   /**
    * Create a new return slip
    */
-  async create(dto: CreateReturnSlipDto): Promise<ReturnSlipResponseDto> {
+  async create(
+    dto: CreateReturnSlipDto,
+    userId?: string,
+  ): Promise<ReturnSlipResponseDto> {
     const transaction = await this.sequelize.transaction();
 
     try {
@@ -212,7 +215,7 @@ export class ReturnSlipService {
           returnDate: new Date(dto.returnDate),
           status: EEquipmentReturnSlipStatus.RETURNED,
           note: dto.note,
-          // createdById: this.auditContext.getUserId(),
+          createdById: userId,
         } as unknown as EquipmentReturnSlipEntity,
         { transaction },
       );
@@ -225,7 +228,7 @@ export class ReturnSlipService {
             equipmentReturnSlipId: returnSlip.id,
             deviceId: deviceItem.deviceId,
             note: deviceItem.note,
-            // createdById: this.auditContext.getUserId(),
+            createdById: userId,
           } as unknown as EquipmentReturnSlipDetailEntity,
           { transaction },
         );
@@ -335,7 +338,7 @@ export class ReturnSlipService {
         },
         {
           model: UserEntity,
-          as: 'modifiedByUser',
+          as: 'updatedByUser',
           attributes: ['id', 'name', 'email'],
         },
         {
@@ -438,6 +441,7 @@ export class ReturnSlipService {
   async update(
     id: string,
     dto: UpdateReturnSlipDto,
+    userId?: string,
   ): Promise<ReturnSlipResponseDto> {
     const transaction = await this.sequelize.transaction();
 
@@ -460,7 +464,7 @@ export class ReturnSlipService {
 
       // Only allow updating returner and note
       const updateData: Partial<EquipmentReturnSlipEntity> = {
-        // modifiedById: this.auditContext.getUserId(),
+        updatedById: userId,
       };
 
       if (dto.returnerId) {
@@ -504,7 +508,7 @@ export class ReturnSlipService {
    * - Update device status back to ON_LOAN
    * - Update loan slip status if needed
    */
-  async cancel(id: string): Promise<ReturnSlipResponseDto> {
+  async cancel(id: string, userId?: string): Promise<ReturnSlipResponseDto> {
     const transaction = await this.sequelize.transaction();
 
     try {
@@ -561,7 +565,7 @@ export class ReturnSlipService {
       await this.returnSlipRepo.update(
         {
           status: EEquipmentReturnSlipStatus.CANCELLED,
-          // modifiedById: this.auditContext.getUserId(),
+          updatedById: userId,
         },
         {
           where: { id },

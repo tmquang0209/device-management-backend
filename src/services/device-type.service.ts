@@ -26,6 +26,7 @@ export class DeviceTypeService {
 
   async createDeviceType(
     params: CreateDeviceTypeDto,
+    userId?: string,
   ): Promise<DeviceTypeResponseDto> {
     const existingType = await this.deviceTypeRepo.findOne({
       where: { deviceTypeName: params.deviceTypeName },
@@ -35,9 +36,10 @@ export class DeviceTypeService {
       throw new BadRequestException(this.i18n.t('device.type.already_exists'));
     }
 
-    const newDeviceType = await this.deviceTypeRepo.create(
-      params as unknown as DeviceTypeEntity,
-    );
+    const newDeviceType = await this.deviceTypeRepo.create({
+      ...params,
+      createdById: userId,
+    } as unknown as DeviceTypeEntity);
 
     await this.cacheService.delByPattern('*device-types*');
     return newDeviceType.toJSON();
@@ -46,6 +48,7 @@ export class DeviceTypeService {
   async updateDeviceType(
     id: string,
     params: UpdateDeviceTypeDto,
+    userId?: string,
   ): Promise<DeviceTypeResponseDto> {
     const deviceType = await this.deviceTypeRepo.findByPk(id);
 
@@ -68,7 +71,7 @@ export class DeviceTypeService {
       }
     }
 
-    await deviceType.update(params);
+    await deviceType.update({ ...params, updatedById: userId });
     await this.cacheService.delByPattern('*device-types*');
     return deviceType.toJSON();
   }

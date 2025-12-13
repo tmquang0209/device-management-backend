@@ -61,10 +61,10 @@ export class EquipmentReturnSlipDetailEntity extends BaseEntity<EquipmentReturnS
   @Column({
     type: DataType.UUID,
     allowNull: true,
-    field: 'modified_by',
+    field: 'updated_by',
   })
-  declare modifiedById?: string;
+  declare updatedById?: string;
 
-  @BelongsTo(() => UserEntity, 'modifiedById')
-  declare modifiedByUser?: UserEntity;
+  @BelongsTo(() => UserEntity, 'updatedById')
+  declare updatedByUser?: UserEntity;
 }

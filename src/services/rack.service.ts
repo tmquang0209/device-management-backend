@@ -32,7 +32,7 @@ export class RackService {
    * - Validate rack code uniqueness
    * - Create rack
    */
-  async create(dto: CreateRackDto): Promise<RackResponseDto> {
+  async create(dto: CreateRackDto, userId?: string): Promise<RackResponseDto> {
     const transaction = await this.sequelize.transaction();
 
     try {
@@ -50,9 +50,10 @@ export class RackService {
         }
       }
 
-      const newRack = await this.rackRepo.create(dto as RackEntity, {
-        transaction,
-      });
+      const newRack = await this.rackRepo.create(
+        { ...dto, createdById: userId } as RackEntity,
+        { transaction },
+      );
 
       await transaction.commit();
 
@@ -79,7 +80,11 @@ export class RackService {
    * - Validate code uniqueness if changing
    * - Update rack
    */
-  async update(id: string, dto: UpdateRackDto): Promise<RackResponseDto> {
+  async update(
+    id: string,
+    dto: UpdateRackDto,
+    userId?: string,
+  ): Promise<RackResponseDto> {
     const transaction = await this.sequelize.transaction();
 
     try {
@@ -105,7 +110,7 @@ export class RackService {
         }
       }
 
-      await rack.update(dto, { transaction });
+      await rack.update({ ...dto, updatedById: userId }, { transaction });
 
       await transaction.commit();
 

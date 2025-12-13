@@ -1,5 +1,7 @@
 import { EndpointKey, ResponseMessage } from '@common/decorators';
+import { CurrentUser } from '@common/decorators/current-user.decorator';
 import {
+  BasicInfoDto,
   CreateSupplierDto,
   SupplierListRequestDto,
   UpdateSupplierDto,
@@ -24,8 +26,11 @@ export class SupplierController {
   @EndpointKey('suppliers.create')
   @Post()
   @ResponseMessage(i18nValidationMessage('supplier.create.success'))
-  createSupplier(@Body() dto: CreateSupplierDto) {
-    return this.supplierService.create(dto);
+  createSupplier(
+    @Body() dto: CreateSupplierDto,
+    @CurrentUser() user: BasicInfoDto,
+  ) {
+    return this.supplierService.create(dto, user?.id);
   }
 
   @EndpointKey('suppliers.get_list')
@@ -44,8 +49,12 @@ export class SupplierController {
   @EndpointKey('suppliers.update')
   @Put(':id')
   @ResponseMessage(i18nValidationMessage('supplier.update.success'))
-  updateSupplier(@Param('id') id: string, @Body() dto: UpdateSupplierDto) {
-    return this.supplierService.update(id, dto);
+  updateSupplier(
+    @Param('id') id: string,
+    @Body() dto: UpdateSupplierDto,
+    @CurrentUser() user: BasicInfoDto,
+  ) {
+    return this.supplierService.update(id, dto, user?.id);
   }
 
   @EndpointKey('suppliers.delete')

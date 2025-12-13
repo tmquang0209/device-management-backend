@@ -1,5 +1,7 @@
 import { EndpointKey, ResponseMessage } from '@common/decorators';
+import { CurrentUser } from '@common/decorators/current-user.decorator';
 import {
+  BasicInfoDto,
   CreateRackDto,
   RackListRequestDto,
   RackResponseDto,
@@ -25,8 +27,11 @@ export class RackController {
   @EndpointKey('racks.create')
   @Post()
   @ResponseMessage(i18nValidationMessage('rack.create.success'))
-  create(@Body() dto: CreateRackDto): Promise<RackResponseDto> {
-    return this.rackService.create(dto);
+  create(
+    @Body() dto: CreateRackDto,
+    @CurrentUser() user: BasicInfoDto,
+  ): Promise<RackResponseDto> {
+    return this.rackService.create(dto, user?.id);
   }
 
   @EndpointKey('racks.get_list')
@@ -49,8 +54,9 @@ export class RackController {
   update(
     @Param('id') id: string,
     @Body() dto: UpdateRackDto,
+    @CurrentUser() user: BasicInfoDto,
   ): Promise<RackResponseDto> {
-    return this.rackService.update(id, dto);
+    return this.rackService.update(id, dto, user?.id);
   }
 
   @EndpointKey('racks.delete')

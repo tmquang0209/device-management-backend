@@ -1,6 +1,8 @@
-import { EndpointKey, ResponseMessage } from '@common/decorators';
+import { EndpointKey, ResponseMessage, SkipCache } from '@common/decorators';
+import { CurrentUser } from '@common/decorators/current-user.decorator';
 import {
   AvailableDevicesForLoanRequestDto,
+  BasicInfoDto,
   ChangeDeviceStatusDto,
   CreateDeviceDto,
   DeviceListRequestDto,
@@ -22,6 +24,7 @@ import {
 import { DeviceService } from '@services';
 import { i18nValidationMessage } from 'nestjs-i18n';
 
+@SkipCache()
 @Controller('devices')
 export class DeviceController {
   constructor(private readonly deviceService: DeviceService) {}
@@ -29,8 +32,11 @@ export class DeviceController {
   @EndpointKey('devices.create')
   @Post()
   @ResponseMessage(i18nValidationMessage('device.create.success'))
-  createDevice(@Body() params: CreateDeviceDto) {
-    return this.deviceService.createDevice(params);
+  createDevice(
+    @Body() params: CreateDeviceDto,
+    @CurrentUser() user: BasicInfoDto,
+  ) {
+    return this.deviceService.createDevice(params, user?.id);
   }
 
   @EndpointKey('devices.get_list')
@@ -61,8 +67,12 @@ export class DeviceController {
   @EndpointKey('devices.update')
   @Put(':id')
   @ResponseMessage(i18nValidationMessage('device.update.success'))
-  updateDevice(@Param('id') id: string, @Body() params: UpdateDeviceDto) {
-    return this.deviceService.updateDevice(id, params);
+  updateDevice(
+    @Param('id') id: string,
+    @Body() params: UpdateDeviceDto,
+    @CurrentUser() user: BasicInfoDto,
+  ) {
+    return this.deviceService.updateDevice(id, params, user?.id);
   }
 
   @EndpointKey('devices.change_status')
@@ -71,8 +81,9 @@ export class DeviceController {
   changeDeviceStatus(
     @Param('id') id: string,
     @Body() statusData: ChangeDeviceStatusDto,
+    @CurrentUser() user: BasicInfoDto,
   ) {
-    return this.deviceService.changeDeviceStatus(id, statusData);
+    return this.deviceService.changeDeviceStatus(id, statusData, user?.id);
   }
 
   @EndpointKey('devices.delete')

@@ -1,5 +1,11 @@
 import { EndpointKey, ResponseMessage } from '@common/decorators';
-import { CreateParamDto, ParamListRequestDto, UpdateParamDto } from '@dto';
+import { CurrentUser } from '@common/decorators/current-user.decorator';
+import {
+  BasicInfoDto,
+  CreateParamDto,
+  ParamListRequestDto,
+  UpdateParamDto,
+} from '@dto';
 import {
   Body,
   Controller,
@@ -20,8 +26,8 @@ export class ParamController {
   @EndpointKey('params.create')
   @Post()
   @ResponseMessage(i18nValidationMessage('param.create.success'))
-  createParam(@Body() dto: CreateParamDto) {
-    return this.paramService.create(dto);
+  createParam(@Body() dto: CreateParamDto, @CurrentUser() user: BasicInfoDto) {
+    return this.paramService.create(dto, user?.id);
   }
 
   @EndpointKey('params.get_list')
@@ -55,8 +61,12 @@ export class ParamController {
   @EndpointKey('params.update')
   @Put(':id')
   @ResponseMessage(i18nValidationMessage('param.update.success'))
-  updateParam(@Param('id') id: string, @Body() dto: UpdateParamDto) {
-    return this.paramService.update(id, dto);
+  updateParam(
+    @Param('id') id: string,
+    @Body() dto: UpdateParamDto,
+    @CurrentUser() user: BasicInfoDto,
+  ) {
+    return this.paramService.update(id, dto, user?.id);
   }
 
   @EndpointKey('params.delete')

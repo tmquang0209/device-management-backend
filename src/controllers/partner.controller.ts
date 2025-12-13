@@ -1,5 +1,7 @@
 import { EndpointKey, ResponseMessage } from '@common/decorators';
+import { CurrentUser } from '@common/decorators/current-user.decorator';
 import {
+  BasicInfoDto,
   CreatePartnerDto,
   PartnerListRequestDto,
   UpdatePartnerDto,
@@ -24,8 +26,11 @@ export class PartnerController {
   @EndpointKey('partners.create')
   @Post()
   @ResponseMessage(i18nValidationMessage('partner.create.success'))
-  createPartner(@Body() dto: CreatePartnerDto) {
-    return this.partnerService.create(dto);
+  createPartner(
+    @Body() dto: CreatePartnerDto,
+    @CurrentUser() user: BasicInfoDto,
+  ) {
+    return this.partnerService.create(dto, user?.id);
   }
 
   @EndpointKey('partners.get_list')
@@ -44,8 +49,12 @@ export class PartnerController {
   @EndpointKey('partners.update')
   @Put(':id')
   @ResponseMessage(i18nValidationMessage('partner.update.success'))
-  updatePartner(@Param('id') id: string, @Body() dto: UpdatePartnerDto) {
-    return this.partnerService.update(id, dto);
+  updatePartner(
+    @Param('id') id: string,
+    @Body() dto: UpdatePartnerDto,
+    @CurrentUser() user: BasicInfoDto,
+  ) {
+    return this.partnerService.update(id, dto, user?.id);
   }
 
   @EndpointKey('partners.delete')

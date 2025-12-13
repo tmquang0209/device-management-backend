@@ -1,5 +1,7 @@
 import { EndpointKey, ResponseMessage } from '@common/decorators';
+import { CurrentUser } from '@common/decorators/current-user.decorator';
 import {
+  BasicInfoDto,
   CreateLoanSlipDto,
   LoanSlipListRequestDto,
   ReturnLoanSlipDto,
@@ -24,8 +26,11 @@ export class LoanSlipController {
   @EndpointKey('loan_slips.create')
   @Post()
   @ResponseMessage(i18nValidationMessage('loan_slip.create.success'))
-  createLoanSlip(@Body() dto: CreateLoanSlipDto) {
-    return this.loanSlipService.create(dto);
+  createLoanSlip(
+    @Body() dto: CreateLoanSlipDto,
+    @CurrentUser() user: BasicInfoDto,
+  ) {
+    return this.loanSlipService.create(dto, user?.id);
   }
 
   @EndpointKey('loan_slips.get_list')
@@ -44,14 +49,18 @@ export class LoanSlipController {
   @EndpointKey('loan_slips.return_devices')
   @Put(':id/return')
   @ResponseMessage(i18nValidationMessage('loan_slip.return.success'))
-  returnDevices(@Param('id') id: string, @Body() dto: ReturnLoanSlipDto) {
-    return this.loanSlipService.returnDevices(id, dto);
+  returnDevices(
+    @Param('id') id: string,
+    @Body() dto: ReturnLoanSlipDto,
+    @CurrentUser() user: BasicInfoDto,
+  ) {
+    return this.loanSlipService.returnDevices(id, dto, user?.id);
   }
 
   @EndpointKey('loan_slips.cancel')
   @Delete(':id/cancel')
   @ResponseMessage(i18nValidationMessage('loan_slip.cancel.success'))
-  cancelLoanSlip(@Param('id') id: string) {
-    return this.loanSlipService.cancel(id);
+  cancelLoanSlip(@Param('id') id: string, @CurrentUser() user: BasicInfoDto) {
+    return this.loanSlipService.cancel(id, user?.id);
   }
 }

@@ -39,7 +39,10 @@ export class WarrantyService {
    * - Create warranty record
    * - Update device status to UNDER_WARRANTY
    */
-  async createRequest(dto: CreateWarrantyDto): Promise<WarrantyResponseDto> {
+  async createRequest(
+    dto: CreateWarrantyDto,
+    userId?: string,
+  ): Promise<WarrantyResponseDto> {
     const transaction = await this.sequelize.transaction();
 
     try {
@@ -86,6 +89,7 @@ export class WarrantyService {
           reason: dto.reason,
           requestDate: dto.requestDate,
           status: EWarrantyStatus.PENDING,
+          createdById: userId,
         } as unknown as WarrantyEntity,
         { transaction },
       );
@@ -135,6 +139,7 @@ export class WarrantyService {
   async update(
     id: string,
     dto: UpdateWarrantyDto,
+    userId?: string,
   ): Promise<WarrantyResponseDto> {
     const warranty = await this.warrantyRepo.findByPk(id);
 
@@ -144,7 +149,7 @@ export class WarrantyService {
       );
     }
 
-    await warranty.update(dto);
+    await warranty.update({ ...dto, updatedById: userId });
 
     // Clear cache
     await this.cacheService.delByPattern('*warranty*');
@@ -233,7 +238,10 @@ export class WarrantyService {
   /**
    * Complete warranty
    */
-  async completeWarranty(id: string): Promise<WarrantyResponseDto> {
+  async completeWarranty(
+    id: string,
+    userId?: string,
+  ): Promise<WarrantyResponseDto> {
     const warranty = await this.warrantyRepo.findByPk(id, {
       include: [
         {
@@ -250,7 +258,10 @@ export class WarrantyService {
     }
 
     // Update warranty status to COMPLETED
-    await warranty.update({ status: EWarrantyStatus.COMPLETED });
+    await warranty.update({
+      status: EWarrantyStatus.COMPLETED,
+      updatedById: userId,
+    });
 
     // Update device status back to AVAILABLE
     await this.deviceRepo.update(
@@ -287,7 +298,10 @@ export class WarrantyService {
   /**
    * Reject warranty
    */
-  async rejectWarranty(id: string): Promise<WarrantyResponseDto> {
+  async rejectWarranty(
+    id: string,
+    userId?: string,
+  ): Promise<WarrantyResponseDto> {
     const warranty = await this.warrantyRepo.findByPk(id, {
       include: [
         {
@@ -304,7 +318,10 @@ export class WarrantyService {
     }
 
     // Update warranty status to REJECTED
-    await warranty.update({ status: EWarrantyStatus.REJECTED });
+    await warranty.update({
+      status: EWarrantyStatus.REJECTED,
+      updatedById: userId,
+    });
 
     // Update device status back to AVAILABLE (or BROKEN if device is broken)
     const newDeviceStatus = warranty.device?.status || EDeviceStatus.AVAILABLE;
@@ -363,7 +380,7 @@ export class WarrantyService {
    * - Can only cancel PENDING or PROCESSING warranties
    * - Revert device status if needed
    */
-  async cancelWarranty(id: string): Promise<void> {
+  async cancelWarranty(id: string, userId?: string): Promise<void> {
     const transaction = await this.sequelize.transaction();
 
     try {

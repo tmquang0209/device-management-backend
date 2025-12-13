@@ -44,7 +44,10 @@ export class DeviceService {
     private readonly auditContext: AuditContextService,
   ) {}
 
-  async createDevice(params: CreateDeviceDto): Promise<DeviceResponseDto> {
+  async createDevice(
+    params: CreateDeviceDto,
+    userId?: string,
+  ): Promise<DeviceResponseDto> {
     // Validate deviceType exists
     const deviceType = await this.deviceTypeRepo.findByPk(params.deviceTypeId);
     if (!deviceType) {
@@ -77,7 +80,10 @@ export class DeviceService {
       }
     }
 
-    const newDevice = await this.deviceRepo.create(params as DeviceEntity);
+    const newDevice = await this.deviceRepo.create({
+      ...params,
+      createdById: userId,
+    } as DeviceEntity);
 
     // Clear cache
     await this.cacheService.delByPattern('*devices*');
@@ -88,6 +94,7 @@ export class DeviceService {
   async updateDevice(
     id: string,
     params: UpdateDeviceDto,
+    userId?: string,
   ): Promise<DeviceResponseDto> {
     const device = await this.deviceRepo.findByPk(id, {
       attributes: {
@@ -158,7 +165,7 @@ export class DeviceService {
       }
     }
 
-    await device.update(params);
+    await device.update({ ...params, updatedById: userId });
 
     // Clear cache
     await this.cacheService.delByPattern('*devices*');
@@ -276,6 +283,7 @@ export class DeviceService {
   async changeDeviceStatus(
     id: string,
     statusData: ChangeDeviceStatusDto,
+    userId?: string,
   ): Promise<void> {
     const device = await this.deviceRepo.findOne({ where: { id } });
 
@@ -285,7 +293,7 @@ export class DeviceService {
 
     this.auditContext.setAuditBefore(device);
 
-    await device.update({ status: statusData.status });
+    await device.update({ status: statusData.status, updatedById: userId });
 
     await this.cacheService.delByPattern('*devices*');
 

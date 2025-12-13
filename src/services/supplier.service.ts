@@ -26,7 +26,10 @@ export class SupplierService {
     private readonly cacheService: CacheService,
   ) {}
 
-  async create(dto: CreateSupplierDto): Promise<SupplierResponseDto> {
+  async create(
+    dto: CreateSupplierDto,
+    userId?: string,
+  ): Promise<SupplierResponseDto> {
     // Check if supplier with same name already exists
     const existingSupplier = await this.supplierRepo.findOne({
       where: { supplierName: dto.supplierName },
@@ -38,7 +41,10 @@ export class SupplierService {
       );
     }
 
-    const newSupplier = await this.supplierRepo.create(dto as SupplierEntity);
+    const newSupplier = await this.supplierRepo.create({
+      ...dto,
+      createdById: userId,
+    } as SupplierEntity);
 
     await this.cacheService.delByPattern('*suppliers*');
 
@@ -48,6 +54,7 @@ export class SupplierService {
   async update(
     id: string,
     dto: UpdateSupplierDto,
+    userId?: string,
   ): Promise<SupplierResponseDto> {
     const supplier = await this.supplierRepo.findByPk(id);
 
@@ -68,7 +75,7 @@ export class SupplierService {
       }
     }
 
-    await supplier.update(dto);
+    await supplier.update({ ...dto, updatedById: userId });
 
     await this.cacheService.delByPattern('*suppliers*');
 

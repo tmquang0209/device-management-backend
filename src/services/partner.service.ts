@@ -28,7 +28,10 @@ export class PartnerService {
     private readonly cacheService: CacheService,
   ) {}
 
-  async create(dto: CreatePartnerDto): Promise<PartnerResponseDto> {
+  async create(
+    dto: CreatePartnerDto,
+    userId?: string,
+  ): Promise<PartnerResponseDto> {
     // Validate user exists
     const user = await this.userRepo.findByPk(dto.userId);
     if (!user) {
@@ -46,14 +49,21 @@ export class PartnerService {
       );
     }
 
-    const newPartner = await this.partnerRepo.create(dto as PartnerEntity);
+    const newPartner = await this.partnerRepo.create({
+      ...dto,
+      createdById: userId,
+    } as PartnerEntity);
 
     await this.cacheService.delByPattern('*partners*');
 
     return newPartner.toJSON() as PartnerResponseDto;
   }
 
-  async update(id: string, dto: UpdatePartnerDto): Promise<PartnerResponseDto> {
+  async update(
+    id: string,
+    dto: UpdatePartnerDto,
+    userId?: string,
+  ): Promise<PartnerResponseDto> {
     const partner = await this.partnerRepo.findByPk(id);
 
     if (!partner) {
@@ -81,7 +91,7 @@ export class PartnerService {
       }
     }
 
-    await partner.update(dto);
+    await partner.update({ ...dto, updatedById: userId });
 
     await this.cacheService.delByPattern('*partners*');
 

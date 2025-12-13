@@ -87,12 +87,12 @@ export class EquipmentReturnSlipEntity extends BaseEntity<EquipmentReturnSlipEnt
   @Column({
     type: DataType.UUID,
     allowNull: true,
-    field: 'modified_by',
+    field: 'updated_by',
   })
-  declare modifiedById?: string;
+  declare updatedById?: string;
 
-  @BelongsTo(() => UserEntity, 'modifiedById')
-  declare modifiedByUser?: UserEntity;
+  @BelongsTo(() => UserEntity, 'updatedById')
+  declare updatedByUser?: UserEntity;
 
   @HasMany(() => EquipmentReturnSlipDetailEntity)
   declare details?: EquipmentReturnSlipDetailEntity[];

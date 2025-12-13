@@ -26,6 +26,7 @@ export class DeviceLocationService {
 
   async createDeviceLocation(
     params: CreateDeviceLocationDto,
+    userId?: string,
   ): Promise<DeviceLocationResponseDto> {
     // Validate rack exists
     const rack = await this.rackRepo.findByPk(params.rackId);
@@ -52,15 +53,17 @@ export class DeviceLocationService {
       }
     }
 
-    const newLocation = await this.deviceLocationRepo.create(
-      params as unknown as DeviceLocationEntity,
-    );
+    const newLocation = await this.deviceLocationRepo.create({
+      ...params,
+      createdById: userId,
+    } as unknown as DeviceLocationEntity);
     return newLocation.toJSON();
   }
 
   async updateDeviceLocation(
     id: string,
     params: UpdateDeviceLocationDto,
+    userId?: string,
   ): Promise<DeviceLocationResponseDto> {
     const location = await this.deviceLocationRepo.findByPk(id);
 
@@ -99,7 +102,7 @@ export class DeviceLocationService {
       }
     }
 
-    await location.update(params);
+    await location.update({ ...params, updatedById: userId });
     return location.toJSON();
   }
 

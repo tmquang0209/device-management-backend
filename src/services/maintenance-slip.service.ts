@@ -39,6 +39,7 @@ export class MaintenanceSlipService {
    */
   async create(
     dto: CreateMaintenanceSlipDto,
+    userId?: string,
   ): Promise<MaintenanceSlipResponseDto> {
     const transaction = await this.sequelize.transaction();
 
@@ -66,7 +67,7 @@ export class MaintenanceSlipService {
       }
 
       const newSlip = await this.maintenanceSlipRepo.create(
-        dto as MaintenanceSlipEntity,
+        { ...dto, createdById: userId } as MaintenanceSlipEntity,
         { transaction },
       );
 
@@ -114,6 +115,7 @@ export class MaintenanceSlipService {
   async update(
     id: string,
     dto: UpdateMaintenanceSlipDto,
+    userId?: string,
   ): Promise<MaintenanceSlipResponseDto> {
     const transaction = await this.sequelize.transaction();
 
@@ -152,7 +154,7 @@ export class MaintenanceSlipService {
         }
       }
 
-      await slip.update(dto, { transaction });
+      await slip.update({ ...dto, updatedById: userId }, { transaction });
 
       await transaction.commit();
 

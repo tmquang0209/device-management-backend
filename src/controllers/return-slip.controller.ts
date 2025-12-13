@@ -1,5 +1,7 @@
 import { EndpointKey, ResponseMessage } from '@common/decorators';
+import { CurrentUser } from '@common/decorators/current-user.decorator';
 import {
+  BasicInfoDto,
   CreateReturnSlipDto,
   ReturnSlipListRequestDto,
   UpdateReturnSlipDto,
@@ -36,8 +38,11 @@ export class ReturnSlipController {
   @EndpointKey('return_slips.create')
   @Post()
   @ResponseMessage(i18nValidationMessage('return_slip.create.success'))
-  createReturnSlip(@Body() dto: CreateReturnSlipDto) {
-    return this.returnSlipService.create(dto);
+  createReturnSlip(
+    @Body() dto: CreateReturnSlipDto,
+    @CurrentUser() user: BasicInfoDto,
+  ) {
+    return this.returnSlipService.create(dto, user?.id);
   }
 
   @EndpointKey('return_slips.get_list')
@@ -56,14 +61,18 @@ export class ReturnSlipController {
   @EndpointKey('return_slips.update')
   @Put(':id')
   @ResponseMessage(i18nValidationMessage('return_slip.update.success'))
-  updateReturnSlip(@Param('id') id: string, @Body() dto: UpdateReturnSlipDto) {
-    return this.returnSlipService.update(id, dto);
+  updateReturnSlip(
+    @Param('id') id: string,
+    @Body() dto: UpdateReturnSlipDto,
+    @CurrentUser() user: BasicInfoDto,
+  ) {
+    return this.returnSlipService.update(id, dto, user?.id);
   }
 
   @EndpointKey('return_slips.cancel')
   @Delete(':id/cancel')
   @ResponseMessage(i18nValidationMessage('return_slip.cancel.success'))
-  cancelReturnSlip(@Param('id') id: string) {
-    return this.returnSlipService.cancel(id);
+  cancelReturnSlip(@Param('id') id: string, @CurrentUser() user: BasicInfoDto) {
+    return this.returnSlipService.cancel(id, user?.id);
   }
 }

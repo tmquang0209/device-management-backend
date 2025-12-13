@@ -1,5 +1,7 @@
 import { EndpointKey, ResponseMessage } from '@common/decorators';
+import { CurrentUser } from '@common/decorators/current-user.decorator';
 import {
+  BasicInfoDto,
   CreateDeviceTypeDto,
   DeviceTypeListRequestDto,
   UpdateDeviceTypeDto,
@@ -24,8 +26,11 @@ export class DeviceTypeController {
   @EndpointKey('device_types.create')
   @Post()
   @ResponseMessage(i18nValidationMessage('device.type.create.success'))
-  createDeviceType(@Body() params: CreateDeviceTypeDto) {
-    return this.deviceTypeService.createDeviceType(params);
+  createDeviceType(
+    @Body() params: CreateDeviceTypeDto,
+    @CurrentUser() user: BasicInfoDto,
+  ) {
+    return this.deviceTypeService.createDeviceType(params, user?.id);
   }
 
   @EndpointKey('device_types.get_list')
@@ -47,8 +52,9 @@ export class DeviceTypeController {
   updateDeviceType(
     @Param('id') id: string,
     @Body() params: UpdateDeviceTypeDto,
+    @CurrentUser() user: BasicInfoDto,
   ) {
-    return this.deviceTypeService.updateDeviceType(id, params);
+    return this.deviceTypeService.updateDeviceType(id, params, user?.id);
   }
 
   @EndpointKey('device_types.delete')

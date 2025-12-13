@@ -26,7 +26,10 @@ export class ParamService {
     private readonly cacheService: CacheService,
   ) {}
 
-  async create(dto: CreateParamDto): Promise<ParamResponseDto> {
+  async create(
+    dto: CreateParamDto,
+    userId?: string,
+  ): Promise<ParamResponseDto> {
     // Check if param with same type and code already exists
     const existingParam = await this.paramRepo.findOne({
       where: { type: dto.type, code: dto.code },
@@ -36,14 +39,21 @@ export class ParamService {
       throw new BadRequestException(this.i18n.t('param.create.already_exists'));
     }
 
-    const newParam = await this.paramRepo.create(dto as ParamEntity);
+    const newParam = await this.paramRepo.create({
+      ...dto,
+      createdById: userId,
+    } as ParamEntity);
 
     await this.cacheService.delByPattern('*params*');
 
     return newParam.toJSON();
   }
 
-  async update(id: string, dto: UpdateParamDto): Promise<ParamResponseDto> {
+  async update(
+    id: string,
+    dto: UpdateParamDto,
+    userId?: string,
+  ): Promise<ParamResponseDto> {
     const param = await this.paramRepo.findByPk(id);
 
     if (!param) {
@@ -66,7 +76,7 @@ export class ParamService {
       }
     }
 
-    await param.update(dto);
+    await param.update({ ...dto, updatedById: userId });
 
     await this.cacheService.delByPattern('*params*');
 

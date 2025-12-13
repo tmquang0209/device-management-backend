@@ -1,5 +1,7 @@
-import { EndpointKey, ResponseMessage } from '@common/decorators';
+import { EndpointKey, ResponseMessage, SkipCache } from '@common/decorators';
+import { CurrentUser } from '@common/decorators/current-user.decorator';
 import {
+  BasicInfoDto,
   CreateDeviceLocationDto,
   DeviceLocationListRequestDto,
   UpdateDeviceLocationDto,
@@ -17,6 +19,7 @@ import {
 import { DeviceLocationService } from '@services';
 import { i18nValidationMessage } from 'nestjs-i18n';
 
+@SkipCache()
 @Controller('device-locations')
 export class DeviceLocationController {
   constructor(private readonly deviceLocationService: DeviceLocationService) {}
@@ -24,8 +27,11 @@ export class DeviceLocationController {
   @EndpointKey('device_locations.create')
   @Post()
   @ResponseMessage(i18nValidationMessage('device.location.create.success'))
-  createDeviceLocation(@Body() params: CreateDeviceLocationDto) {
-    return this.deviceLocationService.createDeviceLocation(params);
+  createDeviceLocation(
+    @Body() params: CreateDeviceLocationDto,
+    @CurrentUser() user: BasicInfoDto,
+  ) {
+    return this.deviceLocationService.createDeviceLocation(params, user?.id);
   }
 
   @EndpointKey('device_locations.get_list')
@@ -47,8 +53,13 @@ export class DeviceLocationController {
   updateDeviceLocation(
     @Param('id') id: string,
     @Body() params: UpdateDeviceLocationDto,
+    @CurrentUser() user: BasicInfoDto,
   ) {
-    return this.deviceLocationService.updateDeviceLocation(id, params);
+    return this.deviceLocationService.updateDeviceLocation(
+      id,
+      params,
+      user?.id,
+    );
   }
 
   @EndpointKey('device_locations.delete')
