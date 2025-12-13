@@ -103,7 +103,7 @@ export class EquipmentLoanSlipEntity extends BaseEntity<EquipmentLoanSlipEntity>
         },
       });
 
-      const sequence = String(count + 1).padStart(2, '0');
+      const sequence = String(count + 1).padStart(3, '0');
       instance.code = `GDXM_${datePrefix}_${sequence}`;
     }
   }

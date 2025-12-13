@@ -2,10 +2,9 @@ import {
   EEquipmentLoanSlipDetailStatus,
   EEquipmentLoanSlipStatus,
 } from '@common/enums';
-import { Transform, Type } from 'class-transformer';
+import { Type } from 'class-transformer';
 import {
   IsArray,
-  IsDate,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -44,25 +43,6 @@ export class CreateLoanSlipDto {
     ),
   })
   readonly loanerId: string;
-
-  @IsNotEmpty({
-    message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.field_required',
-    ),
-  })
-  @IsDate({
-    message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_date',
-      { property: 'expectedReturnDate' },
-    ),
-  })
-  @Transform(({ value }) => {
-    if (typeof value === 'string') {
-      return new Date(value);
-    }
-    return value;
-  })
-  readonly expectedReturnDate: Date;
 
   @IsNotEmpty({
     message: i18nValidationMessage<I18nTranslations>(
@@ -178,7 +158,6 @@ export class LoanSlipResponseDto {
   equipmentBorrowerId: string;
   equipmentLoanerId: string;
   status: EEquipmentLoanSlipStatus; // 1: BORROWING, 2: CLOSED, 3: CANCELLED
-  expectedReturnDate?: Date;
   details?: LoanSlipDetailResponseDto[];
   borrower?: {
     id: string;

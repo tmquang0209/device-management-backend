@@ -112,7 +112,6 @@ export class LoanSlipService {
           equipmentBorrowerId: dto.borrowerId,
           equipmentLoanerId: dto.loanerId,
           status: EEquipmentLoanSlipStatus.BORROWING,
-          expectedReturnDate: dto.expectedReturnDate,
         } as unknown as EquipmentLoanSlipEntity,
         { transaction },
       );
