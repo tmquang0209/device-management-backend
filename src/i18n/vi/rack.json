@@ -1,0 +1,12 @@
+{
+  "list": {
+    "success": "Lấy danh sách giá đỡ thành công."
+  },
+  "find": {
+    "not_found": "Giá đỡ không tồn tại."
+  },
+  "delete": {
+    "not_found": "Giá đỡ không tồn tại.",
+    "has_device_assigned": "Không thể xóa giá đỡ vì có thiết bị được gán cho nó."
+  }
+}

@@ -425,6 +425,41 @@ export class DeviceListRequestDto extends PaginationRequestDto {
 
   @IsOptional()
   readonly status?: number;
+
+  @IsOptional()
+  readonly supplier?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => {
+    const date = new Date(value);
+    return isNaN(date.getTime()) ? undefined : date;
+  })
+  readonly purchaseDate?: Date;
+
+  @IsOptional()
+  @Transform(({ value }) => {
+    const date = new Date(value);
+    return isNaN(date.getTime()) ? undefined : date;
+  })
+  readonly warrantyExpirationDate?: Date;
+
+  @IsOptional()
+  @IsString({
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.must_be_string',
+      { field: 'serial' },
+    ),
+  })
+  readonly serial?: string;
+
+  @IsOptional()
+  @IsString({
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.must_be_string',
+      { field: 'model' },
+    ),
+  })
+  readonly model?: string;
 }
 
 export class DeviceTypeInfoDto {

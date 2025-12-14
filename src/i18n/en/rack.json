@@ -1,0 +1,12 @@
+{
+  "list": {
+    "success": "Rack list retrieved successfully."
+  },
+  "find": {
+    "not_found": "Rack not found."
+  },
+  "delete": {
+    "not_found": "Rack not found.",
+    "has_device_assigned": "Cannot delete rack because it has devices assigned to it."
+  }
+}

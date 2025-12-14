@@ -326,6 +326,18 @@ export type I18nTranslations = {
             };
         };
     };
+    "rack": {
+        "list": {
+            "success": string;
+        };
+        "find": {
+            "not_found": string;
+        };
+        "delete": {
+            "not_found": string;
+            "has_device_assigned": string;
+        };
+    };
     "role": {
         "get_role_info_success": string;
         "get_roles_list_success": string;

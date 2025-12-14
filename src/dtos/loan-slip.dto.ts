@@ -143,6 +143,7 @@ export class LoanSlipDetailResponseDto {
   status: number; // 1: BORROWED, 2: RETURNED, 3: BROKEN
   returnDate?: Date;
   note?: string;
+  returnSlipCode?: string; // Mã phiếu trả (nếu đã trả)
   device?: {
     id: string;
     deviceName: string;
@@ -155,9 +156,11 @@ export class LoanSlipDetailResponseDto {
 
 export class LoanSlipResponseDto {
   id: string;
+  code?: string;
   equipmentBorrowerId: string;
   equipmentLoanerId: string;
   status: EEquipmentLoanSlipStatus; // 1: BORROWING, 2: CLOSED, 3: CANCELLED
+  totalReturned?: number; // Tổng số thiết bị đã trả
   details?: LoanSlipDetailResponseDto[];
   borrower?: {
     id: string;

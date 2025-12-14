@@ -44,7 +44,6 @@ import {
   FileManagementService,
   LoanSlipService,
   MailService,
-  MaintenanceSlipService,
   ParamService,
   PartnerService,
   RackService,
@@ -60,6 +59,7 @@ import {
 import { ClsService } from 'nestjs-cls';
 import { I18nService } from 'nestjs-i18n';
 import { SeederModule } from './seeders/seeder.module';
+import { MaintenanceSlipService } from './services/maintenance-slip.service';
 
 @Module({
   imports: [CommonModule, DatabaseModule, SeederModule],

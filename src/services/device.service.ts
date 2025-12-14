@@ -185,6 +185,7 @@ export class DeviceService {
       orderBy = 'DESC',
       ...filters
     } = params;
+    console.log('🚀 ~ DeviceService ~ getListDevices ~ filters:', filters);
 
     const options = buildSequelizeQuery<DeviceEntity>(
       {
@@ -460,10 +461,6 @@ export class DeviceService {
       deviceTypeId,
       status: 1, // Only available devices
     };
-    console.log(
-      '🚀 ~ DeviceService ~ getAvailableDevicesForLoan ~ whereClause:',
-      whereClause,
-    );
 
     // Exclude already selected devices
     if (excludeDeviceIds.length > 0) {

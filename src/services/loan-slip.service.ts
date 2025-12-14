@@ -25,6 +25,8 @@ import {
   DeviceEntity,
   EquipmentLoanSlipDetailEntity,
   EquipmentLoanSlipEntity,
+  EquipmentReturnSlipDetailEntity,
+  EquipmentReturnSlipEntity,
   PartnerEntity,
   UserEntity,
   WarrantyEntity,
@@ -38,6 +40,10 @@ export class LoanSlipService {
     private readonly loanSlipRepo: typeof EquipmentLoanSlipEntity,
     @InjectModel(EquipmentLoanSlipDetailEntity)
     private readonly loanSlipDetailRepo: typeof EquipmentLoanSlipDetailEntity,
+    @InjectModel(EquipmentReturnSlipEntity)
+    private readonly returnSlipRepo: typeof EquipmentReturnSlipEntity,
+    @InjectModel(EquipmentReturnSlipDetailEntity)
+    private readonly returnSlipDetailRepo: typeof EquipmentReturnSlipDetailEntity,
     @InjectModel(DeviceEntity)
     private readonly deviceRepo: typeof DeviceEntity,
     @InjectModel(PartnerEntity)
@@ -492,7 +498,57 @@ export class LoanSlipService {
       );
     }
 
-    return loanSlip.toJSON() as LoanSlipResponseDto;
+    const result = loanSlip.toJSON();
+
+    // Get device IDs that are returned or broken
+    const returnedDeviceIds = (result.details || [])
+      .filter(
+        (d: any) =>
+          d.status === EEquipmentLoanSlipDetailStatus.RETURNED ||
+          d.status === EEquipmentLoanSlipDetailStatus.BROKEN,
+      )
+      .map((d: any) => d.deviceId);
+
+    // Calculate totalReturned
+    (result as any).totalReturned = returnedDeviceIds.length;
+
+    // Query return slip details to get return slip codes for returned devices
+    if (returnedDeviceIds.length > 0) {
+      const returnSlipDetails = await this.returnSlipDetailRepo.findAll({
+        where: {
+          deviceId: returnedDeviceIds,
+        },
+        include: [
+          {
+            model: EquipmentReturnSlipEntity,
+            as: 'returnSlip',
+            attributes: ['id', 'code'],
+            where: {
+              equipmentLoanSlipId: id,
+            },
+            required: true,
+          },
+        ],
+      });
+
+      // Create a map of deviceId -> returnSlipCode
+      const deviceReturnSlipMap: Record<string, string> = {};
+      for (const detail of returnSlipDetails) {
+        const plain = detail.toJSON() as any;
+        if (plain.returnSlip?.code) {
+          deviceReturnSlipMap[plain.deviceId] = plain.returnSlip.code;
+        }
+      }
+
+      // Add returnSlipCode to each detail
+      for (const detail of result.details || []) {
+        if (deviceReturnSlipMap[detail.deviceId]) {
+          (detail as any).returnSlipCode = deviceReturnSlipMap[detail.deviceId];
+        }
+      }
+    }
+
+    return result as LoanSlipResponseDto;
   }
 
   /**

@@ -6,7 +6,7 @@ import {
   RackResponseDto,
   UpdateRackDto,
 } from '@dto';
-import { RackEntity } from '@entities';
+import { DeviceLocationEntity, RackEntity } from '@entities';
 import {
   BadRequestException,
   Injectable,
@@ -22,6 +22,8 @@ export class RackService {
   constructor(
     @InjectModel(RackEntity)
     private readonly rackRepo: typeof RackEntity,
+    @InjectModel(DeviceLocationEntity)
+    private readonly deviceLocationRepo: typeof DeviceLocationEntity,
     private readonly sequelize: Sequelize,
     private readonly i18n: I18nService,
     private readonly cacheService: CacheService,
@@ -161,10 +163,29 @@ export class RackService {
       RackEntity,
     );
 
+    // Eager load deviceLocations for counting
+    options.include = [
+      {
+        model: this.deviceLocationRepo,
+        attributes: ['id', 'rackId'],
+        required: false,
+      },
+    ];
+
     const { rows, count } = await this.rackRepo.findAndCountAll(options);
 
+    // Map to add count field
+    const data = rows.map((row) => {
+      const plain = row.toJSON();
+      // deviceLocations may be undefined if not loaded
+      const count = Array.isArray(plain.deviceLocations)
+        ? plain.deviceLocations.length
+        : 0;
+      return { ...plain, count };
+    });
+
     return {
-      data: rows.map((row) => row.toJSON() as RackResponseDto),
+      data,
       total: count,
       page,
       pageSize,
@@ -192,14 +213,19 @@ export class RackService {
     const transaction = await this.sequelize.transaction();
 
     try {
-      const rack = await this.rackRepo.findByPk(id, {
+      const rack = await this.rackRepo.findByPk(id, { transaction });
+      if (!rack)
+        throw new NotFoundException(this.i18n.t('rack.delete.not_found'));
+      // check if rack already exists device before deleting
+      const deviceLocation = await this.deviceLocationRepo.findOne({
+        where: { rackId: id },
         transaction,
       });
-
-      if (!rack) {
-        throw new NotFoundException(this.i18n.t('rack.delete.not_found'));
+      if (deviceLocation) {
+        throw new BadRequestException(
+          this.i18n.t('rack.delete.has_device_assigned'),
+        );
       }
-
       await rack.destroy({ transaction });
 
       await transaction.commit();
