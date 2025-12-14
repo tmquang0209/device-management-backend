@@ -187,7 +187,7 @@ export class LoanSlipService implements OnModuleInit {
       }
 
       // Validate loaner exists
-      const loaner = await this.partnerRepo.findByPk(dto.loanerId, {
+      const loaner = await this.userRepo.findByPk(dto.loanerId, {
         transaction,
       });
       if (!loaner) {
@@ -271,15 +271,9 @@ export class LoanSlipService implements OnModuleInit {
             ],
           },
           {
-            model: PartnerEntity,
+            model: UserEntity,
             as: 'loaner',
-            include: [
-              {
-                model: UserEntity,
-                as: 'user',
-                attributes: ['id', 'name', 'email'],
-              },
-            ],
+            attributes: ['id', 'name', 'email'],
           },
           {
             model: EquipmentLoanSlipDetailEntity,
@@ -450,15 +444,9 @@ export class LoanSlipService implements OnModuleInit {
             ],
           },
           {
-            model: PartnerEntity,
+            model: UserEntity,
             as: 'loaner',
-            include: [
-              {
-                model: UserEntity,
-                as: 'user',
-                attributes: ['id', 'name', 'email'],
-              },
-            ],
+            attributes: ['id', 'name', 'email'],
           },
           {
             model: EquipmentLoanSlipDetailEntity,
@@ -520,15 +508,9 @@ export class LoanSlipService implements OnModuleInit {
         ],
       },
       {
-        model: PartnerEntity,
+        model: UserEntity,
         as: 'loaner',
-        include: [
-          {
-            model: UserEntity,
-            as: 'user',
-            attributes: ['id', 'name', 'email'],
-          },
-        ],
+        attributes: ['id', 'name', 'email'],
       },
       {
         model: EquipmentLoanSlipDetailEntity,
@@ -571,15 +553,9 @@ export class LoanSlipService implements OnModuleInit {
           ],
         },
         {
-          model: PartnerEntity,
+          model: UserEntity,
           as: 'loaner',
-          include: [
-            {
-              model: UserEntity,
-              as: 'user',
-              attributes: ['id', 'name', 'email'],
-            },
-          ],
+          attributes: ['id', 'name', 'email'],
         },
         {
           model: EquipmentLoanSlipDetailEntity,
@@ -773,7 +749,7 @@ export class LoanSlipService implements OnModuleInit {
 
       // Validate loaner if provided
       if (dto.loanerId) {
-        const loaner = await this.partnerRepo.findByPk(dto.loanerId, {
+        const loaner = await this.userRepo.findByPk(dto.loanerId, {
           transaction,
         });
         if (!loaner) {

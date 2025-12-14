@@ -39,7 +39,7 @@ export class EquipmentLoanSlipEntity extends BaseEntity<EquipmentLoanSlipEntity>
   @BelongsTo(() => PartnerEntity, 'equipmentBorrowerId')
   declare borrower?: PartnerEntity;
 
-  @ForeignKey(() => PartnerEntity)
+  @ForeignKey(() => UserEntity)
   @Column({
     type: DataType.UUID,
     allowNull: false,
@@ -47,8 +47,8 @@ export class EquipmentLoanSlipEntity extends BaseEntity<EquipmentLoanSlipEntity>
   })
   declare equipmentLoanerId: string;
 
-  @BelongsTo(() => PartnerEntity, 'equipmentLoanerId')
-  declare loaner?: PartnerEntity;
+  @BelongsTo(() => UserEntity, 'equipmentLoanerId')
+  declare loaner?: UserEntity;
 
   @Column({
     type: DataType.INTEGER,
