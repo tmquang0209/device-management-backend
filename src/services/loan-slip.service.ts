@@ -163,7 +163,6 @@ export class LoanSlipService implements OnModuleInit {
 
   /**
    * Create a new loan slip with transaction
-   * - Validate borrower and loaner exist
    * - Validate devices exist and are AVAILABLE
    * - Create loan slip with status BORROWING
    * - Create loan slip details for each device
@@ -183,16 +182,6 @@ export class LoanSlipService implements OnModuleInit {
       if (!borrower) {
         throw new BadRequestException(
           this.i18n.t('loan_slip.create.borrower_not_found'),
-        );
-      }
-
-      // Validate loaner exists
-      const loaner = await this.userRepo.findByPk(dto.loanerId, {
-        transaction,
-      });
-      if (!loaner) {
-        throw new BadRequestException(
-          this.i18n.t('loan_slip.create.loaner_not_found'),
         );
       }
 
@@ -222,7 +211,6 @@ export class LoanSlipService implements OnModuleInit {
       const loanSlip = await this.loanSlipRepo.create(
         {
           equipmentBorrowerId: dto.borrowerId,
-          equipmentLoanerId: dto.loanerId,
           status: EEquipmentLoanSlipStatus.BORROWING,
           createdById: userId,
         } as unknown as EquipmentLoanSlipEntity,
@@ -230,7 +218,7 @@ export class LoanSlipService implements OnModuleInit {
       );
 
       // Create loan slip details for each device
-      const details = await this.loanSlipDetailRepo.bulkCreate(
+      await this.loanSlipDetailRepo.bulkCreate(
         devices.map((device) => ({
           equipmentLoanSlipId: loanSlip.id,
           deviceId: device.id,
@@ -239,8 +227,6 @@ export class LoanSlipService implements OnModuleInit {
         })) as unknown as EquipmentLoanSlipDetailEntity[],
         { transaction },
       );
-      console.log('🚀 ~ LoanSlipService ~ create ~ details:', details);
-
       // Update device status to ON_LOAN for all devices
       await this.deviceRepo.update(
         { status: EDeviceStatus.ON_LOAN },
@@ -269,11 +255,6 @@ export class LoanSlipService implements OnModuleInit {
                 attributes: ['id', 'name', 'email'],
               },
             ],
-          },
-          {
-            model: UserEntity,
-            as: 'loaner',
-            attributes: ['id', 'name', 'email'],
           },
           {
             model: EquipmentLoanSlipDetailEntity,
@@ -444,11 +425,6 @@ export class LoanSlipService implements OnModuleInit {
             ],
           },
           {
-            model: UserEntity,
-            as: 'loaner',
-            attributes: ['id', 'name', 'email'],
-          },
-          {
             model: EquipmentLoanSlipDetailEntity,
             as: 'details',
             include: [
@@ -494,7 +470,7 @@ export class LoanSlipService implements OnModuleInit {
       EquipmentLoanSlipEntity,
     );
 
-    // Add include for borrower, loaner, details
+    // Add include for borrower, details
     options.include = [
       {
         model: PartnerEntity,
@@ -506,11 +482,6 @@ export class LoanSlipService implements OnModuleInit {
             attributes: ['id', 'name', 'email'],
           },
         ],
-      },
-      {
-        model: UserEntity,
-        as: 'loaner',
-        attributes: ['id', 'name', 'email'],
       },
       {
         model: EquipmentLoanSlipDetailEntity,
@@ -551,11 +522,6 @@ export class LoanSlipService implements OnModuleInit {
               attributes: ['id', 'name', 'email'],
             },
           ],
-        },
-        {
-          model: UserEntity,
-          as: 'loaner',
-          attributes: ['id', 'name', 'email'],
         },
         {
           model: EquipmentLoanSlipDetailEntity,
@@ -703,7 +669,7 @@ export class LoanSlipService implements OnModuleInit {
   /**
    * Update a loan slip
    * - Only allow update if status is BORROWING
-   * - Can update borrower, loaner, note, and devices
+   * - Can update borrower, note, and devices
    */
   async update(
     loanSlipId: string,
@@ -747,23 +713,10 @@ export class LoanSlipService implements OnModuleInit {
         }
       }
 
-      // Validate loaner if provided
-      if (dto.loanerId) {
-        const loaner = await this.userRepo.findByPk(dto.loanerId, {
-          transaction,
-        });
-        if (!loaner) {
-          throw new BadRequestException(
-            this.i18n.t('loan_slip.update.loaner_not_found'),
-          );
-        }
-      }
-
       // Update loan slip
       await this.loanSlipRepo.update(
         {
           ...(dto.borrowerId && { equipmentBorrowerId: dto.borrowerId }),
-          ...(dto.loanerId && { equipmentLoanerId: dto.loanerId }),
           updatedById: userId,
         },
         {

@@ -1,6 +1,7 @@
 export * from './audit-log.dto';
 export * from './auth.dto';
 export * from './config.dto';
+export * from './dashboard.dto';
 export * from './device.dto';
 export * from './file.dto';
 export * from './loan-slip.dto';

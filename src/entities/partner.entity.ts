@@ -69,9 +69,6 @@ export class PartnerEntity extends BaseEntity<PartnerEntity> {
   @HasMany(() => EquipmentLoanSlipEntity, 'equipmentBorrowerId')
   declare borrowedSlips?: EquipmentLoanSlipEntity[];
 
-  @HasMany(() => EquipmentLoanSlipEntity, 'equipmentLoanerId')
-  declare loanedSlips?: EquipmentLoanSlipEntity[];
-
   @HasMany(() => MaintenanceSlipEntity)
   declare maintenanceSlips?: MaintenanceSlipEntity[];
 }

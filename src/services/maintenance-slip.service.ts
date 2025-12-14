@@ -36,7 +36,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CacheService } from '@services';
-import dayjs from 'dayjs';
+import * as dayjs from 'dayjs';
 import { I18nService } from 'nestjs-i18n';
 import { Op } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';

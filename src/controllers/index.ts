@@ -2,6 +2,7 @@ export * from './app.controller';
 export * from './audit.controller';
 export * from './auth.controller';
 export * from './config.controller';
+export * from './dashboard.controller';
 export * from './device-location.controller';
 export * from './device-type.controller';
 export * from './device.controller';

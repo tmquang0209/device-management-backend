@@ -81,17 +81,6 @@ export class ReturnSlipService {
             },
           ],
         },
-        {
-          model: PartnerEntity,
-          as: 'loaner',
-          include: [
-            {
-              model: UserEntity,
-              as: 'user',
-              attributes: ['id', 'name', 'email'],
-            },
-          ],
-        },
       ],
       order: [['createdAt', 'DESC']],
     });

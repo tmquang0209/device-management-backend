@@ -36,19 +36,6 @@ export class CreateLoanSlipDto {
       'common.validation.field_required',
     ),
   })
-  @IsUUID('4', {
-    message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_uuid',
-      { property: 'loanerId' },
-    ),
-  })
-  readonly loanerId: string;
-
-  @IsNotEmpty({
-    message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.field_required',
-    ),
-  })
   @IsArray({
     message: i18nValidationMessage<I18nTranslations>(
       'common.validation.must_be_array',
@@ -74,15 +61,6 @@ export class UpdateLoanSlipDto {
     ),
   })
   readonly borrowerId?: string;
-
-  @IsOptional()
-  @IsUUID('4', {
-    message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_uuid',
-      { property: 'loanerId' },
-    ),
-  })
-  readonly loanerId?: string;
 
   @IsOptional()
   @IsString({
@@ -153,15 +131,6 @@ export class LoanSlipListRequestDto extends PaginationRequestDto {
   readonly borrowerId?: string;
 
   @IsOptional()
-  @IsUUID('4', {
-    message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_uuid',
-      { property: 'loanerId' },
-    ),
-  })
-  readonly loanerId?: string;
-
-  @IsOptional()
   readonly status?: number;
 }
 
@@ -187,19 +156,10 @@ export class LoanSlipResponseDto {
   id: string;
   code?: string;
   equipmentBorrowerId: string;
-  equipmentLoanerId: string;
   status: EEquipmentLoanSlipStatus; // 1: BORROWING, 2: CLOSED, 3: CANCELLED
   totalReturned?: number; // Tổng số thiết bị đã trả
   details?: LoanSlipDetailResponseDto[];
   borrower?: {
-    id: string;
-    user?: {
-      id: string;
-      fullName: string;
-      email: string;
-    };
-  };
-  loaner?: {
     id: string;
     user?: {
       id: string;

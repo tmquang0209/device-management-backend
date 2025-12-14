@@ -76,6 +76,11 @@ export type I18nTranslations = {
             "config_key_not_found": string;
         };
     };
+    "dashboard": {
+        "stats": {
+            "success": string;
+        };
+    };
     "device": {
         "type": {
             "has_associated_devices": string;

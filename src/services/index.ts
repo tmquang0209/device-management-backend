@@ -3,6 +3,7 @@ export * from './audit-log.service';
 export * from './auth.service';
 export * from './cache.service';
 export * from './config.service';
+export * from './dashboard.service';
 export * from './device-location.service';
 export * from './device-type.service';
 export * from './device.service';

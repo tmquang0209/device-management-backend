@@ -221,13 +221,7 @@ export class DeviceSeeder {
           locationIds.length > 0 && faker.datatype.boolean({ probability: 0.7 })
             ? faker.helpers.arrayElement(locationIds)
             : null,
-        status: faker.helpers.weightedArrayElement([
-          { value: EDeviceStatus.AVAILABLE, weight: 60 },
-          { value: EDeviceStatus.ON_LOAN, weight: 20 },
-          { value: EDeviceStatus.MAINTENANCE, weight: 10 },
-          { value: EDeviceStatus.BROKEN, weight: 5 },
-          { value: EDeviceStatus.UNDER_WARRANTY, weight: 5 },
-        ]),
+        status: 1,
         purchaseDate,
         warrantyExpirationDate,
         note: faker.datatype.boolean({ probability: 0.3 })
