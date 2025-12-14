@@ -1,76 +1,75 @@
 {
-  "device": {
-    "type": {
-      "already_exists": "Device type with this name already exists",
-      "not_found": "Device type not found",
-      "create": {
-        "success": "Device type created successfully"
-      },
-      "update": {
-        "success": "Device type updated successfully"
-      },
-      "delete": {
-        "success": "Device type deleted successfully"
-      },
-      "list": {
-        "success": "Device types retrieved successfully"
-      }
-    },
-    "location": {
-      "already_exists": "Device location with this name already exists",
-      "not_found": "Device location not found",
-      "create": {
-        "success": "Device location created successfully"
-      },
-      "update": {
-        "success": "Device location updated successfully"
-      },
-      "delete": {
-        "success": "Device location deleted successfully"
-      },
-      "list": {
-        "success": "Device locations retrieved successfully"
-      }
-    },
+  "type": {
+    "has_associated_devices": "Cannot delete device type with associated devices",
+    "already_exists": "Device type with this name already exists",
+    "not_found": "Device type not found",
     "create": {
-      "success": "Device created successfully",
-      "invalid_device_type": "Invalid device type ID",
-      "invalid_device_location": "Invalid device location ID",
-      "serial_exists": "Device with this serial number already exists"
+      "success": "Device type created successfully"
     },
     "update": {
-      "success": "Device updated successfully",
-      "not_found": "Device not found",
-      "invalid_device_type": "Invalid device type ID",
-      "invalid_device_location": "Invalid device location ID",
-      "serial_exists": "Device with this serial number already exists"
-    },
-    "status": {
-      "not_found": "Device not found",
-      "success": "Device status updated successfully"
+      "success": "Device type updated successfully"
     },
     "delete": {
-      "not_found": "Device not found",
-      "success": "Device deleted successfully"
-    },
-    "details": {
-      "not_found": "Device not found"
+      "success": "Device type deleted successfully"
     },
     "list": {
-      "success": "Devices retrieved successfully"
-    },
-    "by_type": {
-      "success": "Devices by type retrieved successfully"
-    },
-    "by_location": {
-      "success": "Devices by location retrieved successfully"
-    },
-    "unassigned": {
-      "success": "Unassigned devices retrieved successfully"
-    },
-    "available_for_loan": {
-      "success": "Available devices for loan retrieved successfully"
+      "success": "Device types retrieved successfully"
     }
+  },
+  "location": {
+    "already_exists": "Device location with this name already exists",
+    "not_found": "Device location not found",
+    "create": {
+      "success": "Device location created successfully"
+    },
+    "update": {
+      "success": "Device location updated successfully"
+    },
+    "delete": {
+      "success": "Device location deleted successfully"
+    },
+    "list": {
+      "success": "Device locations retrieved successfully"
+    }
+  },
+  "create": {
+    "success": "Device created successfully",
+    "invalid_device_type": "Invalid device type ID",
+    "invalid_device_location": "Invalid device location ID",
+    "serial_exists": "Device with this serial number already exists"
+  },
+  "update": {
+    "success": "Device updated successfully",
+    "not_found": "Device not found",
+    "invalid_device_type": "Invalid device type ID",
+    "invalid_device_location": "Invalid device location ID",
+    "serial_exists": "Device with this serial number already exists"
+  },
+  "status": {
+    "not_found": "Device not found",
+    "success": "Device status updated successfully"
+  },
+  "delete": {
+    "not_found": "Device not found",
+    "success": "Device deleted successfully"
+  },
+  "details": {
+    "not_found": "Device not found"
+  },
+  "list": {
+    "success": "Devices retrieved successfully"
+  },
+  "by_type": {
+    "success": "Devices by type retrieved successfully"
+  },
+  "by_location": {
+    "success": "Devices by location retrieved successfully"
+  },
+  "unassigned": {
+    "success": "Unassigned devices retrieved successfully"
+  },
+  "available_for_loan": {
+    "success": "Available devices for loan retrieved successfully"
   },
   "loan_slip": {
     "create": {

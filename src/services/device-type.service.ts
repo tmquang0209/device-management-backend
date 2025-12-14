@@ -126,9 +126,15 @@ export class DeviceTypeService {
   async deleteDeviceType(id: string): Promise<void> {
     const deviceType = await this.deviceTypeRepo.findOne({ where: { id } });
 
-    if (!deviceType) {
+    if (!deviceType)
       throw new NotFoundException(this.i18n.t('device.type.not_found'));
-    }
+
+    // Check for associated devices before deletion
+    const associatedDevices = await deviceType.$get('devices');
+    if (associatedDevices.length > 0)
+      throw new BadRequestException(
+        this.i18n.t('device.type.has_associated_devices'),
+      );
 
     await this.cacheService.delByPattern('*device-types*');
     await deviceType.destroy();

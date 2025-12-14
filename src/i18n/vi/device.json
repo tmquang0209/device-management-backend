@@ -1,76 +1,75 @@
 {
-  "device": {
-    "type": {
-      "already_exists": "Loại thiết bị với tên này đã tồn tại",
-      "not_found": "Loại thiết bị không được tìm thấy",
-      "create": {
-        "success": "Loại thiết bị được tạo thành công"
-      },
-      "update": {
-        "success": "Loại thiết bị được cập nhật thành công"
-      },
-      "delete": {
-        "success": "Loại thiết bị được xóa thành công"
-      },
-      "list": {
-        "success": "Loại thiết bị được lấy thành công"
-      }
-    },
-    "location": {
-      "already_exists": "Vị trí thiết bị với tên này đã tồn tại",
-      "not_found": "Vị trí thiết bị không được tìm thấy",
-      "create": {
-        "success": "Vị trí thiết bị được tạo thành công"
-      },
-      "update": {
-        "success": "Vị trí thiết bị được cập nhật thành công"
-      },
-      "delete": {
-        "success": "Vị trí thiết bị được xóa thành công"
-      },
-      "list": {
-        "success": "Vị trí thiết bị được lấy thành công"
-      }
-    },
+  "type": {
+    "has_associated_devices": "Loại thiết bị không thể xóa vì có đang có thiết bị",
+    "already_exists": "Loại thiết bị với tên này đã tồn tại",
+    "not_found": "Loại thiết bị không được tìm thấy",
     "create": {
-      "success": "Thiết bị được tạo thành công",
-      "invalid_device_type": "ID loại thiết bị không hợp lệ",
-      "invalid_device_location": "ID vị trí thiết bị không hợp lệ",
-      "serial_exists": "Thiết bị có số seri này đã tồn tại"
+      "success": "Loại thiết bị được tạo thành công"
     },
     "update": {
-      "success": "Thiết bị được cập nhật thành công",
-      "not_found": "Thiết bị không được tìm thấy",
-      "invalid_device_type": "ID loại thiết bị không hợp lệ",
-      "invalid_device_location": "ID vị trí thiết bị không hợp lệ",
-      "serial_exists": "Thiết bị có số seri này đã tồn tại"
-    },
-    "status": {
-      "not_found": "Thiết bị không được tìm thấy",
-      "success": "Trạng thái thiết bị được cập nhật thành công"
+      "success": "Loại thiết bị được cập nhật thành công"
     },
     "delete": {
-      "not_found": "Thiết bị không được tìm thấy",
-      "success": "Thiết bị được xóa thành công"
-    },
-    "details": {
-      "not_found": "Thiết bị không được tìm thấy"
+      "success": "Loại thiết bị được xóa thành công"
     },
     "list": {
-      "success": "Thiết bị được lấy thành công"
-    },
-    "by_type": {
-      "success": "Thiết bị theo loại được lấy thành công"
-    },
-    "by_location": {
-      "success": "Thiết bị theo vị trí được lấy thành công"
-    },
-    "unassigned": {
-      "success": "Thiết bị chưa gán được lấy thành công"
-    },
-    "available_for_loan": {
-      "success": "Thiết bị khả dụng cho mượn được lấy thành công"
+      "success": "Loại thiết bị được lấy thành công"
     }
+  },
+  "location": {
+    "already_exists": "Vị trí thiết bị với tên này đã tồn tại",
+    "not_found": "Vị trí thiết bị không được tìm thấy",
+    "create": {
+      "success": "Vị trí thiết bị được tạo thành công"
+    },
+    "update": {
+      "success": "Vị trí thiết bị được cập nhật thành công"
+    },
+    "delete": {
+      "success": "Vị trí thiết bị được xóa thành công"
+    },
+    "list": {
+      "success": "Vị trí thiết bị được lấy thành công"
+    }
+  },
+  "create": {
+    "success": "Thiết bị được tạo thành công",
+    "invalid_device_type": "ID loại thiết bị không hợp lệ",
+    "invalid_device_location": "ID vị trí thiết bị không hợp lệ",
+    "serial_exists": "Thiết bị có số seri này đã tồn tại"
+  },
+  "update": {
+    "success": "Thiết bị được cập nhật thành công",
+    "not_found": "Thiết bị không được tìm thấy",
+    "invalid_device_type": "ID loại thiết bị không hợp lệ",
+    "invalid_device_location": "ID vị trí thiết bị không hợp lệ",
+    "serial_exists": "Thiết bị có số seri này đã tồn tại"
+  },
+  "status": {
+    "not_found": "Thiết bị không được tìm thấy",
+    "success": "Trạng thái thiết bị được cập nhật thành công"
+  },
+  "delete": {
+    "not_found": "Thiết bị không được tìm thấy",
+    "success": "Thiết bị được xóa thành công"
+  },
+  "details": {
+    "not_found": "Thiết bị không được tìm thấy"
+  },
+  "list": {
+    "success": "Thiết bị được lấy thành công"
+  },
+  "by_type": {
+    "success": "Thiết bị theo loại được lấy thành công"
+  },
+  "by_location": {
+    "success": "Thiết bị theo vị trí được lấy thành công"
+  },
+  "unassigned": {
+    "success": "Thiết bị chưa gán được lấy thành công"
+  },
+  "available_for_loan": {
+    "success": "Thiết bị khả dụng cho mượn được lấy thành công"
   },
   "loan_slip": {
     "create": {
