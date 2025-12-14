@@ -174,6 +174,12 @@ export type I18nTranslations = {
             "list": {
                 "success": string;
             };
+            "get_status": {
+                "success": string;
+            };
+            "get_detail_status": {
+                "success": string;
+            };
         };
         "return_slip": {
             "create": {

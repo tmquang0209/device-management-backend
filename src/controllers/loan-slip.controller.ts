@@ -23,6 +23,20 @@ import { i18nValidationMessage } from 'nestjs-i18n';
 export class LoanSlipController {
   constructor(private readonly loanSlipService: LoanSlipService) {}
 
+  @EndpointKey('loan_slips.get_status_list')
+  @Get('config/status')
+  @ResponseMessage(i18nValidationMessage('loan_slip.get_status.success'))
+  getLoanSlipStatusList() {
+    return this.loanSlipService.getLoanSlipStatusList();
+  }
+
+  @EndpointKey('loan_slips.get_detail_status_list')
+  @Get('config/detail-status')
+  @ResponseMessage(i18nValidationMessage('loan_slip.get_detail_status.success'))
+  getLoanSlipDetailStatusList() {
+    return this.loanSlipService.getLoanSlipDetailStatusList();
+  }
+
   @EndpointKey('loan_slips.create')
   @Post()
   @ResponseMessage(i18nValidationMessage('loan_slip.create.success'))

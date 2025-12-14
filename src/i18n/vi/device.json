@@ -95,6 +95,12 @@
     },
     "list": {
       "success": "Phiếu mượn được lấy thành công"
+    },
+    "get_status": {
+      "success": "Lấy danh sách trạng thái phiếu mượn thành công"
+    },
+    "get_detail_status": {
+      "success": "Lấy danh sách trạng thái chi tiết phiếu mượn thành công"
     }
   },
   "return_slip": {

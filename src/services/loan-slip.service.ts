@@ -1,12 +1,19 @@
 import {
   BadRequestException,
   Injectable,
+  Logger,
   NotFoundException,
+  OnModuleInit,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { I18nService } from 'nestjs-i18n';
 import { Sequelize } from 'sequelize-typescript';
 
+import {
+  DEFAULT_LOAN_SLIP_DETAIL_STATUS,
+  DEFAULT_LOAN_SLIP_STATUS,
+  PARAM_TYPES,
+} from '@common/constants';
 import {
   EDeviceStatus,
   EEquipmentLoanSlipDetailStatus,
@@ -28,6 +35,7 @@ import {
   EquipmentLoanSlipEntity,
   EquipmentReturnSlipDetailEntity,
   EquipmentReturnSlipEntity,
+  ParamEntity,
   PartnerEntity,
   UserEntity,
   WarrantyEntity,
@@ -35,7 +43,9 @@ import {
 import { AuditContextService, CacheService } from '@services';
 
 @Injectable()
-export class LoanSlipService {
+export class LoanSlipService implements OnModuleInit {
+  private readonly logger = new Logger(LoanSlipService.name);
+
   constructor(
     @InjectModel(EquipmentLoanSlipEntity)
     private readonly loanSlipRepo: typeof EquipmentLoanSlipEntity,
@@ -53,11 +63,103 @@ export class LoanSlipService {
     private readonly userRepo: typeof UserEntity,
     @InjectModel(WarrantyEntity)
     private readonly warrantyRepo: typeof WarrantyEntity,
+    @InjectModel(ParamEntity)
+    private readonly paramRepo: typeof ParamEntity,
     private readonly sequelize: Sequelize,
     private readonly i18n: I18nService,
     private readonly cacheService: CacheService,
     private readonly auditContext: AuditContextService,
   ) {}
+
+  /**
+   * Initialize loan slip status in param table if not exists
+   */
+  async onModuleInit() {
+    this.logger.log('Initializing loan slip status configurations...');
+    await this.initLoanSlipStatus();
+    await this.initLoanSlipDetailStatus();
+    this.logger.log('Loan slip status configurations initialized.');
+  }
+
+  /**
+   * Initialize loan slip status in param table
+   */
+  private async initLoanSlipStatus() {
+    for (const status of DEFAULT_LOAN_SLIP_STATUS) {
+      const existing = await this.paramRepo.findOne({
+        where: {
+          type: PARAM_TYPES.LOAN_SLIP_STATUS,
+          code: status.code,
+        },
+      });
+
+      if (!existing) {
+        await this.paramRepo.create({
+          type: PARAM_TYPES.LOAN_SLIP_STATUS,
+          code: status.code,
+          value: status.value,
+          status: status.status,
+        } as ParamEntity);
+        this.logger.log(
+          `Created loan slip status: ${status.code} - ${status.value}`,
+        );
+      }
+    }
+  }
+
+  /**
+   * Initialize loan slip detail status in param table
+   */
+  private async initLoanSlipDetailStatus() {
+    for (const status of DEFAULT_LOAN_SLIP_DETAIL_STATUS) {
+      const existing = await this.paramRepo.findOne({
+        where: {
+          type: PARAM_TYPES.LOAN_SLIP_DETAIL_STATUS,
+          code: status.code,
+        },
+      });
+
+      if (!existing) {
+        await this.paramRepo.create({
+          type: PARAM_TYPES.LOAN_SLIP_DETAIL_STATUS,
+          code: status.code,
+          value: status.value,
+          status: status.status,
+        } as ParamEntity);
+        this.logger.log(
+          `Created loan slip detail status: ${status.code} - ${status.value}`,
+        );
+      }
+    }
+  }
+
+  /**
+   * Get loan slip status list from param table
+   */
+  async getLoanSlipStatusList() {
+    const statuses = await this.paramRepo.findAll({
+      where: {
+        type: PARAM_TYPES.LOAN_SLIP_STATUS,
+        status: 1,
+      },
+      order: [['code', 'ASC']],
+    });
+    return statuses.map((s) => s.toJSON());
+  }
+
+  /**
+   * Get loan slip detail status list from param table
+   */
+  async getLoanSlipDetailStatusList() {
+    const statuses = await this.paramRepo.findAll({
+      where: {
+        type: PARAM_TYPES.LOAN_SLIP_DETAIL_STATUS,
+        status: 1,
+      },
+      order: [['code', 'ASC']],
+    });
+    return statuses.map((s) => s.toJSON());
+  }
 
   /**
    * Create a new loan slip with transaction

@@ -95,6 +95,12 @@
     },
     "list": {
       "success": "Loan slips retrieved successfully"
+    },
+    "get_status": {
+      "success": "Loan slip status list retrieved successfully"
+    },
+    "get_detail_status": {
+      "success": "Loan slip detail status list retrieved successfully"
     }
   },
   "return_slip": {
