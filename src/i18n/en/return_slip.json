@@ -1,0 +1,21 @@
+{
+  "create": {
+    "success": "Return slip created successfully"
+  },
+  "update": {
+    "success": "Return slip updated successfully"
+  },
+  "cancel": {
+    "success": "Return slip cancelled successfully"
+  },
+  "list": {
+    "success": "Return slips retrieved successfully"
+  },
+  "loan_slip_not_found": "Loan slip not found",
+  "loan_slip_not_available": "Loan slip is not available for return",
+  "returner_not_found": "Returner not found",
+  "device_not_available_for_return": "Device is not available for return",
+  "return_slip_not_found": "Return slip not found",
+  "cannot_update_cancelled": "Cannot update a cancelled return slip",
+  "already_cancelled": "Return slip is already cancelled"
+}

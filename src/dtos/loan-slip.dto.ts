@@ -65,6 +65,51 @@ export class CreateLoanSlipDto {
   readonly deviceIds: string[];
 }
 
+export class UpdateLoanSlipDto {
+  @IsOptional()
+  @IsUUID('4', {
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.must_be_uuid',
+      { property: 'borrowerId' },
+    ),
+  })
+  readonly borrowerId?: string;
+
+  @IsOptional()
+  @IsUUID('4', {
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.must_be_uuid',
+      { property: 'loanerId' },
+    ),
+  })
+  readonly loanerId?: string;
+
+  @IsOptional()
+  @IsArray({
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.must_be_array',
+      { property: 'deviceIds' },
+    ),
+  })
+  @IsUUID('4', {
+    each: true,
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.must_be_uuid',
+      { property: 'deviceIds' },
+    ),
+  })
+  readonly deviceIds?: string[];
+
+  @IsOptional()
+  @IsString({
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.must_be_string',
+      { property: 'note' },
+    ),
+  })
+  readonly note?: string;
+}
+
 export class ReturnDeviceItemDto {
   @IsNotEmpty({
     message: i18nValidationMessage<I18nTranslations>(

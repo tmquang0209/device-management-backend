@@ -1,0 +1,40 @@
+{
+  "create": {
+    "success": "Phiếu mượn thiết bị được tạo thành công",
+    "borrower_not_found": "Người mượn không được tìm thấy",
+    "loaner_not_found": "Người cho mượn không được tìm thấy",
+    "device_not_found": "Một hoặc nhiều thiết bị không được tìm thấy",
+    "device_not_available": "Một hoặc nhiều thiết bị không khả dụng để mượn"
+  },
+  "return": {
+    "success": "Thiết bị được trả lại thành công",
+    "loan_slip_not_found": "Phiếu mượn không được tìm thấy",
+    "device_not_in_slip": "Thiết bị không nằm trong phiếu mượn này"
+  },
+  "cancel": {
+    "success": "Phiếu mượn được hủy thành công",
+    "loan_slip_not_found": "Phiếu mượn không được tìm thấy",
+    "cannot_cancel_loan_slip": "Không thể hủy phiếu mượn không ở trạng thái BORROWING"
+  },
+  "update": {
+    "success": "Phiếu mượn được cập nhật thành công",
+    "loan_slip_not_found": "Phiếu mượn không được tìm thấy",
+    "cannot_update_loan_slip": "Không thể cập nhật phiếu mượn không ở trạng thái BORROWING",
+    "borrower_not_found": "Người mượn không được tìm thấy",
+    "loaner_not_found": "Người cho mượn không được tìm thấy",
+    "device_not_found": "Một hoặc nhiều thiết bị không được tìm thấy",
+    "device_not_available": "Một hoặc nhiều thiết bị không khả dụng để mượn"
+  },
+  "get": {
+    "loan_slip_not_found": "Phiếu mượn không được tìm thấy"
+  },
+  "list": {
+    "success": "Phiếu mượn được lấy thành công"
+  },
+  "get_status": {
+    "success": "Lấy danh sách trạng thái phiếu mượn thành công"
+  },
+  "get_detail_status": {
+    "success": "Lấy danh sách trạng thái chi tiết phiếu mượn thành công"
+  }
+}

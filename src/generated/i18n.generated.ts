@@ -167,6 +167,15 @@ export type I18nTranslations = {
                 "loan_slip_not_found": string;
                 "cannot_cancel_loan_slip": string;
             };
+            "update": {
+                "success": string;
+                "loan_slip_not_found": string;
+                "cannot_update_loan_slip": string;
+                "borrower_not_found": string;
+                "loaner_not_found": string;
+                "device_not_found": string;
+                "device_not_available": string;
+            };
             "get": {
                 "loan_slip_not_found": string;
             };

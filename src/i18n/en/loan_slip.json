@@ -1,0 +1,40 @@
+{
+  "create": {
+    "success": "Loan slip created successfully",
+    "borrower_not_found": "Borrower not found",
+    "loaner_not_found": "Loaner not found",
+    "device_not_found": "One or more devices not found",
+    "device_not_available": "One or more devices are not available for loan"
+  },
+  "return": {
+    "success": "Devices returned successfully",
+    "loan_slip_not_found": "Loan slip not found",
+    "device_not_in_slip": "Device is not in this loan slip"
+  },
+  "cancel": {
+    "success": "Loan slip cancelled successfully",
+    "loan_slip_not_found": "Loan slip not found",
+    "cannot_cancel_loan_slip": "Cannot cancel a loan slip that is not in BORROWING status"
+  },
+  "update": {
+    "success": "Loan slip updated successfully",
+    "loan_slip_not_found": "Loan slip not found",
+    "cannot_update_loan_slip": "Cannot update a loan slip that is not in BORROWING status",
+    "borrower_not_found": "Borrower not found",
+    "loaner_not_found": "Loaner not found",
+    "device_not_found": "One or more devices not found",
+    "device_not_available": "One or more devices are not available for loan"
+  },
+  "get": {
+    "loan_slip_not_found": "Loan slip not found"
+  },
+  "list": {
+    "success": "Loan slips retrieved successfully"
+  },
+  "get_status": {
+    "success": "Loan slip status list retrieved successfully"
+  },
+  "get_detail_status": {
+    "success": "Loan slip detail status list retrieved successfully"
+  }
+}

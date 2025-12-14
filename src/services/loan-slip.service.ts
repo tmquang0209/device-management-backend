@@ -27,6 +27,7 @@ import {
   LoanSlipListResponseDto,
   LoanSlipResponseDto,
   ReturnLoanSlipDto,
+  UpdateLoanSlipDto,
 } from '@dto';
 import {
   DeviceEntity,
@@ -718,6 +719,177 @@ export class LoanSlipService implements OnModuleInit {
       // Clear cache
       await this.cacheService.delByPattern('*loan*');
       await this.cacheService.delByPattern('*devices*');
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
+  }
+
+  /**
+   * Update a loan slip
+   * - Only allow update if status is BORROWING
+   * - Can update borrower, loaner, note, and devices
+   */
+  async update(
+    loanSlipId: string,
+    dto: UpdateLoanSlipDto,
+    userId?: string,
+  ): Promise<LoanSlipResponseDto> {
+    const transaction = await this.sequelize.transaction();
+
+    try {
+      const loanSlip = await this.loanSlipRepo.findByPk(loanSlipId, {
+        include: [
+          {
+            model: EquipmentLoanSlipDetailEntity,
+            as: 'details',
+          },
+        ],
+        transaction,
+      });
+
+      if (!loanSlip) {
+        throw new NotFoundException(
+          this.i18n.t('loan_slip.update.loan_slip_not_found'),
+        );
+      }
+
+      if (loanSlip.status !== EEquipmentLoanSlipStatus.BORROWING) {
+        throw new BadRequestException(
+          this.i18n.t('loan_slip.update.cannot_update_loan_slip'),
+        );
+      }
+
+      // Validate borrower if provided
+      if (dto.borrowerId) {
+        const borrower = await this.partnerRepo.findByPk(dto.borrowerId, {
+          transaction,
+        });
+        if (!borrower) {
+          throw new BadRequestException(
+            this.i18n.t('loan_slip.update.borrower_not_found'),
+          );
+        }
+      }
+
+      // Validate loaner if provided
+      if (dto.loanerId) {
+        const loaner = await this.partnerRepo.findByPk(dto.loanerId, {
+          transaction,
+        });
+        if (!loaner) {
+          throw new BadRequestException(
+            this.i18n.t('loan_slip.update.loaner_not_found'),
+          );
+        }
+      }
+
+      // Handle device updates if provided
+      if (dto.deviceIds && dto.deviceIds.length > 0) {
+        // Get current device IDs that are still BORROWED (not yet returned)
+        const currentBorrowedDetails =
+          loanSlip.details?.filter(
+            (d) => d.status === EEquipmentLoanSlipDetailStatus.BORROWED,
+          ) || [];
+        const currentBorrowedDeviceIds = currentBorrowedDetails.map(
+          (d) => d.deviceId,
+        );
+
+        // Find devices to add and devices to remove
+        const devicesToAdd = dto.deviceIds.filter(
+          (id) => !currentBorrowedDeviceIds.includes(id),
+        );
+        const devicesToRemove = currentBorrowedDeviceIds.filter(
+          (id) => !dto.deviceIds.includes(id),
+        );
+
+        // Validate new devices exist and are AVAILABLE
+        if (devicesToAdd.length > 0) {
+          const newDevices = await this.deviceRepo.findAll({
+            where: { id: devicesToAdd },
+            transaction,
+          });
+
+          if (newDevices.length !== devicesToAdd.length) {
+            throw new BadRequestException(
+              this.i18n.t('loan_slip.update.device_not_found'),
+            );
+          }
+
+          const unavailableDevices = newDevices.filter(
+            (device) => device.status !== EDeviceStatus.AVAILABLE,
+          );
+          if (unavailableDevices.length > 0) {
+            throw new BadRequestException(
+              this.i18n.t('loan_slip.update.device_not_available'),
+            );
+          }
+
+          // Create loan slip details for new devices
+          await this.loanSlipDetailRepo.bulkCreate(
+            newDevices.map((device) => ({
+              equipmentLoanSlipId: loanSlipId,
+              deviceId: device.id,
+              status: EEquipmentLoanSlipDetailStatus.BORROWED,
+              createdById: userId,
+            })) as unknown as EquipmentLoanSlipDetailEntity[],
+            { transaction },
+          );
+
+          // Update new device status to ON_LOAN
+          await this.deviceRepo.update(
+            { status: EDeviceStatus.ON_LOAN },
+            {
+              where: { id: devicesToAdd },
+              transaction,
+            },
+          );
+        }
+
+        // Remove devices from loan slip
+        if (devicesToRemove.length > 0) {
+          // Delete loan slip details for removed devices
+          await this.loanSlipDetailRepo.destroy({
+            where: {
+              equipmentLoanSlipId: loanSlipId,
+              deviceId: devicesToRemove,
+              status: EEquipmentLoanSlipDetailStatus.BORROWED,
+            },
+            transaction,
+          });
+
+          // Update removed device status back to AVAILABLE
+          await this.deviceRepo.update(
+            { status: EDeviceStatus.AVAILABLE },
+            {
+              where: { id: devicesToRemove },
+              transaction,
+            },
+          );
+        }
+      }
+
+      // Update loan slip
+      await this.loanSlipRepo.update(
+        {
+          ...(dto.borrowerId && { equipmentBorrowerId: dto.borrowerId }),
+          ...(dto.loanerId && { equipmentLoanerId: dto.loanerId }),
+          updatedById: userId,
+        },
+        {
+          where: { id: loanSlipId },
+          transaction,
+        },
+      );
+
+      await transaction.commit();
+
+      // Clear cache
+      await this.cacheService.delByPattern('*loan*');
+      await this.cacheService.delByPattern('*devices*');
+
+      // Reload and return
+      return this.getById(loanSlipId);
     } catch (error) {
       await transaction.rollback();
       throw error;

@@ -5,6 +5,7 @@ import {
   CreateLoanSlipDto,
   LoanSlipListRequestDto,
   ReturnLoanSlipDto,
+  UpdateLoanSlipDto,
 } from '@dto';
 import {
   Body,
@@ -58,6 +59,17 @@ export class LoanSlipController {
   @Get(':id')
   getLoanSlipById(@Param('id') id: string) {
     return this.loanSlipService.getById(id);
+  }
+
+  @EndpointKey('loan_slips.update')
+  @Put(':id')
+  @ResponseMessage(i18nValidationMessage('loan_slip.update.success'))
+  updateLoanSlip(
+    @Param('id') id: string,
+    @Body() dto: UpdateLoanSlipDto,
+    @CurrentUser() user: BasicInfoDto,
+  ) {
+    return this.loanSlipService.update(id, dto, user?.id);
   }
 
   @EndpointKey('loan_slips.return_devices')

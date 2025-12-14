@@ -1,0 +1,26 @@
+{
+  "create": {
+    "success": "Warranty request created successfully",
+    "device_not_found": "Device not found",
+    "device_warranty_expired": "Device warranty has expired",
+    "warranty_already_exists": "Device already has a pending or processing warranty"
+  },
+  "update": {
+    "success": "Warranty updated successfully",
+    "warranty_not_found": "Warranty not found"
+  },
+  "complete": {
+    "success": "Warranty completed successfully",
+    "warranty_not_found": "Warranty not found"
+  },
+  "reject": {
+    "success": "Warranty rejected successfully",
+    "warranty_not_found": "Warranty not found"
+  },
+  "get": {
+    "warranty_not_found": "Warranty not found"
+  },
+  "list": {
+    "success": "Warranties retrieved successfully"
+  }
+}

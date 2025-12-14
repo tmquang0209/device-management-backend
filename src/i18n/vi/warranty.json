@@ -1,0 +1,26 @@
+{
+  "create": {
+    "success": "Yêu cầu bảo hành được tạo thành công",
+    "device_not_found": "Thiết bị không được tìm thấy",
+    "device_warranty_expired": "Bảo hành thiết bị đã hết hạn",
+    "warranty_already_exists": "Thiết bị đã có bảo hành đang chờ xử lý hoặc đang xử lý"
+  },
+  "update": {
+    "success": "Bảo hành được cập nhật thành công",
+    "warranty_not_found": "Bảo hành không được tìm thấy"
+  },
+  "complete": {
+    "success": "Bảo hành được hoàn thành thành công",
+    "warranty_not_found": "Bảo hành không được tìm thấy"
+  },
+  "reject": {
+    "success": "Bảo hành được từ chối thành công",
+    "warranty_not_found": "Bảo hành không được tìm thấy"
+  },
+  "get": {
+    "warranty_not_found": "Bảo hành không được tìm thấy"
+  },
+  "list": {
+    "success": "Bảo hành được lấy thành công"
+  }
+}
