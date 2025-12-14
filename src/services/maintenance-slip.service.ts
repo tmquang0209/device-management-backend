@@ -601,6 +601,7 @@ export class MaintenanceSlipService implements OnModuleInit {
   async getById(id: string): Promise<MaintenanceSlipResponseDto> {
     const slip = await this.maintenanceSlipRepo.findByPk(id, {
       include: this.getDefaultIncludes(),
+      attributes: { exclude: ['deletedAt', 'partnerId', 'createdById'] },
     });
 
     if (!slip) {
@@ -723,6 +724,7 @@ export class MaintenanceSlipService implements OnModuleInit {
    */
   private getDefaultIncludes() {
     return [
+      { model: UserEntity, as: 'createdByUser', attributes: ['id', 'name'] },
       {
         model: PartnerEntity,
         as: 'partner',

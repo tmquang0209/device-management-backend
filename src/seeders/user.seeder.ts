@@ -1,4 +1,3 @@
-import { EUserRole } from '@common/enums';
 import { UserEntity } from '@entities';
 import { faker } from '@faker-js/faker';
 import { Injectable, Logger } from '@nestjs/common';
@@ -23,7 +22,7 @@ export class UserSeeder {
     this.logger.log(`Seeding ${count} users...`);
 
     const hashedPassword = await bcrypt.hash('password123', 10);
-    const roles = Object.values(EUserRole);
+    const roles = ['ADMIN', 'STAFF'];
     const users: Partial<UserEntity>[] = [];
 
     for (let i = 0; i < count; i++) {
@@ -76,7 +75,7 @@ export class UserSeeder {
       userName: 'admin',
       email: 'admin@example.com',
       password: hashedPassword,
-      roleType: EUserRole.ADMIN,
+      roleType: 'ADMIN',
       status: true,
     } as UserEntity);
 

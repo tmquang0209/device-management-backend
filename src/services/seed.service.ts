@@ -1,4 +1,3 @@
-import { EUserRole } from '@common/enums';
 import { UserEntity } from '@entities';
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
@@ -21,7 +20,7 @@ export class SeedService implements OnModuleInit {
     try {
       // Check if any admin user exists
       const adminExists = await this.userRepo.findOne({
-        where: { roleType: EUserRole.ADMIN },
+        where: { roleType: 'ADMIN' },
       });
 
       if (adminExists) {
@@ -44,7 +43,7 @@ export class SeedService implements OnModuleInit {
         userName: 'admin',
         email: 'admin@system.local',
         password: hashedPassword,
-        roleType: EUserRole.ADMIN,
+        roleType: 'ADMIN',
         status: true,
       } as UserEntity);
 

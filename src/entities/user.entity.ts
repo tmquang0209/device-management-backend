@@ -1,5 +1,4 @@
 import { BaseEntity } from '@common/database';
-import { EUserRole } from '@common/enums';
 import {
   BelongsTo,
   Column,
@@ -48,10 +47,10 @@ export class UserEntity extends BaseEntity<UserEntity> {
   declare password: string;
 
   @Column({
-    type: DataType.ENUM(...Object.values(EUserRole)),
+    type: DataType.STRING(50),
     allowNull: false,
     field: 'role_type',
-    defaultValue: EUserRole.STAFF,
+    defaultValue: 'STAFF',
   })
   declare roleType: string;
 

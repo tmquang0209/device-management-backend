@@ -2,6 +2,7 @@ import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '../app.module';
 import { DeviceSeeder } from './device.seeder';
+import { ParamSeeder } from './param.seeder';
 import { PartnerSeeder } from './partner.seeder';
 import { UserSeeder } from './user.seeder';
 
@@ -15,6 +16,7 @@ async function bootstrap() {
     const app = await NestFactory.createApplicationContext(AppModule);
 
     // Get seeders
+    const paramSeeder = app.get(ParamSeeder);
     const userSeeder = app.get(UserSeeder);
     const partnerSeeder = app.get(PartnerSeeder);
     const deviceSeeder = app.get(DeviceSeeder);
@@ -39,10 +41,14 @@ async function bootstrap() {
       await deviceSeeder.clearDeviceTypes();
       await partnerSeeder.clear();
       await userSeeder.clear();
+      await paramSeeder.clearUserRoles();
       logger.log('Data cleared successfully');
     }
 
-    // Seed data in order (users first, then partners and devices)
+    // Seed data in order (params first, then users, partners and devices)
+    logger.log('Seeding user role params...');
+    await paramSeeder.seedUserRoles();
+
     logger.log('Seeding users...');
     await userSeeder.seedAdmin();
     await userSeeder.seed(userCount);

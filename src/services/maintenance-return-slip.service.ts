@@ -229,6 +229,7 @@ export class MaintenanceReturnSlipService implements OnModuleInit {
    */
   async getAvailableMaintenanceSlips(): Promise<MaintenanceSlipEntity[]> {
     const maintenanceSlips = await this.maintenanceSlipRepo.findAll({
+      attributes: { exclude: ['partnerId', 'createdById'] },
       where: {
         status: {
           [Op.in]: [
@@ -248,6 +249,11 @@ export class MaintenanceReturnSlipService implements OnModuleInit {
               attributes: ['id', 'name', 'email'],
             },
           ],
+        },
+        {
+          model: UserEntity,
+          as: 'createdByUser',
+          attributes: ['id', 'name', 'email'],
         },
       ],
       order: [['createdAt', 'DESC']],
