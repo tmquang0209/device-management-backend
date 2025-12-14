@@ -23,6 +23,7 @@ import {
 } from '@dto';
 import {
   DeviceEntity,
+  DeviceTypeEntity,
   EquipmentLoanSlipDetailEntity,
   EquipmentLoanSlipEntity,
   EquipmentReturnSlipDetailEntity,
@@ -486,6 +487,13 @@ export class LoanSlipService {
               model: DeviceEntity,
               as: 'device',
               attributes: ['id', 'deviceName', 'serial', 'model'],
+              include: [
+                {
+                  model: DeviceTypeEntity,
+                  as: 'deviceType',
+                  attributes: ['id', 'deviceTypeName'],
+                },
+              ],
             },
           ],
         },
