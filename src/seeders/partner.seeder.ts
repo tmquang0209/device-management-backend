@@ -4,10 +4,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 
 export enum EPartnerType {
-  SUPPLIER = 1,
-  CUSTOMER = 2,
-  MAINTENANCE = 3,
-  WARRANTY = 4,
+  BORROWER = 1,
+  MAINTENANCE_PROVIDER = 2,
 }
 
 @Injectable()

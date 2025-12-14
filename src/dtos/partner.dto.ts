@@ -1,4 +1,5 @@
 import { PaginationRequestDto, PaginationResponseDto } from '@dto';
+import { Transform } from 'class-transformer';
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { i18nValidationMessage } from 'nestjs-i18n';
 import { I18nTranslations } from 'src/generated/i18n.generated';
@@ -19,6 +20,7 @@ export class CreatePartnerDto {
   })
   readonly userId: string;
 
+  @Transform(({ value }) => Number.parseInt(value, 10))
   @IsNotEmpty({
     message: i18nValidationMessage<I18nTranslations>(
       'common.validation.field_required',
@@ -42,6 +44,9 @@ export class UpdatePartnerDto {
   })
   readonly userId?: string;
 
+  @Transform(({ value }) => {
+    Number.parseInt(value, 10);
+  })
   @IsOptional()
   @IsNumber()
   readonly partnerType?: number;
@@ -57,6 +62,10 @@ export class PartnerListRequestDto extends PaginationRequestDto {
   readonly userId?: string;
 
   @IsOptional()
+  @Transform(({ value }) => {
+    const parsed = Number.parseInt(value, 10);
+    return Number.isNaN(parsed) ? undefined : parsed;
+  })
   @IsNumber()
   readonly partnerType?: number;
 
@@ -73,6 +82,7 @@ export class PartnerResponseDto {
   id: string;
   userId: string;
   partnerType: number;
+  partnerTypeLabel?: string;
   status: number;
   createdAt: Date;
   updatedAt: Date;

@@ -41,7 +41,7 @@ import {
   UserEntity,
   WarrantyEntity,
 } from '@entities';
-import { AuditContextService, CacheService } from '@services';
+import { CacheService } from '@services';
 
 @Injectable()
 export class LoanSlipService implements OnModuleInit {
@@ -69,7 +69,6 @@ export class LoanSlipService implements OnModuleInit {
     private readonly sequelize: Sequelize,
     private readonly i18n: I18nService,
     private readonly cacheService: CacheService,
-    private readonly auditContext: AuditContextService,
   ) {}
 
   /**

@@ -1,0 +1,21 @@
+{
+  "create": {
+    "success": "Parameter created successfully",
+    "already_exists": "Parameter with this type and code already exists"
+  },
+  "update": {
+    "success": "Parameter updated successfully",
+    "not_found": "Parameter not found",
+    "already_exists": "Parameter with this type and code already exists"
+  },
+  "delete": {
+    "success": "Parameter deleted successfully",
+    "not_found": "Parameter not found"
+  },
+  "get": {
+    "not_found": "Parameter not found"
+  },
+  "list": {
+    "success": "Parameters retrieved successfully"
+  }
+}

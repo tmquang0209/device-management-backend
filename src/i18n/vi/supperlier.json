@@ -1,0 +1,21 @@
+{
+  "create": {
+    "success": "Nhà cung cấp được tạo thành công",
+    "already_exists": "Nhà cung cấp với tên này đã tồn tại"
+  },
+  "update": {
+    "success": "Nhà cung cấp được cập nhật thành công",
+    "not_found": "Nhà cung cấp không được tìm thấy",
+    "already_exists": "Nhà cung cấp với tên này đã tồn tại"
+  },
+  "delete": {
+    "success": "Nhà cung cấp được xóa thành công",
+    "not_found": "Nhà cung cấp không được tìm thấy"
+  },
+  "get": {
+    "not_found": "Nhà cung cấp không được tìm thấy"
+  },
+  "list": {
+    "success": "Nhà cung cấp được lấy thành công"
+  }
+}

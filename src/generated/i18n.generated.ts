@@ -211,69 +211,46 @@ export type I18nTranslations = {
         "cannot_update_cancelled": string;
         "already_cancelled": string;
     };
-    "master-data": {
-        "param": {
-            "create": {
-                "success": string;
-                "already_exists": string;
-            };
-            "update": {
-                "success": string;
-                "not_found": string;
-                "already_exists": string;
-            };
-            "delete": {
-                "success": string;
-                "not_found": string;
-            };
-            "get": {
-                "not_found": string;
-            };
-            "list": {
-                "success": string;
-            };
+    "param": {
+        "create": {
+            "success": string;
+            "already_exists": string;
         };
-        "partner": {
-            "create": {
-                "success": string;
-                "already_exists": string;
-            };
-            "update": {
-                "success": string;
-                "not_found": string;
-                "already_exists": string;
-            };
-            "delete": {
-                "success": string;
-                "not_found": string;
-            };
-            "get": {
-                "not_found": string;
-            };
-            "list": {
-                "success": string;
-            };
+        "update": {
+            "success": string;
+            "not_found": string;
+            "already_exists": string;
         };
-        "supplier": {
-            "create": {
-                "success": string;
-                "already_exists": string;
-            };
-            "update": {
-                "success": string;
-                "not_found": string;
-                "already_exists": string;
-            };
-            "delete": {
-                "success": string;
-                "not_found": string;
-            };
-            "get": {
-                "not_found": string;
-            };
-            "list": {
-                "success": string;
-            };
+        "delete": {
+            "success": string;
+            "not_found": string;
+        };
+        "get": {
+            "not_found": string;
+        };
+        "list": {
+            "success": string;
+        };
+    };
+    "partner": {
+        "create": {
+            "success": string;
+            "already_exists": string;
+        };
+        "update": {
+            "success": string;
+            "not_found": string;
+            "already_exists": string;
+        };
+        "delete": {
+            "success": string;
+            "not_found": string;
+        };
+        "get": {
+            "not_found": string;
+        };
+        "list": {
+            "success": string;
         };
     };
     "payment": {
@@ -356,6 +333,27 @@ export type I18nTranslations = {
         "get_permissions_list_success": string;
         "role_not_found": string;
         "cannot_delete_default": string;
+    };
+    "superlier": {
+        "create": {
+            "success": string;
+            "already_exists": string;
+        };
+        "update": {
+            "success": string;
+            "not_found": string;
+            "already_exists": string;
+        };
+        "delete": {
+            "success": string;
+            "not_found": string;
+        };
+        "get": {
+            "not_found": string;
+        };
+        "list": {
+            "success": string;
+        };
     };
     "upload": {
         "upload_success": string;
@@ -442,6 +440,27 @@ export type I18nTranslations = {
         };
         "get": {
             "warranty_not_found": string;
+        };
+        "list": {
+            "success": string;
+        };
+    };
+    "supperlier": {
+        "create": {
+            "success": string;
+            "already_exists": string;
+        };
+        "update": {
+            "success": string;
+            "not_found": string;
+            "already_exists": string;
+        };
+        "delete": {
+            "success": string;
+            "not_found": string;
+        };
+        "get": {
+            "not_found": string;
         };
         "list": {
             "success": string;

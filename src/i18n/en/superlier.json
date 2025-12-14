@@ -1,0 +1,21 @@
+{
+  "create": {
+    "success": "Supplier created successfully",
+    "already_exists": "Supplier with this name already exists"
+  },
+  "update": {
+    "success": "Supplier updated successfully",
+    "not_found": "Supplier not found",
+    "already_exists": "Supplier with this name already exists"
+  },
+  "delete": {
+    "success": "Supplier deleted successfully",
+    "not_found": "Supplier not found"
+  },
+  "get": {
+    "not_found": "Supplier not found"
+  },
+  "list": {
+    "success": "Suppliers retrieved successfully"
+  }
+}

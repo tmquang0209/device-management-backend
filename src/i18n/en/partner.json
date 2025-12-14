@@ -1,0 +1,21 @@
+{
+  "create": {
+    "success": "Partner created successfully",
+    "already_exists": "Partner with this name already exists"
+  },
+  "update": {
+    "success": "Partner updated successfully",
+    "not_found": "Partner not found",
+    "already_exists": "Partner with this name already exists"
+  },
+  "delete": {
+    "success": "Partner deleted successfully",
+    "not_found": "Partner not found"
+  },
+  "get": {
+    "not_found": "Partner not found"
+  },
+  "list": {
+    "success": "Partners retrieved successfully"
+  }
+}

@@ -54,6 +54,7 @@ export class ParamService {
     dto: UpdateParamDto,
     userId?: string,
   ): Promise<ParamResponseDto> {
+    console.log('🚀 ~ ParamService ~ update ~ dto:', dto);
     const param = await this.paramRepo.findByPk(id);
 
     if (!param) {

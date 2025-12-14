@@ -1,11 +1,14 @@
 import {
   BadRequestException,
   Injectable,
+  Logger,
   NotFoundException,
+  OnModuleInit,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { I18nService } from 'nestjs-i18n';
 
+import { DEFAULT_PARTNER_TYPE, PARAM_TYPES } from '@common/constants';
 import { buildSequelizeQuery } from '@common/utils/query-builder';
 import {
   CreatePartnerDto,
@@ -14,19 +17,76 @@ import {
   PartnerResponseDto,
   UpdatePartnerDto,
 } from '@dto';
-import { PartnerEntity, UserEntity } from '@entities';
+import { ParamEntity, PartnerEntity, UserEntity } from '@entities';
 import { CacheService } from '@services';
 
 @Injectable()
-export class PartnerService {
+export class PartnerService implements OnModuleInit {
+  private readonly logger = new Logger(PartnerService.name);
+
   constructor(
     @InjectModel(PartnerEntity)
     private readonly partnerRepo: typeof PartnerEntity,
     @InjectModel(UserEntity)
     private readonly userRepo: typeof UserEntity,
+    @InjectModel(ParamEntity)
+    private readonly paramRepo: typeof ParamEntity,
     private readonly i18n: I18nService,
     private readonly cacheService: CacheService,
   ) {}
+
+  /**
+   * Initialize partner type in param table if not exists
+   */
+  async onModuleInit() {
+    this.logger.log('Initializing partner type configurations...');
+    await this.initPartnerType();
+    this.logger.log('Partner type configurations initialized.');
+  }
+
+  /**
+   * Initialize partner type in param table
+   */
+  private async initPartnerType() {
+    for (const partnerType of DEFAULT_PARTNER_TYPE) {
+      const existing = await this.paramRepo.findOne({
+        where: {
+          type: PARAM_TYPES.PARTNER_TYPE,
+          code: partnerType.code,
+        },
+      });
+
+      if (!existing) {
+        await this.paramRepo.create({
+          type: PARAM_TYPES.PARTNER_TYPE,
+          code: partnerType.code,
+          value: partnerType.value,
+          status: partnerType.status,
+        } as ParamEntity);
+        this.logger.log(
+          `Created partner type: ${partnerType.code} - ${partnerType.value}`,
+        );
+      }
+    }
+  }
+
+  /**
+   * Get partner type labels from param table
+   */
+  private async getPartnerTypeLabels(): Promise<Map<string, string>> {
+    const partnerTypes = await this.paramRepo.findAll({
+      where: {
+        type: PARAM_TYPES.PARTNER_TYPE,
+        status: 1,
+      },
+    });
+
+    const labelMap = new Map<string, string>();
+    for (const pt of partnerTypes) {
+      labelMap.set(pt.code, pt.value);
+    }
+    return labelMap;
+  }
 
   async create(
     dto: CreatePartnerDto,
@@ -139,8 +199,17 @@ export class PartnerService {
 
     const { rows, count } = await this.partnerRepo.findAndCountAll(options);
 
+    // Get partner type labels
+    const partnerTypeLabels = await this.getPartnerTypeLabels();
+
     return {
-      data: rows.map((row) => row.toJSON() as PartnerResponseDto),
+      data: rows.map((row) => {
+        const partner = row.toJSON() as PartnerResponseDto;
+        return {
+          ...partner,
+          partnerTypeLabel: partnerTypeLabels.get(String(partner.partnerType)),
+        };
+      }),
       total: count,
       page,
       pageSize,
@@ -161,7 +230,14 @@ export class PartnerService {
     if (!partner)
       throw new NotFoundException(this.i18n.t('partner.get.not_found'));
 
-    return partner.toJSON() as PartnerResponseDto;
+    // Get partner type label
+    const partnerTypeLabels = await this.getPartnerTypeLabels();
+    const partnerJson = partner.toJSON() as PartnerResponseDto;
+
+    return {
+      ...partnerJson,
+      partnerTypeLabel: partnerTypeLabels.get(String(partnerJson.partnerType)),
+    };
   }
 
   async delete(id: string): Promise<void> {

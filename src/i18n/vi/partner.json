@@ -1,0 +1,21 @@
+{
+  "create": {
+    "success": "Đối tượng được tạo thành công",
+    "already_exists": "Đối tượng với tên này đã tồn tại"
+  },
+  "update": {
+    "success": "Đối tượng được cập nhật thành công",
+    "not_found": "Đối tượng không được tìm thấy",
+    "already_exists": "Đối tượng với tên này đã tồn tại"
+  },
+  "delete": {
+    "success": "Đối tượng được xóa thành công",
+    "not_found": "Đối tượng không được tìm thấy"
+  },
+  "get": {
+    "not_found": "Đối tượng không được tìm thấy"
+  },
+  "list": {
+    "success": "Đối tượng được lấy thành công"
+  }
+}

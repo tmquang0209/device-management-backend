@@ -15,6 +15,7 @@ export const PARAM_TYPES = {
   MAINTENANCE_RETURN_SLIP_DETAIL_STATUS:
     'MAINTENANCE_RETURN_SLIP_DETAIL_STATUS',
   MAINTENANCE_RETURN_SLIP_PREFIX: 'MAINTENANCE_RETURN_SLIP_PREFIX',
+  PARTNER_TYPE: 'PARTNER_TYPE',
 } as const;
 
 /**
@@ -88,4 +89,13 @@ export const DEFAULT_MAINTENANCE_SLIP_DETAIL_STATUS = [
  */
 export const DEFAULT_MAINTENANCE_SLIP_PREFIX = [
   { code: 'PREFIX', value: 'PXBT', status: 1 },
+] as const;
+
+/**
+ * Default Partner Type configurations
+ * These will be auto-initialized in the param table if not exists
+ */
+export const DEFAULT_PARTNER_TYPE = [
+  { code: '1', value: 'Đối tượng bảo trì', status: 1 },
+  { code: '2', value: 'Đối tượng mượn', status: 1 },
 ] as const;

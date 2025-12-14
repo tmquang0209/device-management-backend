@@ -1,0 +1,21 @@
+{
+  "create": {
+    "success": "Tham số được tạo thành công",
+    "already_exists": "Tham số với loại và mã này đã tồn tại"
+  },
+  "update": {
+    "success": "Tham số được cập nhật thành công",
+    "not_found": "Tham số không được tìm thấy",
+    "already_exists": "Tham số với loại và mã này đã tồn tại"
+  },
+  "delete": {
+    "success": "Tham số được xóa thành công",
+    "not_found": "Tham số không được tìm thấy"
+  },
+  "get": {
+    "not_found": "Tham số không được tìm thấy"
+  },
+  "list": {
+    "success": "Tham số được lấy thành công"
+  }
+}
