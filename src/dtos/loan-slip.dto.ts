@@ -85,22 +85,6 @@ export class UpdateLoanSlipDto {
   readonly loanerId?: string;
 
   @IsOptional()
-  @IsArray({
-    message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_array',
-      { property: 'deviceIds' },
-    ),
-  })
-  @IsUUID('4', {
-    each: true,
-    message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_uuid',
-      { property: 'deviceIds' },
-    ),
-  })
-  readonly deviceIds?: string[];
-
-  @IsOptional()
   @IsString({
     message: i18nValidationMessage<I18nTranslations>(
       'common.validation.must_be_string',
