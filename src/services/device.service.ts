@@ -15,7 +15,6 @@ import {
   DeviceEntity,
   DeviceLocationEntity,
   DeviceTypeEntity,
-  MaintenanceSlipEntity,
   RackEntity,
 } from '@entities';
 import {
@@ -259,18 +258,18 @@ export class DeviceService {
           ],
           required: false,
         },
-        {
-          model: MaintenanceSlipEntity,
-          as: 'maintenanceSlips',
-          attributes: [
-            'id',
-            'transferStatus',
-            'reason',
-            'requestDate',
-            'status',
-          ],
-          required: false,
-        },
+        // {
+        //   model: MaintenanceSlipEntity,
+        //   as: 'maintenanceSlips',
+        //   attributes: [
+        //     'id',
+        //     'transferStatus',
+        //     'reason',
+        //     'requestDate',
+        //     'status',
+        //   ],
+        //   required: false,
+        // },
       ],
     });
 
