@@ -66,6 +66,8 @@ export class DashboardService {
       devicesOnLoanCount,
       pendingLoanSlipsCount,
       pendingMaintenanceSlipsCount,
+      recentLoanSlips,
+      recentReturnSlips,
     ] = await Promise.all([
       this.userRepo.count(),
       this.deviceRepo.count(),
@@ -106,6 +108,42 @@ export class DashboardService {
           },
         },
       }),
+      this.loanSlipRepo.findAll({
+        limit: 10,
+        order: [['created_at', 'DESC']],
+        include: [
+          {
+            model: PartnerEntity,
+            as: 'borrower',
+            include: [
+              { model: UserEntity, as: 'user', attributes: ['id', 'name'] },
+            ],
+          },
+          {
+            model: UserEntity,
+            as: 'createdByUser',
+            attributes: ['id', 'name'],
+          },
+        ],
+      }),
+      this.returnSlipRepo.findAll({
+        limit: 10,
+        order: [['created_at', 'DESC']],
+        include: [
+          {
+            model: PartnerEntity,
+            as: 'returner',
+            include: [
+              { model: UserEntity, as: 'user', attributes: ['id', 'name'] },
+            ],
+          },
+          {
+            model: UserEntity,
+            as: 'createdByUser',
+            attributes: ['id', 'name'],
+          },
+        ],
+      }),
     ]);
 
     const counts: DashboardCountsDto = {
@@ -126,7 +164,30 @@ export class DashboardService {
       pendingMaintenanceSlips: pendingMaintenanceSlipsCount,
     };
 
-    return { counts };
+    // Transform loan slips to activities
+    const loanActivities = recentLoanSlips.map((slip) => ({
+      id: slip.id,
+      type: 'loan',
+      message: `Phiếu mượn ${slip.code} được tạo bởi ${slip.borrower?.user?.name || 'N/A'}`,
+      date: slip.createdAt.toISOString(),
+      user: slip.createdByUser?.name || 'System',
+    }));
+
+    // Transform return slips to activities
+    const returnActivities = recentReturnSlips.map((slip) => ({
+      id: slip.id,
+      type: 'return',
+      message: `Phiếu hoàn trả ${slip.code} được tạo bởi ${slip.returner?.user?.name || 'N/A'}`,
+      date: slip.createdAt.toISOString(),
+      user: slip.createdByUser?.name || 'System',
+    }));
+
+    // Combine and sort by date
+    const recent = [...loanActivities, ...returnActivities]
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, 10);
+
+    return { counts, recent };
   }
 
   private formatAuditMessage(log: AuditLogsEntity): string {

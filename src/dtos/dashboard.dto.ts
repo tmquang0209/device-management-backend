@@ -70,4 +70,7 @@ export class RecentActivityDto {
 export class DashboardResponseDto {
   @ApiProperty({ description: 'Dashboard statistics counts' })
   counts: DashboardCountsDto;
+
+  @ApiProperty({ description: 'Recent activities', type: [RecentActivityDto] })
+  recent: RecentActivityDto[];
 }
