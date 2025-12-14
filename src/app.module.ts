@@ -16,6 +16,7 @@ import {
   DeviceLocationController,
   DeviceTypeController,
   LoanSlipController,
+  MaintenanceReturnSlipController,
   MaintenanceSlipController,
   ParamController,
   PartnerController,
@@ -59,6 +60,7 @@ import {
 import { ClsService } from 'nestjs-cls';
 import { I18nService } from 'nestjs-i18n';
 import { SeederModule } from './seeders/seeder.module';
+import { MaintenanceReturnSlipService } from './services/maintenance-return-slip.service';
 import { MaintenanceSlipService } from './services/maintenance-slip.service';
 
 @Module({
@@ -75,6 +77,7 @@ import { MaintenanceSlipService } from './services/maintenance-slip.service';
     DeviceTypeController,
     DeviceController,
     LoanSlipController,
+    MaintenanceReturnSlipController,
     MaintenanceSlipController,
     ParamController,
     PartnerController,
@@ -105,6 +108,7 @@ import { MaintenanceSlipService } from './services/maintenance-slip.service';
     DeviceTypeService,
     DeviceLocationService,
     LoanSlipService,
+    MaintenanceReturnSlipService,
     MaintenanceSlipService,
     WarrantyService,
     ParamService,

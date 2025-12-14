@@ -10,6 +10,7 @@ export * from './file-manager.service';
 export * from './file.service';
 export * from './loan-slip.service';
 export * from './mail.service';
+export * from './maintenance-return-slip.service';
 export * from './maintenance-slip.service';
 export * from './minio.service';
 export * from './param.service';

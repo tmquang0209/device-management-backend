@@ -1,0 +1,21 @@
+{
+  "create": {
+    "success": "Maintenance return slip created successfully"
+  },
+  "update": {
+    "success": "Maintenance return slip updated successfully"
+  },
+  "cancel": {
+    "success": "Maintenance return slip cancelled successfully"
+  },
+  "list": {
+    "success": "Maintenance return slips retrieved successfully"
+  },
+  "maintenance_slip_not_found": "Maintenance slip not found",
+  "maintenance_slip_not_available": "Maintenance slip is not available for return",
+  "device_not_available_for_return": "Device is not available for return",
+  "invalid_device_status": "Invalid device status. Only accepts: Returned or Broken",
+  "not_found": "Maintenance return slip not found",
+  "cannot_update_cancelled": "Cannot update a cancelled maintenance return slip",
+  "already_cancelled": "Maintenance return slip is already cancelled"
+}

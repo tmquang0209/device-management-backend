@@ -1,8 +1,6 @@
 import { BaseEntity } from '@common/database';
 import { EMaintenanceSlipStatus } from '@common/enums';
-import { Op } from 'sequelize';
 import {
-  BeforeCreate,
   BelongsTo,
   Column,
   DataType,
@@ -85,30 +83,4 @@ export class MaintenanceSlipEntity extends BaseEntity<MaintenanceSlipEntity> {
 
   @HasMany(() => MaintenanceSlipDetailEntity)
   declare details?: MaintenanceSlipDetailEntity[];
-
-  @BeforeCreate
-  static async generateCode(instance: MaintenanceSlipEntity) {
-    if (!instance.code) {
-      const now = new Date();
-      const day = String(now.getDate()).padStart(2, '0');
-      const month = String(now.getMonth() + 1).padStart(2, '0');
-      const year = String(now.getFullYear()).slice(-2);
-      const datePrefix = `${day}${month}${year}`;
-
-      // Find the count of maintenance slips created today
-      const startOfDay = new Date(now.setHours(0, 0, 0, 0));
-      const endOfDay = new Date(now.setHours(23, 59, 59, 999));
-
-      const count = await MaintenanceSlipEntity.count({
-        where: {
-          createdAt: {
-            [Op.between]: [startOfDay, endOfDay],
-          },
-        },
-      });
-
-      const sequence = String(count + 1).padStart(3, '0');
-      instance.code = `GDBT_${datePrefix}_${sequence}`;
-    }
-  }
 }

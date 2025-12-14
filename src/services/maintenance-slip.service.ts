@@ -1,4 +1,10 @@
 import {
+  DEFAULT_MAINTENANCE_SLIP_DETAIL_STATUS,
+  DEFAULT_MAINTENANCE_SLIP_PREFIX,
+  DEFAULT_MAINTENANCE_SLIP_STATUS,
+  PARAM_TYPES,
+} from '@common/constants';
+import {
   EDeviceStatus,
   EMaintenanceSlipDetailStatus,
   EMaintenanceSlipStatus,
@@ -17,21 +23,28 @@ import {
   DeviceTypeEntity,
   MaintenanceSlipDetailEntity,
   MaintenanceSlipEntity,
+  ParamEntity,
   PartnerEntity,
   UserEntity,
 } from '@entities';
 import {
   BadRequestException,
   Injectable,
+  Logger,
   NotFoundException,
+  OnModuleInit,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CacheService } from '@services';
+import dayjs from 'dayjs';
 import { I18nService } from 'nestjs-i18n';
+import { Op } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
 
 @Injectable()
-export class MaintenanceSlipService {
+export class MaintenanceSlipService implements OnModuleInit {
+  private readonly logger = new Logger(MaintenanceSlipService.name);
+
   constructor(
     @InjectModel(MaintenanceSlipEntity)
     private readonly maintenanceSlipRepo: typeof MaintenanceSlipEntity,
@@ -41,10 +54,165 @@ export class MaintenanceSlipService {
     private readonly deviceRepo: typeof DeviceEntity,
     @InjectModel(PartnerEntity)
     private readonly partnerRepo: typeof PartnerEntity,
+    @InjectModel(ParamEntity)
+    private readonly paramRepo: typeof ParamEntity,
     private readonly sequelize: Sequelize,
     private readonly i18n: I18nService,
     private readonly cacheService: CacheService,
   ) {}
+
+  /**
+   * Initialize maintenance slip configurations in param table if not exists
+   */
+  async onModuleInit() {
+    this.logger.log('Initializing maintenance slip status configurations...');
+    await this.initMaintenanceSlipStatus();
+    await this.initMaintenanceSlipDetailStatus();
+    await this.initMaintenanceSlipPrefix();
+    this.logger.log('Maintenance slip status configurations initialized.');
+  }
+
+  /**
+   * Initialize maintenance slip status in param table
+   */
+  private async initMaintenanceSlipStatus() {
+    for (const status of DEFAULT_MAINTENANCE_SLIP_STATUS) {
+      const existing = await this.paramRepo.findOne({
+        where: {
+          type: PARAM_TYPES.MAINTENANCE_SLIP_STATUS,
+          code: status.code,
+        },
+      });
+
+      if (!existing) {
+        await this.paramRepo.create({
+          type: PARAM_TYPES.MAINTENANCE_SLIP_STATUS,
+          code: status.code,
+          value: status.value,
+          status: status.status,
+        } as ParamEntity);
+        this.logger.log(
+          `Created maintenance slip status: ${status.code} - ${status.value}`,
+        );
+      }
+    }
+  }
+
+  /**
+   * Initialize maintenance slip detail status in param table
+   */
+  private async initMaintenanceSlipDetailStatus() {
+    for (const status of DEFAULT_MAINTENANCE_SLIP_DETAIL_STATUS) {
+      const existing = await this.paramRepo.findOne({
+        where: {
+          type: PARAM_TYPES.MAINTENANCE_SLIP_DETAIL_STATUS,
+          code: status.code,
+        },
+      });
+
+      if (!existing) {
+        await this.paramRepo.create({
+          type: PARAM_TYPES.MAINTENANCE_SLIP_DETAIL_STATUS,
+          code: status.code,
+          value: status.value,
+          status: status.status,
+        } as ParamEntity);
+        this.logger.log(
+          `Created maintenance slip detail status: ${status.code} - ${status.value}`,
+        );
+      }
+    }
+  }
+
+  /**
+   * Initialize maintenance slip prefix in param table
+   */
+  private async initMaintenanceSlipPrefix() {
+    for (const prefix of DEFAULT_MAINTENANCE_SLIP_PREFIX) {
+      const existing = await this.paramRepo.findOne({
+        where: {
+          type: PARAM_TYPES.MAINTENANCE_SLIP_PREFIX,
+          code: prefix.code,
+        },
+      });
+
+      if (!existing) {
+        await this.paramRepo.create({
+          type: PARAM_TYPES.MAINTENANCE_SLIP_PREFIX,
+          code: prefix.code,
+          value: prefix.value,
+          status: prefix.status,
+        } as ParamEntity);
+        this.logger.log(
+          `Created maintenance slip prefix: ${prefix.code} - ${prefix.value}`,
+        );
+      }
+    }
+  }
+
+  /**
+   * Get maintenance slip status list from param table
+   */
+  async getMaintenanceSlipStatusList() {
+    const statuses = await this.paramRepo.findAll({
+      where: {
+        type: PARAM_TYPES.MAINTENANCE_SLIP_STATUS,
+        status: 1,
+      },
+      order: [['code', 'ASC']],
+    });
+    return statuses.map((s) => s.toJSON());
+  }
+
+  /**
+   * Get maintenance slip detail status list from param table
+   */
+  async getMaintenanceSlipDetailStatusList() {
+    const statuses = await this.paramRepo.findAll({
+      where: {
+        type: PARAM_TYPES.MAINTENANCE_SLIP_DETAIL_STATUS,
+        status: 1,
+      },
+      order: [['code', 'ASC']],
+    });
+    return statuses.map((s) => s.toJSON());
+  }
+
+  /**
+   * Get maintenance slip prefix from param table
+   */
+  async getMaintenanceSlipPrefix(): Promise<string> {
+    const prefix = await this.paramRepo.findOne({
+      where: {
+        type: PARAM_TYPES.MAINTENANCE_SLIP_PREFIX,
+        code: 'PREFIX',
+        status: 1,
+      },
+    });
+    return prefix?.value || 'PXBT';
+  }
+
+  /**
+   * Generate unique code for maintenance slip
+   * Format: {PREFIX}_{YYMMDD}_{SEQ}
+   */
+  private async generateCode(): Promise<string> {
+    const prefix = await this.getMaintenanceSlipPrefix();
+    const now = dayjs();
+    const dateFormat = now.format('YYMMDD');
+    const startOfDay = now.startOf('day').toDate();
+    const endOfDay = now.endOf('day').toDate();
+
+    const count = await this.maintenanceSlipRepo.count({
+      where: {
+        createdAt: {
+          [Op.between]: [startOfDay, endOfDay],
+        },
+      },
+    });
+
+    return `${prefix}_${dateFormat}_${String(count + 1).padStart(3, '0')}`;
+  }
 
   /**
    * Create a new maintenance slip with transaction
@@ -95,9 +263,13 @@ export class MaintenanceSlipService {
         );
       }
 
+      // Generate code from param table prefix
+      const code = await this.generateCode();
+
       // Create maintenance slip with status SENDING
       const maintenanceSlip = await this.maintenanceSlipRepo.create(
         {
+          code,
           partnerId: dto.partnerId,
           reason: dto.reason,
           requestDate: dto.requestDate || new Date(),

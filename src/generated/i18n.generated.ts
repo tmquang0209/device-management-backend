@@ -190,6 +190,27 @@ export type I18nTranslations = {
             "success": string;
         };
     };
+    "maintenance_return_slip": {
+        "create": {
+            "success": string;
+        };
+        "update": {
+            "success": string;
+        };
+        "cancel": {
+            "success": string;
+        };
+        "list": {
+            "success": string;
+        };
+        "maintenance_slip_not_found": string;
+        "maintenance_slip_not_available": string;
+        "device_not_available_for_return": string;
+        "invalid_device_status": string;
+        "not_found": string;
+        "cannot_update_cancelled": string;
+        "already_cancelled": string;
+    };
     "master-data": {
         "param": {
             "create": {

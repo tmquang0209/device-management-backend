@@ -5,6 +5,7 @@ export * from './device.dto';
 export * from './file.dto';
 export * from './loan-slip.dto';
 export * from './mail.dto';
+export * from './maintenance-return-slip.dto';
 export * from './maintenance-slip.dto';
 export * from './pagination.dto';
 export * from './param.dto';

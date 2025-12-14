@@ -109,3 +109,13 @@ export enum EMaintenanceSlipDetailStatus {
   RETURNED = 2,
   BROKEN = 3,
 }
+
+/**
+ * Maintenance Return Slip Status Enum
+ * 1: RETURNED - Return slip is completed, devices returned to warehouse
+ * 2: CANCELLED - Return slip is cancelled
+ */
+export enum EMaintenanceReturnSlipStatus {
+  RETURNED = 1,
+  CANCELLED = 2,
+}

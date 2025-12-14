@@ -1,0 +1,21 @@
+{
+  "create": {
+    "success": "Phiếu nhận thiết bị từ bảo trì được tạo thành công"
+  },
+  "update": {
+    "success": "Phiếu nhận thiết bị từ bảo trì được cập nhật thành công"
+  },
+  "cancel": {
+    "success": "Phiếu nhận thiết bị từ bảo trì được hủy thành công"
+  },
+  "list": {
+    "success": "Danh sách phiếu nhận từ bảo trì được lấy thành công"
+  },
+  "maintenance_slip_not_found": "Phiếu bảo trì không được tìm thấy",
+  "maintenance_slip_not_available": "Phiếu bảo trì không khả dụng để nhận lại",
+  "device_not_available_for_return": "Thiết bị không khả dụng để nhận lại",
+  "invalid_device_status": "Trạng thái thiết bị không hợp lệ. Chỉ chấp nhận: Đã sửa hoặc Không sửa được",
+  "not_found": "Phiếu nhận từ bảo trì không được tìm thấy",
+  "cannot_update_cancelled": "Không thể cập nhật phiếu nhận đã hủy",
+  "already_cancelled": "Phiếu nhận đã được hủy"
+}

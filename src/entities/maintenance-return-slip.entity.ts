@@ -8,7 +8,6 @@
 //   updated_by varchar
 //   updated_at date
 // }
-
 import { BaseEntity } from '@common/database';
 import {
   BelongsTo,

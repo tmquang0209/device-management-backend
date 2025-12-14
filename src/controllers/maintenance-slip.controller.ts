@@ -26,6 +26,18 @@ export class MaintenanceSlipController {
     private readonly maintenanceSlipService: MaintenanceSlipService,
   ) {}
 
+  @EndpointKey('maintenance_slips.get_status_list')
+  @Get('statuses')
+  getMaintenanceSlipStatusList() {
+    return this.maintenanceSlipService.getMaintenanceSlipStatusList();
+  }
+
+  @EndpointKey('maintenance_slips.get_detail_status_list')
+  @Get('detail-statuses')
+  getMaintenanceSlipDetailStatusList() {
+    return this.maintenanceSlipService.getMaintenanceSlipDetailStatusList();
+  }
+
   @EndpointKey('maintenance_slips.create')
   @Post()
   @ResponseMessage(i18nValidationMessage('maintenance_slip.create.success'))
