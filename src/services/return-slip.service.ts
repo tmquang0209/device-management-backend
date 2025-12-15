@@ -71,6 +71,11 @@ export class ReturnSlipService {
       },
       include: [
         {
+          model: UserEntity,
+          as: 'createdByUser',
+          attributes: ['id', 'name', 'email'],
+        },
+        {
           model: PartnerEntity,
           as: 'borrower',
           include: [

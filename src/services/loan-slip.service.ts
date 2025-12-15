@@ -494,6 +494,11 @@ export class LoanSlipService implements OnModuleInit {
           },
         ],
       },
+      {
+        model: UserEntity,
+        as: 'createdByUser',
+        attributes: ['id', 'name', 'email'],
+      },
     ];
 
     const { rows, count } = await this.loanSlipRepo.findAndCountAll(options);
