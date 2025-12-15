@@ -309,6 +309,7 @@ export class MaintenanceReturnSlipService implements OnModuleInit {
     dto: CreateMaintenanceReturnSlipDto,
     userId?: string,
   ): Promise<MaintenanceReturnSlipResponseDto> {
+    console.log('🚀 ~ MaintenanceReturnSlipService ~ create ~ userId:', userId);
     const transaction = await this.sequelize.transaction();
 
     try {

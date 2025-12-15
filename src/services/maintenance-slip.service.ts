@@ -241,13 +241,28 @@ export class MaintenanceSlipService implements OnModuleInit {
         }
       }
 
+      // Support both old format (deviceIds) and new format (devices with notes)
+      const deviceItems =
+        dto.devices && dto.devices.length > 0
+          ? dto.devices
+          : dto.deviceIds?.map((id) => ({ deviceId: id, note: undefined })) ||
+            [];
+
+      if (deviceItems.length === 0) {
+        throw new BadRequestException(
+          this.i18n.t('maintenance_slip.create.no_devices'),
+        );
+      }
+
+      const deviceIds = deviceItems.map((item) => item.deviceId);
+
       // Query all devices and check if they exist and are AVAILABLE
       const devices = await this.deviceRepo.findAll({
-        where: { id: dto.deviceIds },
+        where: { id: deviceIds },
         transaction,
       });
 
-      if (devices.length !== dto.deviceIds.length) {
+      if (devices.length !== deviceIds.length) {
         throw new BadRequestException(
           this.i18n.t('maintenance_slip.create.device_not_found'),
         );
@@ -279,12 +294,13 @@ export class MaintenanceSlipService implements OnModuleInit {
         { transaction },
       );
 
-      // Create maintenance slip details for each device
+      // Create maintenance slip details for each device with note
       await this.maintenanceSlipDetailRepo.bulkCreate(
-        devices.map((device) => ({
+        deviceItems.map((item) => ({
           maintenanceSlipId: maintenanceSlip.id,
-          deviceId: device.id,
+          deviceId: item.deviceId,
           status: EMaintenanceSlipDetailStatus.SENT,
+          note: item.note,
           createdById: userId,
         })) as unknown as MaintenanceSlipDetailEntity[],
         { transaction },
@@ -294,7 +310,7 @@ export class MaintenanceSlipService implements OnModuleInit {
       await this.deviceRepo.update(
         { status: EDeviceStatus.MAINTENANCE },
         {
-          where: { id: dto.deviceIds },
+          where: { id: deviceIds },
           transaction,
         },
       );

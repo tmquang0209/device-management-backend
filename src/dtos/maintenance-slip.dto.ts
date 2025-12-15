@@ -19,6 +19,30 @@ import { PaginationRequestDto, PaginationResponseDto } from './pagination.dto';
 
 // ============== Maintenance Slip DTOs ==============
 
+export class CreateDeviceItemMaintenanceDto {
+  @IsNotEmpty({
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.field_required',
+    ),
+  })
+  @IsUUID('4', {
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.must_be_uuid',
+      { property: 'deviceId' },
+    ),
+  })
+  readonly deviceId: string;
+
+  @IsOptional()
+  @IsString({
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.must_be_string',
+      { property: 'note' },
+    ),
+  })
+  readonly note?: string;
+}
+
 export class CreateMaintenanceSlipDto {
   @IsOptional()
   @IsUUID('4', {
@@ -50,11 +74,7 @@ export class CreateMaintenanceSlipDto {
   })
   readonly requestDate?: Date;
 
-  @IsNotEmpty({
-    message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.field_required',
-    ),
-  })
+  @IsOptional()
   @IsArray({
     message: i18nValidationMessage<I18nTranslations>(
       'common.validation.must_be_array',
@@ -68,7 +88,18 @@ export class CreateMaintenanceSlipDto {
       { property: 'deviceIds' },
     ),
   })
-  readonly deviceIds: string[];
+  readonly deviceIds?: string[];
+
+  @IsOptional()
+  @IsArray({
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.must_be_array',
+      { property: 'devices' },
+    ),
+  })
+  @ValidateNested({ each: true })
+  @Type(() => CreateDeviceItemMaintenanceDto)
+  readonly devices?: CreateDeviceItemMaintenanceDto[];
 }
 
 export class ReturnDeviceItemMaintenanceDto {

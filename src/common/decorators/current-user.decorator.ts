@@ -1,6 +1,10 @@
 import { BasicInfoDto } from '@dto';
 import { UserEntity } from '@entities';
-import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import {
+  createParamDecorator,
+  ExecutionContext,
+  UnauthorizedException,
+} from '@nestjs/common';
 
 export const CurrentUser = createParamDecorator(
   async (_data: unknown, context: ExecutionContext) => {
@@ -13,7 +17,7 @@ export const CurrentUser = createParamDecorator(
       attributes: ['id', 'name', 'userName', 'email', 'roleType', 'status'],
     });
 
-    if (!user) return null;
+    if (!user) throw new UnauthorizedException();
 
     return {
       id: user.id,
