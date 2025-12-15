@@ -61,6 +61,14 @@ export class CreateUserDto {
     ),
   })
   readonly userName: string;
+
+  @IsOptional()
+  @IsString({
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.must_be_string',
+    ),
+  })
+  readonly roleType: string;
 }
 
 export class UpdateUserDto {

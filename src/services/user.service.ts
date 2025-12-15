@@ -48,6 +48,7 @@ export class UserService {
       email: params.email,
       password: hashedPassword,
       userName: params.userName || params.email.split('@')[0],
+      roleType: params.roleType,
     } as UserEntity);
     return newUser;
   }
