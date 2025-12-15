@@ -92,25 +92,29 @@ export class PartnerService implements OnModuleInit {
     dto: CreatePartnerDto,
     userId?: string,
   ): Promise<PartnerResponseDto> {
-    // Validate user exists
-    const user = await this.userRepo.findByPk(dto.userId);
-    if (!user) {
-      throw new BadRequestException(this.i18n.t('partner.create.invalid_user'));
-    }
-
-    // Check if partner already exists for this user
-    const existingPartner = await this.partnerRepo.findOne({
-      where: { userId: dto.userId },
+    // Check if email already exists
+    const existingUser = await this.userRepo.findOne({
+      where: { email: dto.email },
     });
 
-    if (existingPartner) {
-      throw new BadRequestException(
-        this.i18n.t('partner.create.already_exists'),
-      );
+    if (existingUser) {
+      throw new BadRequestException(this.i18n.t('partner.create.email_exists'));
     }
 
+    // Create user with HIDDEN role
+    const newUser = await this.userRepo.create({
+      userName: dto.email.split('@')[0],
+      name: dto.name,
+      email: dto.email,
+      roleType: 'HIDDEN',
+      password: '', // Empty password since this user won't login
+    } as UserEntity);
+
+    // Create partner linked to the new user
     const newPartner = await this.partnerRepo.create({
-      ...dto,
+      userId: newUser.id,
+      partnerType: dto.partnerType,
+      status: dto.status ?? 1,
       createdById: userId,
     } as PartnerEntity);
 
@@ -124,34 +128,55 @@ export class PartnerService implements OnModuleInit {
     dto: UpdatePartnerDto,
     userId?: string,
   ): Promise<PartnerResponseDto> {
-    const partner = await this.partnerRepo.findByPk(id);
+    const partner = await this.partnerRepo.findByPk(id, {
+      include: [
+        {
+          model: UserEntity,
+          as: 'user',
+        },
+      ],
+    });
 
     if (!partner) {
       throw new NotFoundException(this.i18n.t('partner.update.not_found'));
     }
 
-    // Validate user if changing
-    if (dto.userId && dto.userId !== partner.userId) {
-      const user = await this.userRepo.findByPk(dto.userId);
+    // Update user information if name or email changed
+    if (dto.name || dto.email) {
+      const user = await this.userRepo.findByPk(partner.userId);
       if (!user) {
-        throw new BadRequestException(
-          this.i18n.t('partner.update.invalid_user'),
+        throw new NotFoundException(
+          this.i18n.t('partner.update.user_not_found'),
         );
       }
 
-      // Check if another partner already exists for this user
-      const existingPartner = await this.partnerRepo.findOne({
-        where: { userId: dto.userId },
+      // Check if email is being changed and if it already exists
+      if (dto.email && dto.email !== user.email) {
+        const existingUser = await this.userRepo.findOne({
+          where: { email: dto.email },
+        });
+
+        if (existingUser && existingUser.id !== user.id) {
+          throw new BadRequestException(
+            this.i18n.t('partner.update.email_exists'),
+          );
+        }
+      }
+
+      // Update user fields
+      await user.update({
+        name: dto.name ?? user.name,
+        email: dto.email ?? user.email,
+        userName: dto.email ? dto.email.split('@')[0] : user.userName,
       });
-
-      if (existingPartner && existingPartner.id !== id) {
-        throw new BadRequestException(
-          this.i18n.t('partner.update.already_exists'),
-        );
-      }
     }
 
-    await partner.update({ ...dto, updatedById: userId });
+    // Update partner fields
+    await partner.update({
+      partnerType: dto.partnerType ?? partner.partnerType,
+      status: dto.status ?? partner.status,
+      updatedById: userId,
+    });
 
     await this.cacheService.delByPattern('*partners*');
 

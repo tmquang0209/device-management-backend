@@ -18,6 +18,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { AuditContextService, CacheService } from '@services';
 import * as bcrypt from 'bcryptjs';
 import { I18nService } from 'nestjs-i18n';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class UserService {
@@ -81,13 +82,17 @@ export class UserService {
 
   async getListUsers(params: UserListRequestDto): Promise<UserListResponseDto> {
     const { page, pageSize, sortBy, orderBy, ...filters } = params;
+
+    // Add filter to exclude users with HIDDEN role
+    const enhancedFilters = { ...filters, roleType: { [Op.ne]: 'HIDDEN' } };
+
     const options = buildSequelizeQuery<UserEntity>(
       {
         page,
         pageSize,
         sortBy,
         sortOrder: orderBy,
-        filters,
+        filters: enhancedFilters,
         exclude: ['password', 'deletedAt'],
         distinct: true,
       },

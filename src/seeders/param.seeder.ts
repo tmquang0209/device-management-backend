@@ -30,6 +30,12 @@ export class ParamSeeder {
         value: 'STAFF',
         description: 'Staff member with limited access',
       },
+      {
+        type: 'user_role',
+        code: 'HIDDEN',
+        value: 'HIDDEN',
+        description: 'Hidden user role for partner-associated users',
+      },
     ];
 
     for (const role of userRoles) {

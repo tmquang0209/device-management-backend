@@ -14,11 +14,24 @@ export class CreatePartnerDto {
   })
   @IsString({
     message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_uuid',
-      { property: 'userId' },
+      'common.validation.must_be_string',
+      { property: 'name' },
     ),
   })
-  readonly userId: string;
+  readonly name: string;
+
+  @IsNotEmpty({
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.field_required',
+    ),
+  })
+  @IsString({
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.must_be_string',
+      { property: 'email' },
+    ),
+  })
+  readonly email: string;
 
   @Transform(({ value }) => Number.parseInt(value, 10))
   @IsNotEmpty({
@@ -38,11 +51,20 @@ export class UpdatePartnerDto {
   @IsOptional()
   @IsString({
     message: i18nValidationMessage<I18nTranslations>(
-      'common.validation.must_be_uuid',
-      { property: 'userId' },
+      'common.validation.must_be_string',
+      { property: 'name' },
     ),
   })
-  readonly userId?: string;
+  readonly name?: string;
+
+  @IsOptional()
+  @IsString({
+    message: i18nValidationMessage<I18nTranslations>(
+      'common.validation.must_be_string',
+      { property: 'email' },
+    ),
+  })
+  readonly email?: string;
 
   @Transform(({ value }) => {
     Number.parseInt(value, 10);
